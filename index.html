@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Diario de dolores de cabeza</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --fondo:#FBF8FC;
+    --superficie:#FFFFFF;
+    --tinta:#4A4458;
+    --tinta-suave:#8E87A0;
+    --linea:#EDE7F2;
+    --lavanda:#B9A9E0;
+    --lavanda-clara:#EFE9FB;
+    --menta:#CDE9D6;
+    --radio:14px;
+    --sombra:0 1px 2px rgba(74,68,88,.06), 0 8px 24px rgba(74,68,88,.06);
+    --fuente-ui:'Nunito', ui-rounded, "Segoe UI", system-ui, sans-serif;
+    --fuente-titulo:'Fraunces', Georgia, serif;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--fondo);
+    color:var(--tinta);
+    font-family:var(--fuente-ui);
+    font-size:15px;
+    line-height:1.45;
+    -webkit-font-smoothing:antialiased;
+  }
+  button{font-family:inherit;font-size:inherit;color:inherit;cursor:pointer}
+  :focus-visible{outline:2.5px solid var(--lavanda);outline-offset:2px;border-radius:6px}
+
+  /* ---------- Cabecera ---------- */
+  .app{max-width:1080px;margin:0 auto;padding:20px 16px 64px}
+  .barra{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+  .titulo{
+    font-family:var(--fuente-titulo);
+    font-weight:600;
+    font-size:clamp(22px,4vw,30px);
+    letter-spacing:-.01em;
+    margin:0;
+    text-transform:capitalize;
+  }
+  .nav{display:flex;align-items:center;gap:4px}
+  .redondo{
+    width:34px;height:34px;border:1px solid var(--linea);background:var(--superficie);
+    border-radius:50%;display:grid;place-items:center;font-size:16px;line-height:1;
+    transition:background .15s ease,border-color .15s ease;
+  }
+  .redondo:hover{background:var(--lavanda-clara);border-color:var(--lavanda)}
+  .hoy{
+    border:1px solid var(--linea);background:var(--superficie);
+    border-radius:999px;padding:7px 14px;font-weight:600;
+  }
+  .hoy:hover{background:var(--lavanda-clara);border-color:var(--lavanda)}
+  .crece{flex:1}
+  .vistas{display:flex;background:var(--superficie);border:1px solid var(--linea);border-radius:999px;padding:3px;gap:2px}
+  .vistas button{border:0;background:transparent;border-radius:999px;padding:6px 14px;font-weight:600;color:var(--tinta-suave)}
+  .vistas button[aria-pressed="true"]{background:var(--lavanda-clara);color:var(--tinta)}
+
+  /* ---------- Resumen ---------- */
+  .resumen{
+    display:flex;flex-wrap:wrap;gap:8px 22px;align-items:center;
+    background:var(--superficie);border:1px solid var(--linea);border-radius:var(--radio);
+    padding:12px 16px;margin-bottom:14px;box-shadow:var(--sombra);
+  }
+  .dato{display:flex;align-items:baseline;gap:7px}
+  .dato b{font-family:var(--fuente-titulo);font-size:20px;font-weight:600}
+  .dato span{color:var(--tinta-suave);font-size:13px}
+  .escala{display:flex;align-items:center;gap:6px;margin-left:auto;font-size:12px;color:var(--tinta-suave)}
+  .escala i{width:13px;height:13px;border-radius:4px;display:block}
+
+  /* ---------- Calendario ---------- */
+  .tablero{background:var(--superficie);border:1px solid var(--linea);border-radius:var(--radio);overflow:hidden;box-shadow:var(--sombra)}
+  .cabecera-dias{display:grid;grid-template-columns:repeat(7,1fr);border-bottom:1px solid var(--linea)}
+  .cabecera-dias div{
+    padding:9px 8px;font-size:11px;font-weight:700;letter-spacing:.09em;
+    text-transform:uppercase;color:var(--tinta-suave);text-align:center;
+  }
+  .rejilla{display:grid;grid-template-columns:repeat(7,1fr)}
+  .celda{
+    border-right:1px solid var(--linea);border-bottom:1px solid var(--linea);
+    background:transparent;text-align:left;padding:7px 7px 9px;
+    min-height:104px;display:flex;flex-direction:column;gap:5px;
+    transition:background .15s ease;
+  }
+  .celda:nth-child(7n){border-right:0}
+  .celda:hover{background:#FCFAFE}
+  .celda.fuera{color:#C9C3D4;background:#FCFBFD}
+  .num{font-size:13px;font-weight:700;align-self:flex-start;
+       width:26px;height:26px;display:grid;place-items:center;border-radius:50%}
+  .celda.hoy-cel .num{background:var(--lavanda);color:#fff}
+  .celda.fuera .num{font-weight:400}
+  .pildora{
+    display:flex;align-items:center;gap:6px;border-radius:8px;padding:3px 7px;
+    font-size:12px;font-weight:700;color:#4A4458;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;
+  }
+  .pildora small{font-weight:600;opacity:.75;font-size:11px;overflow:hidden;text-overflow:ellipsis}
+  .mas{font-size:11px;color:var(--tinta-suave);font-weight:600;padding-left:3px}
+
+  /* Semana y día */
+  .rejilla.semana .celda{min-height:min(52vh,420px)}
+  .rejilla.dia{grid-template-columns:1fr}
+  .rejilla.dia .celda{min-height:min(58vh,460px);border-right:0;padding:14px}
+  .rejilla.semana .pildora,.rejilla.dia .pildora{white-space:normal;align-items:flex-start;padding:6px 8px}
+  .rejilla.dia .pildora{font-size:14px}
+  .vacio{color:var(--tinta-suave);font-size:13px;margin-top:6px}
+
+  /* ---------- Modal ---------- */
+  .velo{
+    position:fixed;inset:0;background:rgba(74,68,88,.28);backdrop-filter:blur(2px);
+    display:grid;place-items:center;padding:16px;z-index:50;
+  }
+  .velo[hidden]{display:none}
+  .modal{
+    background:var(--superficie);border-radius:20px;width:min(560px,100%);
+    max-height:min(88vh,760px);overflow:auto;box-shadow:0 24px 60px rgba(74,68,88,.22);
+    animation:sube .18s ease-out;
+  }
+  @keyframes sube{from{transform:translateY(10px);opacity:0}to{transform:none;opacity:1}}
+  .modal-cab{
+    position:sticky;top:0;background:var(--superficie);z-index:2;
+    display:flex;align-items:flex-start;gap:12px;padding:18px 20px 12px;border-bottom:1px solid var(--linea);
+  }
+  .modal-cab h2{margin:0;font-family:var(--fuente-titulo);font-weight:600;font-size:21px;text-transform:capitalize}
+  .modal-cab p{margin:2px 0 0;font-size:13px;color:var(--tinta-suave)}
+  .cerrar{margin-left:auto;border:0;background:transparent;font-size:22px;line-height:1;color:var(--tinta-suave);padding:2px 4px}
+  .modal-cuerpo{padding:16px 20px 22px}
+
+  .lista{list-style:none;margin:0 0 18px;padding:0;display:flex;flex-direction:column;gap:8px}
+  .ficha{border:1px solid var(--linea);border-radius:12px;padding:10px 12px;display:flex;gap:11px;align-items:flex-start}
+  .marca{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;font-weight:700;flex:none;font-size:15px}
+  .ficha-txt{flex:1;min-width:0}
+  .ficha-txt b{font-size:13px}
+  .ficha-txt p{margin:3px 0 0;font-size:13px;color:var(--tinta-suave);overflow-wrap:anywhere}
+  .acciones{display:flex;gap:4px;flex:none}
+  .mini{border:1px solid var(--linea);background:var(--superficie);border-radius:8px;padding:4px 8px;font-size:12px;font-weight:600;color:var(--tinta-suave)}
+  .mini:hover{border-color:var(--lavanda);color:var(--tinta);background:var(--lavanda-clara)}
+  .mini.peligro:hover{border-color:#F0A9A9;background:#FDEDED;color:#8A4A4A}
+
+  fieldset{border:0;margin:0 0 16px;padding:0}
+  legend, .etiqueta{
+    font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;
+    color:var(--tinta-suave);padding:0;margin-bottom:8px;display:block;
+  }
+  .fila{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+  .campo{flex:1;min-width:130px}
+  input[type=time],input[type=text],textarea{
+    width:100%;border:1px solid var(--linea);border-radius:10px;padding:9px 11px;
+    font-family:inherit;font-size:15px;color:var(--tinta);background:var(--fondo);
+  }
+  input:focus,textarea:focus{background:var(--superficie);border-color:var(--lavanda);outline:none;box-shadow:0 0 0 3px var(--lavanda-clara)}
+  textarea{resize:vertical;min-height:74px}
+
+  .medidor{display:flex;align-items:center;gap:14px}
+  .cifra{
+    width:56px;height:56px;border-radius:16px;display:grid;place-items:center;flex:none;
+    font-family:var(--fuente-titulo);font-size:24px;font-weight:600;transition:background .18s ease;
+  }
+  input[type=range]{flex:1;-webkit-appearance:none;appearance:none;background:transparent;height:26px;margin:0}
+  input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:99px;
+    background:linear-gradient(90deg,#CDE9D6,#E6EEBD,#FBE3AE,#F9C2AC,#EFA0B4)}
+  input[type=range]::-moz-range-track{height:8px;border-radius:99px;
+    background:linear-gradient(90deg,#CDE9D6,#E6EEBD,#FBE3AE,#F9C2AC,#EFA0B4)}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;
+    background:#fff;border:2.5px solid var(--lavanda);margin-top:-7px;box-shadow:0 1px 4px rgba(74,68,88,.2)}
+  input[type=range]::-moz-range-thumb{width:20px;height:20px;border-radius:50%;background:#fff;
+    border:2.5px solid var(--lavanda);box-shadow:0 1px 4px rgba(74,68,88,.2)}
+  .pistas{display:flex;justify-content:space-between;font-size:11px;color:var(--tinta-suave);margin-top:2px}
+
+  /* Cabeza interactiva */
+  .zona-caja{display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+  .cabeza{width:168px;flex:none}
+  .cabeza path{fill:#F3EFF8;stroke:#fff;stroke-width:2.5;cursor:pointer;transition:fill .15s ease}
+  .cabeza path:hover{fill:var(--lavanda-clara)}
+  .cabeza path[aria-pressed="true"]{fill:var(--lavanda)}
+  .cabeza text{font-family:var(--fuente-ui);font-size:11px;font-weight:700;fill:var(--tinta-suave);pointer-events:none}
+  .cabeza path[aria-pressed="true"] + text{fill:#fff}
+  .zona-ayuda{font-size:13px;color:var(--tinta-suave);flex:1;min-width:140px}
+  .zona-ayuda b{color:var(--tinta);display:block;font-size:14px;margin-bottom:3px}
+
+  .pie{display:flex;gap:10px;align-items:center;margin-top:20px}
+  .guardar{
+    border:0;background:var(--lavanda);color:#fff;font-weight:700;
+    border-radius:999px;padding:11px 22px;box-shadow:0 3px 10px rgba(185,169,224,.45);
+  }
+  .guardar:hover{filter:brightness(1.05)}
+  .texto{border:0;background:transparent;color:var(--tinta-suave);font-weight:600;padding:11px 6px}
+  .aviso{font-size:13px;color:#8A6D3B;background:#FCF3DC;border-radius:10px;padding:8px 11px;margin-bottom:14px}
+  .aviso[hidden]{display:none}
+
+  .pie-pagina{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-top:16px;font-size:13px;color:var(--tinta-suave)}
+  .enlace{border:1px solid var(--linea);background:var(--superficie);border-radius:999px;padding:7px 14px;font-weight:600}
+  .enlace:hover{border-color:var(--lavanda);background:var(--lavanda-clara);color:var(--tinta)}
+
+  .banner{
+    background:#FCF3DC;color:#8A6D3B;border:1px solid #F2E2BC;
+    border-radius:var(--radio);padding:11px 15px;margin-bottom:14px;font-size:14px;
+  }
+  .banner[hidden]{display:none}
+  .toast{
+    position:fixed;left:50%;bottom:26px;transform:translateX(-50%);
+    background:var(--tinta);color:#fff;font-weight:600;font-size:14px;
+    padding:11px 20px;border-radius:999px;z-index:80;
+    box-shadow:0 8px 24px rgba(74,68,88,.28);
+  }
+  .toast[hidden]{display:none}
+  .celda{height:auto}
+
+  @media (max-width:640px){
+    .celda{min-height:78px;padding:5px 4px 7px}
+    .pildora{font-size:11px;padding:2px 5px;gap:4px}
+    .pildora small{display:none}
+    .num{width:23px;height:23px;font-size:12px}
+    .escala{margin-left:0;width:100%}
+    .cabecera-dias div{font-size:10px;padding:7px 2px}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *{animation:none!important;transition:none!important}
+  }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <div class="banner" id="banner" hidden>
+    Este navegador no deja guardar datos en esta ventana. Descarga el archivo y ábrelo desde tu ordenador para que los registros se conserven.
+  </div>
+
+  <div class="barra">
+    <h1 class="titulo" id="titulo">—</h1>
+    <div class="nav">
+      <button class="redondo" id="anterior" aria-label="Periodo anterior">‹</button>
+      <button class="redondo" id="siguiente" aria-label="Periodo siguiente">›</button>
+    </div>
+    <button class="hoy" id="btn-hoy">Hoy</button>
+    <div class="crece"></div>
+    <div class="vistas" role="group" aria-label="Cambiar vista">
+      <button data-vista="mes" aria-pressed="true">Mes</button>
+      <button data-vista="semana" aria-pressed="false">Semana</button>
+      <button data-vista="dia" aria-pressed="false">Día</button>
+    </div>
+  </div>
+
+  <div class="resumen">
+    <div class="dato"><b id="r-total">0</b><span>episodios en este periodo</span></div>
+    <div class="dato"><b id="r-media">—</b><span>intensidad media</span></div>
+    <div class="dato"><b id="r-zona">—</b><span>zona más frecuente</span></div>
+    <div class="escala" aria-hidden="true">
+      <span>Leve</span>
+      <i style="background:#CDE9D6"></i><i style="background:#E6EEBD"></i><i style="background:#FBE3AE"></i><i style="background:#F9C2AC"></i><i style="background:#EFA0B4"></i>
+      <span>Fuerte</span>
+    </div>
+  </div>
+
+  <div class="tablero">
+    <div class="cabecera-dias" id="cabecera-dias"></div>
+    <div class="rejilla" id="rejilla"></div>
+  </div>
+
+  <div class="pie-pagina">
+    <button class="enlace" id="exportar">Exportar a CSV</button>
+    <span id="estado-guardado">Los registros se guardan en este dispositivo.</span>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status" hidden></div>
+
+<!-- Modal -->
+<div class="velo" id="velo" hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-titulo">
+    <div class="modal-cab">
+      <div>
+        <h2 id="modal-titulo">—</h2>
+        <p id="modal-sub">—</p>
+      </div>
+      <button class="cerrar" id="cerrar" aria-label="Cerrar">×</button>
+    </div>
+    <div class="modal-cuerpo">
+      <ul class="lista" id="lista"></ul>
+
+      <div class="aviso" id="aviso" hidden></div>
+
+      <form id="formulario">
+        <input type="hidden" id="id-registro">
+
+        <div class="fila">
+          <div class="campo">
+            <label class="etiqueta" for="hora">Hora</label>
+            <input type="time" id="hora">
+          </div>
+          <div class="campo">
+            <label class="etiqueta" for="duracion">Cuánto le duró</label>
+            <input type="text" id="duracion" placeholder="Ej: 40 minutos" maxlength="40">
+          </div>
+        </div>
+
+        <fieldset>
+          <legend>Intensidad del dolor</legend>
+          <div class="medidor">
+            <output class="cifra" id="cifra">5</output>
+            <div style="flex:1">
+              <input type="range" id="intensidad" min="1" max="10" step="1" value="5" aria-label="Intensidad del 1 al 10">
+              <div class="pistas"><span>1 · casi no molesta</span><span>10 · insoportable</span></div>
+            </div>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Dónde le dolió</legend>
+          <div class="zona-caja">
+            <svg class="cabeza" viewBox="0 0 200 200" role="group" aria-label="Zonas de la cabeza, vista desde arriba">
+              <path d="M100,100 L49.1,49.1 A72,72 0 0,1 150.9,49.1 Z" data-zona="frente" role="button" tabindex="0" aria-pressed="false" aria-label="Frente"></path>
+              <text x="100" y="55" text-anchor="middle">Frente</text>
+              <path d="M100,100 L150.9,49.1 A72,72 0 0,1 150.9,150.9 Z" data-zona="lado derecho" role="button" tabindex="0" aria-pressed="false" aria-label="Lado derecho"></path>
+              <text x="140" y="104" text-anchor="middle">Dcho.</text>
+              <path d="M100,100 L150.9,150.9 A72,72 0 0,1 49.1,150.9 Z" data-zona="nuca" role="button" tabindex="0" aria-pressed="false" aria-label="Nuca"></path>
+              <text x="100" y="152" text-anchor="middle">Nuca</text>
+              <path d="M100,100 L49.1,150.9 A72,72 0 0,1 49.1,49.1 Z" data-zona="lado izquierdo" role="button" tabindex="0" aria-pressed="false" aria-label="Lado izquierdo"></path>
+              <text x="60" y="104" text-anchor="middle">Izdo.</text>
+              <path d="M94,26 L100,14 L106,26 Z" fill="#D9D2E4" stroke="none" style="cursor:default;pointer-events:none"></path>
+            </svg>
+            <p class="zona-ayuda">
+              <b id="zonas-elegidas">Toca las zonas</b>
+              Vista desde arriba, la nariz es el triángulo. Puedes marcar varias.
+            </p>
+          </div>
+        </fieldset>
+
+        <div style="margin-bottom:16px">
+          <label class="etiqueta" for="actividad">Qué estaba haciendo</label>
+          <textarea id="actividad" placeholder="Ej: leyendo en el sofá, después de gimnasia, viendo la tablet..."></textarea>
+        </div>
+
+        <div>
+          <label class="etiqueta" for="notas">Otras notas</label>
+          <input type="text" id="notas" placeholder="Sueño, comidas, medicación, ánimo..." maxlength="140">
+        </div>
+
+        <div class="pie">
+          <button type="submit" class="guardar" id="btn-guardar">Guardar registro</button>
+          <button type="button" class="texto" id="cancelar" hidden>Cancelar edición</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ---------- Almacenamiento: localStorage ---------- */
+  var CLAVE = "diario-cefaleas-v1";
+  var hayLocalStorage = (function(){
+    try{
+      localStorage.setItem("__prueba__","1");
+      localStorage.removeItem("__prueba__");
+      return true;
+    }catch(e){ return false; }
+  })();
+
+  var almacen = {
+    cargar: function(){
+      if (!hayLocalStorage) return [];
+      try{
+        var t = localStorage.getItem(CLAVE);
+        var d = t ? JSON.parse(t) : [];
+        return Array.isArray(d) ? d : [];
+      }catch(e){ return []; }
+    },
+    guardar: function(datos){
+      if (!hayLocalStorage) return false;
+      try{ localStorage.setItem(CLAVE, JSON.stringify(datos)); return true; }
+      catch(e){ return false; }
+    }
+  };
+
+  /* ---------- Estado ---------- */
+  var registros = [];
+  var vista = "mes";
+  var ancla = new Date(); ancla.setHours(0,0,0,0);
+  var diaAbierto = null;
+  var zonasActivas = [];
+
+  var MESES = ["enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiembre","octubre","noviembre","diciembre"];
+  var DIAS_CORTOS = ["lun","mar","mié","jue","vie","sáb","dom"];
+  var DIAS_LARGOS = ["lunes","martes","miércoles","jueves","viernes","sábado","domingo"];
+  var COLORES = ["#CDE9D6","#D8EBC9","#E6EEBD","#F4EFB6","#FBE3AE","#FBD5AC","#F9C2AC","#F5AEB0","#EFA0B4","#E393B4"];
+
+  function color(n){ return COLORES[Math.min(10,Math.max(1,n))-1]; }
+  function clave(f){
+    return f.getFullYear()+"-"+String(f.getMonth()+1).padStart(2,"0")+"-"+String(f.getDate()).padStart(2,"0");
+  }
+  function desdeClave(k){ var p=k.split("-"); return new Date(+p[0], +p[1]-1, +p[2]); }
+  function mismoDia(a,b){ return clave(a)===clave(b); }
+  function lunesDe(f){
+    var d = new Date(f); var n = (d.getDay()+6)%7;
+    d.setDate(d.getDate()-n); d.setHours(0,0,0,0); return d;
+  }
+  function sumaDias(f,n){ var d=new Date(f); d.setDate(d.getDate()+n); return d; }
+  function esc(t){
+    return String(t==null?"":t).replace(/[&<>"']/g, function(c){
+      return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];
+    });
+  }
+  function porDia(k){
+    return registros.filter(function(r){ return r.fecha===k; })
+                    .sort(function(a,b){ return (a.hora||"").localeCompare(b.hora||""); });
+  }
+
+  /* ---------- Referencias ---------- */
+  var $ = function(id){ return document.getElementById(id); };
+  var rejilla = $("rejilla"), cabeceraDias = $("cabecera-dias"), velo = $("velo");
+  var formulario = $("formulario"), intensidad = $("intensidad"), cifra = $("cifra");
+
+  /* ---------- Pintar calendario ---------- */
+  function rango(){
+    if (vista === "dia") return [new Date(ancla), new Date(ancla)];
+    if (vista === "semana"){ var l = lunesDe(ancla); return [l, sumaDias(l,6)]; }
+    var ini = new Date(ancla.getFullYear(), ancla.getMonth(), 1);
+    return [ini, new Date(ancla.getFullYear(), ancla.getMonth()+1, 0)];
+  }
+
+  function pintar(){
+    var hoy = new Date(); hoy.setHours(0,0,0,0);
+    var celdas = [], mesActual = ancla.getMonth();
+
+    if (vista === "mes"){
+      var primero = new Date(ancla.getFullYear(), ancla.getMonth(), 1);
+      var inicio = lunesDe(primero);
+      for (var i=0;i<42;i++) celdas.push(sumaDias(inicio,i));
+      $("titulo").textContent = MESES[mesActual] + " " + ancla.getFullYear();
+      rejilla.className = "rejilla";
+      cabeceraDias.innerHTML = DIAS_CORTOS.map(function(d){ return "<div>"+d+"</div>"; }).join("");
+    } else if (vista === "semana"){
+      var l = lunesDe(ancla);
+      for (var j=0;j<7;j++) celdas.push(sumaDias(l,j));
+      var fin = sumaDias(l,6);
+      $("titulo").textContent = l.getDate()+" "+MESES[l.getMonth()].slice(0,3)+" – "+fin.getDate()+" "+MESES[fin.getMonth()].slice(0,3)+" "+fin.getFullYear();
+      rejilla.className = "rejilla semana";
+      cabeceraDias.innerHTML = celdas.map(function(f){
+        return "<div>"+DIAS_CORTOS[(f.getDay()+6)%7]+" "+f.getDate()+"</div>";
+      }).join("");
+    } else {
+      celdas.push(new Date(ancla));
+      $("titulo").textContent = DIAS_LARGOS[(ancla.getDay()+6)%7]+", "+ancla.getDate()+" de "+MESES[ancla.getMonth()]+" "+ancla.getFullYear();
+      rejilla.className = "rejilla dia";
+      cabeceraDias.innerHTML = "";
+    }
+
+    rejilla.innerHTML = "";
+    celdas.forEach(function(f){
+      var k = clave(f), lista = porDia(k);
+      var b = document.createElement("button");
+      b.type = "button";
+      b.className = "celda";
+      if (vista === "mes" && f.getMonth() !== mesActual) b.classList.add("fuera");
+      if (mismoDia(f, hoy)) b.classList.add("hoy-cel");
+      b.setAttribute("aria-label", f.getDate()+" de "+MESES[f.getMonth()]+", "+lista.length+" registros");
+      b.dataset.fecha = k;
+
+      var html = "";
+      if (vista !== "dia") html += '<span class="num">'+f.getDate()+"</span>";
+
+      lista.forEach(function(r){
+        var detalle = [r.zonas && r.zonas.length ? r.zonas.join(", ") : "", r.actividad||""]
+                      .filter(Boolean).join(" · ");
+        html += '<span class="pildora" style="background:'+color(r.intensidad)+'">'+
+                  esc(r.hora||"")+" · "+r.intensidad+"/10"+
+                  (detalle ? " <small>"+esc(detalle)+"</small>" : "")+
+                "</span>";
+      });
+      if (vista !== "mes" && lista.length === 0) html += '<span class="vacio">Sin dolores. Toca para añadir uno.</span>';
+
+      b.innerHTML = html;
+      b.addEventListener("click", function(){ abrir(k); });
+      rejilla.appendChild(b);
+    });
+
+    resumen();
+  }
+
+  function resumen(){
+    var r = rango(), a = clave(r[0]), z = clave(r[1]);
+    var dentro = registros.filter(function(x){ return x.fecha >= a && x.fecha <= z; });
+    $("r-total").textContent = dentro.length;
+    if (!dentro.length){ $("r-media").textContent = "—"; $("r-zona").textContent = "—"; return; }
+    var suma = dentro.reduce(function(t,x){ return t + Number(x.intensidad||0); }, 0);
+    $("r-media").textContent = (suma/dentro.length).toFixed(1).replace(".", ",");
+    var cuenta = {};
+    dentro.forEach(function(x){ (x.zonas||[]).forEach(function(zz){ cuenta[zz] = (cuenta[zz]||0)+1; }); });
+    var top = Object.keys(cuenta).sort(function(p,q){ return cuenta[q]-cuenta[p]; })[0];
+    $("r-zona").textContent = top ? top.charAt(0).toUpperCase()+top.slice(1) : "—";
+  }
+
+  /* ---------- Modal ---------- */
+  function abrir(k){
+    diaAbierto = k;
+    var f = desdeClave(k);
+    $("modal-titulo").textContent = DIAS_LARGOS[(f.getDay()+6)%7]+", "+f.getDate()+" de "+MESES[f.getMonth()];
+    pintarLista();
+    limpiar();
+    velo.hidden = false;
+    document.body.style.overflow = "hidden";
+    setTimeout(function(){ $("hora").focus(); }, 30);
+  }
+  function cerrar(){
+    velo.hidden = true;
+    document.body.style.overflow = "";
+    diaAbierto = null;
+  }
+
+  function pintarLista(){
+    var lista = porDia(diaAbierto);
+    $("modal-sub").textContent = lista.length ? lista.length+(lista.length===1?" registro guardado":" registros guardados") : "Todavía no hay nada anotado";
+    var ul = $("lista");
+    ul.innerHTML = lista.map(function(r){
+      var partes = [];
+      if (r.zonas && r.zonas.length) partes.push(esc(r.zonas.join(", ")));
+      if (r.duracion) partes.push(esc(r.duracion));
+      if (r.actividad) partes.push(esc(r.actividad));
+      if (r.notas) partes.push(esc(r.notas));
+      return '<li class="ficha">'+
+        '<span class="marca" style="background:'+color(r.intensidad)+'">'+r.intensidad+"</span>"+
+        '<span class="ficha-txt"><b>'+esc(r.hora||"Sin hora")+"</b>"+
+          (partes.length ? "<p>"+partes.join(" · ")+"</p>" : "")+"</span>"+
+        '<span class="acciones">'+
+          '<button type="button" class="mini" data-editar="'+r.id+'">Editar</button>'+
+          '<button type="button" class="mini peligro" data-borrar="'+r.id+'">Borrar</button>'+
+        "</span></li>";
+    }).join("");
+  }
+
+  function limpiar(){
+    formulario.reset();
+    $("id-registro").value = "";
+    var ahora = new Date();
+    $("hora").value = String(ahora.getHours()).padStart(2,"0")+":"+String(ahora.getMinutes()).padStart(2,"0");
+    intensidad.value = 5;
+    zonasActivas = [];
+    refrescarZonas();
+    refrescarCifra();
+    $("btn-guardar").textContent = "Guardar registro";
+    $("cancelar").hidden = true;
+    $("aviso").hidden = true;
+  }
+
+  function refrescarCifra(){
+    var v = Number(intensidad.value);
+    cifra.textContent = v;
+    cifra.style.background = color(v);
+  }
+
+  function refrescarZonas(){
+    document.querySelectorAll(".cabeza path[data-zona]").forEach(function(p){
+      p.setAttribute("aria-pressed", zonasActivas.indexOf(p.dataset.zona) > -1 ? "true" : "false");
+    });
+    $("zonas-elegidas").textContent = zonasActivas.length
+      ? zonasActivas.map(function(z){ return z.charAt(0).toUpperCase()+z.slice(1); }).join(", ")
+      : "Toca las zonas";
+  }
+
+  /* ---------- Eventos ---------- */
+  intensidad.addEventListener("input", refrescarCifra);
+
+  document.querySelectorAll(".cabeza path[data-zona]").forEach(function(p){
+    function alterna(){
+      var z = p.dataset.zona, i = zonasActivas.indexOf(z);
+      if (i > -1) zonasActivas.splice(i,1); else zonasActivas.push(z);
+      refrescarZonas();
+    }
+    p.addEventListener("click", alterna);
+    p.addEventListener("keydown", function(e){
+      if (e.key === "Enter" || e.key === " "){ e.preventDefault(); alterna(); }
+    });
+  });
+
+  $("lista").addEventListener("click", function(e){
+    var ed = e.target.closest("[data-editar]"), bo = e.target.closest("[data-borrar]");
+    if (ed){
+      var r = registros.find(function(x){ return x.id === ed.dataset.editar; });
+      if (!r) return;
+      $("id-registro").value = r.id;
+      $("hora").value = r.hora || "";
+      $("duracion").value = r.duracion || "";
+      intensidad.value = r.intensidad;
+      zonasActivas = (r.zonas || []).slice();
+      $("actividad").value = r.actividad || "";
+      $("notas").value = r.notas || "";
+      refrescarCifra(); refrescarZonas();
+      $("btn-guardar").textContent = "Actualizar registro";
+      $("cancelar").hidden = false;
+      $("hora").focus();
+    }
+    if (bo){
+      registros = registros.filter(function(x){ return x.id !== bo.dataset.borrar; });
+      almacen.guardar(registros);
+      pintarLista(); pintar(); limpiar();
+      aviso("Registro borrado");
+    }
+  });
+
+  $("cancelar").addEventListener("click", limpiar);
+
+  formulario.addEventListener("submit", function(e){
+    e.preventDefault();
+
+    var ahora = new Date();
+    var id = $("id-registro").value;
+    var datos = {
+      id: id || (Date.now().toString(36) + Math.random().toString(36).slice(2,7)),
+      fecha: diaAbierto,
+      hora: $("hora").value || (String(ahora.getHours()).padStart(2,"0")+":"+String(ahora.getMinutes()).padStart(2,"0")),
+      duracion: $("duracion").value.trim(),
+      intensidad: Number(intensidad.value),
+      zonas: zonasActivas.slice(),
+      actividad: $("actividad").value.trim(),
+      notas: $("notas").value.trim()
+    };
+    if (id) registros = registros.map(function(x){ return x.id === id ? datos : x; });
+    else registros.push(datos);
+
+    var ok = almacen.guardar(registros);
+    limpiar();
+    pintar();
+    cerrar();
+    aviso(ok
+      ? (id ? "Registro actualizado" : "Registro guardado")
+      : "Guardado solo en esta sesión: el navegador no permite almacenar datos aquí.");
+  });
+
+  var relojToast = null;
+  function aviso(texto){
+    var t = $("toast");
+    t.textContent = texto;
+    t.hidden = false;
+    clearTimeout(relojToast);
+    relojToast = setTimeout(function(){ t.hidden = true; }, 2600);
+  }
+
+  $("cerrar").addEventListener("click", cerrar);
+  velo.addEventListener("mousedown", function(e){ if (e.target === velo) cerrar(); });
+  document.addEventListener("keydown", function(e){ if (e.key === "Escape" && !velo.hidden) cerrar(); });
+
+  $("anterior").addEventListener("click", function(){ mover(-1); });
+  $("siguiente").addEventListener("click", function(){ mover(1); });
+  function mover(paso){
+    if (vista === "mes") ancla = new Date(ancla.getFullYear(), ancla.getMonth()+paso, 1);
+    else if (vista === "semana") ancla = sumaDias(ancla, 7*paso);
+    else ancla = sumaDias(ancla, paso);
+    pintar();
+  }
+  $("btn-hoy").addEventListener("click", function(){ ancla = new Date(); ancla.setHours(0,0,0,0); pintar(); });
+
+  document.querySelectorAll(".vistas button").forEach(function(b){
+    b.addEventListener("click", function(){
+      vista = b.dataset.vista;
+      document.querySelectorAll(".vistas button").forEach(function(o){
+        o.setAttribute("aria-pressed", o === b ? "true" : "false");
+      });
+      pintar();
+    });
+  });
+
+  $("exportar").addEventListener("click", function(){
+    if (!registros.length){ $("estado-guardado").textContent = "Todavía no hay registros que exportar."; return; }
+    var filas = [["Fecha","Hora","Intensidad","Zonas","Duracion","Actividad","Notas"]];
+    registros.slice().sort(function(a,b){
+      return (a.fecha+a.hora).localeCompare(b.fecha+b.hora);
+    }).forEach(function(r){
+      filas.push([r.fecha, r.hora, r.intensidad, (r.zonas||[]).join(" / "), r.duracion, r.actividad, r.notas]);
+    });
+    var csv = filas.map(function(f){
+      return f.map(function(c){ return '"'+String(c==null?"":c).replace(/"/g,'""')+'"'; }).join(",");
+    }).join("\n");
+    var url = URL.createObjectURL(new Blob(["\ufeff"+csv], {type:"text/csv;charset=utf-8"}));
+    var a = document.createElement("a");
+    a.href = url; a.download = "dolores-de-cabeza.csv";
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(function(){ URL.revokeObjectURL(url); }, 1000);
+  });
+
+  /* ---------- Arranque ---------- */
+  registros = almacen.cargar();
+  pintar();
+  if (!hayLocalStorage){
+    $("banner").hidden = false;
+    $("estado-guardado").textContent = "Sin almacenamiento: descarga el archivo y ábrelo en tu navegador.";
+  } else {
+    $("estado-guardado").textContent = registros.length
+      ? registros.length + " registros guardados en este navegador."
+      : "Los registros se guardan en este navegador (localStorage).";
+  }
+})();
+</script>
+</body>
+</html>
