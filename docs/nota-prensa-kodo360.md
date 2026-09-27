@@ -7,28 +7,35 @@
 **NOTA DE PRENSA**
 Firgas (Gran Canaria), [CONFIRMAR fecha de envío] de 2026
 
-## Una tecnológica de Firgas desarrolla software e inteligencia artificial para empresas de Canarias y Europa
+## Una tecnológica de Firgas acerca la inteligencia artificial y la automatización a las pymes del norte de Gran Canaria
 
-**Kodo 360, con sede en Firgas desde 2021, estrena web y reivindica que desde un municipio de menos de 8.000 habitantes del norte de Gran Canaria se puede hacer ingeniería de software a la altura de cualquier gran ciudad.**
+**Kodo 360 ayuda a pequeñas y medianas empresas a usar la IA en su día a día, con un enfoque práctico: automatizar tareas repetitivas, aprovechar mejor sus propios datos y prepararse para el Bono de Inteligencia Artificial de 600 millones de euros que prepara el Gobierno.**
 
-Kodo 360 es una empresa de ingeniería de software fundada en 2021 en Firgas. Su equipo técnico, de seis personas, diseña, desarrolla y mantiene aplicaciones web y móviles a medida, sistemas en la nube y soluciones de inteligencia artificial para empresas: desde asistentes que responden con la documentación de la propia compañía hasta la automatización de tareas administrativas.
+Solo el 21,1 % de las empresas españolas de diez o más empleados usa inteligencia artificial, según los datos que recoge el Plan IA360, presentado por el Gobierno de España el pasado 21 de septiembre. El objetivo del plan es llegar al 55 % en 2030. Desde Firgas, la empresa de ingeniería de software Kodo 360 quiere que los negocios canarios, y en especial los del norte de Gran Canaria, no se queden atrás en ese cambio.
 
-La empresa acaba de presentar su nueva web, kodo-360.com, disponible en español, inglés, alemán y noruego. Los cuatro idiomas responden a su intención de trabajar con empresas de fuera de las islas sin dejar de hacerlo desde Gran Canaria.
+«La inteligencia artificial no es solo para las grandes empresas ni consiste en usar ChatGPT de vez en cuando», explica Christian Perera, administrador de Kodo 360. «Lo que de verdad cambia un negocio es automatizar el trabajo que hoy se hace a mano: contestar las mismas preguntas de los clientes, pasar facturas y albaranes de un sitio a otro, preparar presupuestos o encontrar un documento. Eso ya es posible para una pyme, y cuesta menos de lo que la gente cree».
 
-«Queremos demostrar que no hace falta irse de Firgas, ni de Canarias, para hacer tecnología de primer nivel», explica Christian Perera, administrador de Kodo 360. «Trabajamos para empresas de cualquier sitio, pero nos importa especialmente que los negocios del norte de la isla tengan cerca a alguien que les ayude a digitalizarse de verdad».
+Entre las aplicaciones que la empresa desarrolla están:
+- asistentes que responden a clientes y empleados con la información de la propia empresa;
+- la lectura automática de facturas, contratos y otros documentos;
+- la conexión entre los programas que ya usa el negocio, como la facturación, la gestión de clientes o el correo, para que los datos no tengan que copiarse a mano.
 
-Kodo 360 es agente digitalizador del programa Kit Digital, con el que ayuda a pymes y autónomos a acceder a las ayudas públicas para su digitalización. La empresa sigue también de cerca el nuevo Plan IA360 del Gobierno de España. El plan incluye un Bono de Inteligencia Artificial de 600 millones de euros para pymes, con un piloto previsto para el primer semestre de 2027. Kodo 360 ha abierto una lista de espera para avisar a las empresas interesadas en cuanto se publiquen las bases.
+Todo se hace a medida y con la privacidad de los datos como condición de partida.
 
-[OPCIONAL, solo si lo vais a hacer: «Además, la empresa ofrece a los negocios de Firgas una primera revisión gratuita de su situación digital y de las ayudas a las que pueden optar».]
+La compañía sigue también de cerca el Bono de Inteligencia Artificial del Plan IA360. Está dotado con 600 millones de euros y pretende ayudar a 25.000 empresas a incorporar la IA. El piloto está previsto para el primer semestre de 2027 y la convocatoria general, antes de que acabe ese año. Según el plan, el bono financiará proyectos con un caso de uso concreto y un diagnóstico previo, y no la simple compra de licencias. Kodo 360 ha abierto una lista de espera para avisar a las empresas interesadas en cuanto se publiquen las bases y para ayudarlas a preparar su caso con antelación.
+
+[OPCIONAL, solo si lo vais a hacer: «Además, la empresa ofrece a los negocios de Firgas y del norte de la isla una primera revisión gratuita para detectar qué tareas podrían automatizar y a qué ayudas pueden optar».]
 
 ### Sobre Kodo 360
 
-KODO 360, S.L. es una empresa de ingeniería de software con sede en Firgas (Gran Canaria), fundada en 2021. Sus servicios abarcan diseño UX/UI, arquitectura de software, desarrollo web y de aplicaciones a medida, cloud, DevOps e inteligencia artificial aplicada. Es agente digitalizador del programa Kit Digital.
+KODO 360, S.L. es una empresa de ingeniería de software con sede en Firgas (Gran Canaria), fundada en 2021. Su equipo técnico, de seis personas, desarrolla software a medida, sistemas en la nube y soluciones de inteligencia artificial y automatización para empresas. Es agente digitalizador del programa Kit Digital. Más información: https://kodo-360.com/es/ia360
 
 **Contacto de prensa**
 Christian Perera · Administrador
 c.perera@kodo-360.com · +34 658 600 718
 https://kodo-360.com
+
+**Fuente del dato:** Plan IA360, Gobierno de España (La Moncloa, 21/09/2026).
 
 ---
 
@@ -36,11 +43,11 @@ https://kodo-360.com
 
 **Para:** redaccion@canarias7.es
 **CC / otros envíos:** redacciones de La Provincia y Canarias Ahora, radios del norte y el gabinete de prensa del Ayuntamiento de Firgas [CONFIRMAR direcciones]
-**Asunto:** Nota de prensa · Una tecnológica de Firgas desarrolla software e IA para empresas de Canarias y Europa
+**Asunto:** Nota de prensa · Una tecnológica de Firgas acerca la IA y la automatización a las pymes del norte de Gran Canaria
 
 > Buenos días:
 >
-> Os adjunto una nota de prensa sobre Kodo 360, una empresa de ingeniería de software con sede en Firgas que acaba de estrenar web y trabaja en desarrollo a medida e inteligencia artificial para empresas.
+> Os adjunto una nota de prensa sobre Kodo 360, una empresa de ingeniería de software con sede en Firgas. Ayuda a las pymes a automatizar tareas con inteligencia artificial y a prepararse para el nuevo Bono de IA de 600 millones del Plan IA360.
 >
 > Adjunto también una foto en alta resolución. Quedo a vuestra disposición para ampliar la información o para una entrevista.
 >
