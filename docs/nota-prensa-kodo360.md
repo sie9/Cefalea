@@ -5,7 +5,7 @@
 ---
 
 **NOTA DE PRENSA**
-Firgas (Gran Canaria), [CONFIRMAR fecha de envío] de 2026
+Firgas (Gran Canaria), 30 de septiembre de 2026
 
 ## Una tecnológica canaria quiere que las pymes de las islas no se queden atrás en inteligencia artificial
 
@@ -24,7 +24,7 @@ Todo se hace a medida y con la privacidad de los datos como condición de partid
 
 La compañía sigue también de cerca el Bono de Inteligencia Artificial del Plan IA360. Está dotado con 600 millones de euros y pretende ayudar a 25.000 empresas de toda España a incorporar la IA. El piloto está previsto para el primer semestre de 2027 y la convocatoria general, antes de que acabe ese año. Según el plan, el bono financiará proyectos con un caso de uso concreto y un diagnóstico previo, y no la simple compra de licencias. Kodo 360 ha abierto una lista de espera para avisar a las empresas canarias interesadas en cuanto se publiquen las bases y para ayudarlas a preparar su caso con antelación.
 
-[OPCIONAL, solo si lo vais a hacer: «Además, la empresa ofrece a las pymes canarias una primera revisión gratuita para detectar qué tareas podrían automatizar y a qué ayudas pueden optar».]
+Además, la empresa ofrece a las pymes canarias una primera revisión gratuita para detectar qué tareas podrían automatizar y a qué ayudas pueden optar.
 
 ### Sobre Kodo 360
 
