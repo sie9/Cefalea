@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light only">
+<title>{{asunto}}</title>
+</head>
+<!--
+  Correo de primer contacto · Kodo 360
+  Variables: {{nombre}} {{negocio}} {{gancho}} {{idea}} {{asunto}} {{email}}
+  Maquetación de correo: tablas, estilos en línea, 600 px, sin SVG ni CSS externo.
+  Se ve como un correo personal (mejor entrega y más respuestas); la marca va en la firma.
+-->
+<body style="margin:0;padding:0;background:#ffffff;">
+<div style="display:none;max-height:0;overflow:hidden;opacity:0;">{{idea}}</div>
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#ffffff;">
+  <tr><td align="left" style="padding:24px 16px;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:600px;">
+
+      <tr><td style="font-family:'Roboto','Helvetica Neue',Arial,sans-serif;font-size:16px;line-height:1.6;color:#333333;">
+        <p style="margin:0 0 16px;">Hola, {{nombre}}:</p>
+        <p style="margin:0 0 16px;">{{gancho}}</p>
+        <p style="margin:0 0 16px;">Soy Christian Perera, de <strong>Kodo 360</strong>, una empresa de software de Firgas (Gran Canaria). Ayudamos a pymes canarias a quitarse trabajo repetitivo con inteligencia artificial y automatizaciones.</p>
+        <p style="margin:0 0 8px;">Pensando en {{negocio}}, se me ocurre por ejemplo:</p>
+      </td></tr>
+
+      <tr><td style="padding:0 0 20px;">
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+          <tr><td style="border-left:4px solid #ace732;background:#f5f5f5;padding:14px 18px;font-family:'Roboto','Helvetica Neue',Arial,sans-serif;font-size:15px;line-height:1.6;color:#141414;">{{idea}}</td></tr>
+        </table>
+      </td></tr>
+
+      <tr><td style="font-family:'Roboto','Helvetica Neue',Arial,sans-serif;font-size:16px;line-height:1.6;color:#333333;">
+        <p style="margin:0 0 16px;">Te ofrezco una <strong>revisión gratuita de 20 minutos</strong>, por videollamada o en persona si estás en Gran Canaria: vemos qué tareas podrías automatizar y si puedes optar a ayudas como el Kit Digital o el nuevo Bono IA.</p>
+        <p style="margin:0 0 24px;">¿Te encaja esta semana o la próxima? Basta con responder a este correo.</p>
+      </td></tr>
+
+      <tr><td style="padding:0 0 8px;">
+        <table role="presentation" cellpadding="0" cellspacing="0" border="0">
+          <tr><td style="border-radius:999px;background:#ace732;">
+            <a href="https://kodo-360.com/es/contacto" style="display:inline-block;padding:12px 24px;font-family:'Roboto','Helvetica Neue',Arial,sans-serif;font-size:15px;font-weight:bold;color:#141414;text-decoration:none;border-radius:999px;">Reservar la revisión gratuita</a>
+          </td></tr>
+        </table>
+      </td></tr>
+
+      <!-- Firma -->
+      <tr><td style="padding:28px 0 0;">
+        <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="border-top:1px solid #e6e6e6;">
+          <tr>
+            <td style="padding:20px 20px 0 0;vertical-align:top;">
+              <a href="https://kodo-360.com" style="text-decoration:none;"><img src="https://kodo-web-prod.web.app/email/logo-kodo-360.png" width="120" alt="Kodo 360" style="display:block;border:0;width:120px;height:auto;background:#141414;padding:10px 12px;border-radius:10px;"></a>
+            </td>
+            <td style="padding:20px 0 0;vertical-align:top;font-family:'Roboto','Helvetica Neue',Arial,sans-serif;font-size:14px;line-height:1.5;color:#141414;">
+              <strong style="font-family:'Raleway','Helvetica Neue',Arial,sans-serif;font-size:15px;">Christian Perera</strong><br>
+              <span style="color:#6b6b6b;">Administrador · Kodo 360</span><br>
+              <a href="tel:+34658600718" style="color:#04424e;text-decoration:none;">+34 658 600 718</a> ·
+              <a href="https://kodo-360.com" style="color:#04424e;text-decoration:none;">kodo-360.com</a>
+            </td>
+          </tr>
+        </table>
+      </td></tr>
+
+      <!-- Pie legal (LSSI art. 20-21 y RGPD) -->
+      <tr><td style="padding:28px 0 0;font-family:'Roboto','Helvetica Neue',Arial,sans-serif;font-size:11px;line-height:1.6;color:#8a8a8a;">
+        Publicidad. Te escribo porque tu negocio muestra públicamente su contacto en Instagram. Si no quieres recibir más correos nuestros, responde «BAJA» o escribe a <a href="mailto:c.perera@kodo-360.com?subject=BAJA%20{{email}}" style="color:#8a8a8a;">c.perera@kodo-360.com</a> y no volveremos a escribirte.
+        Responsable: KODO 360, S.L. · Firgas, Las Palmas. Más información en <a href="https://kodo-360.com/es/legal/privacidad" style="color:#8a8a8a;">kodo-360.com/es/legal/privacidad</a>.
+      </td></tr>
+
+    </table>
+  </td></tr>
+</table>
+</body>
+</html>
