@@ -1,0 +1,461 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NFC Wallet · Storyboard v1</title>
+<style>
+@font-face { font-family: "Archivo Black"; src: url("assets/fonts/archivo-black-400.woff2") format("woff2"); font-weight: 400; }
+@font-face { font-family: "Montserrat"; src: url("assets/fonts/montserrat-var.woff2") format("woff2"); font-weight: 100 900; }
+:root {
+  --bg: #FBF5EC; --fg: #141A33; --accent: #1F5EFF; --muted: #5B6178;
+  --warm: #F4A12B; --wood: #B9773E; --card: #1F2937; --ok: #1B7F3B;
+  --sheet: #EFE7DA;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--sheet); color: var(--fg); font-family: Montserrat, system-ui, sans-serif; padding: 40px clamp(16px, 4vw, 56px) 80px; }
+header { display: flex; flex-wrap: wrap; align-items: end; gap: 12px 32px; margin-bottom: 28px; }
+header h1 { font-family: "Archivo Black", sans-serif; font-weight: 400; font-size: clamp(28px, 4vw, 48px); margin: 0; letter-spacing: -0.01em; }
+header h1 span { color: var(--accent); }
+header p { margin: 0; color: var(--muted); font-size: 16px; max-width: 620px; }
+.tag { background: var(--fg); color: var(--bg); border-radius: 999px; padding: 6px 14px; font-size: 13px; font-weight: 700; }
+.act { grid-column: 1 / -1; display: flex; align-items: center; gap: 14px; font-weight: 800; font-size: 13px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); margin-top: 16px; }
+.act::after { content: ""; flex: 1; height: 2px; background: #D6CBB8; }
+.grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 28px 22px; }
+@media (max-width: 1100px) { .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 680px) { .grid { grid-template-columns: 1fr; } }
+.cell { display: flex; flex-direction: column; gap: 8px; }
+.frame { position: relative; aspect-ratio: 16 / 9; container-type: inline-size; background: var(--bg); border-radius: 10px; overflow: hidden; box-shadow: 0 10px 30px rgba(20,26,51,.12); }
+.label { display: flex; justify-content: space-between; font-size: 13px; font-weight: 800; letter-spacing: .04em; }
+.label span:last-child { color: var(--muted); font-weight: 600; }
+.note { margin: 0; font-size: 14px; line-height: 1.45; color: #2A3150; }
+.note b { color: var(--fg); }
+.chip { align-self: flex-start; font-size: 12px; font-weight: 700; border: 2px solid var(--fg); border-radius: 999px; padding: 2px 10px; }
+.chip.accent { border-color: var(--accent); color: var(--accent); }
+
+/* ---------- in-frame primitives (sizes in cqw) ---------- */
+.f { position: absolute; inset: 0; }
+.ghost { position: absolute; font-family: "Archivo Black"; color: var(--fg); opacity: .06; white-space: nowrap; line-height: .8; }
+.glow { position: absolute; border-radius: 50%; background: radial-gradient(circle, rgba(31,94,255,.22), rgba(31,94,255,0) 70%); }
+.h { font-family: "Archivo Black"; font-weight: 400; line-height: .92; letter-spacing: -.01em; margin: 0; }
+.t { font-weight: 700; }
+.blue { color: var(--accent); }
+.vo { position: absolute; left: 3cqw; bottom: 2.6cqw; right: 3cqw; font-size: 1.55cqw; font-weight: 600; color: var(--muted); font-style: italic; }
+.rule { position: absolute; height: .35cqw; background: var(--accent); }
+.meta { position: absolute; font-size: 1.2cqw; font-weight: 800; letter-spacing: .18em; text-transform: uppercase; color: var(--muted); }
+
+.phone { position: absolute; width: 17cqw; aspect-ratio: 9 / 19; background: #0E1222; border-radius: 3.2cqw; padding: .8cqw; box-shadow: 0 2cqw 4cqw rgba(20,26,51,.28); }
+.screen { position: relative; width: 100%; height: 100%; border-radius: 2.5cqw; overflow: hidden; background: #fff; }
+.pass { position: absolute; border-radius: 1.6cqw; background: var(--card); color: #fff; padding: 1.4cqw; box-shadow: 0 1.4cqw 3cqw rgba(20,26,51,.3); }
+.pass .name { font-family: "Archivo Black"; font-size: 1.5cqw; }
+.pass .lbl { font-size: .9cqw; opacity: .7; text-transform: uppercase; letter-spacing: .12em; margin-top: 1cqw; }
+.pass .val { font-size: 2.1cqw; font-weight: 800; }
+.stamps { display: flex; gap: .6cqw; margin-top: .6cqw; }
+.stamps i { width: 2.2cqw; height: 2.2cqw; border-radius: 50%; border: .25cqw solid rgba(255,255,255,.5); display: block; }
+.stamps i.on { background: var(--warm); border-color: var(--warm); }
+.qr { width: 5cqw; height: 5cqw; margin-top: 1cqw; background:
+  conic-gradient(from 90deg at 50% 50%, #fff 25%, #0E1222 0 50%, #fff 0 75%, #0E1222 0) 0 0 / 1.25cqw 1.25cqw; border: .5cqw solid #fff; border-radius: .4cqw; }
+.btn { display: inline-block; border-radius: 999px; padding: .9cqw 1.8cqw; font-weight: 800; font-size: 1.3cqw; background: #000; color: #fff; }
+.btn.blue-b { background: var(--accent); }
+.panel { position: absolute; background: #fff; border-radius: 1.6cqw; box-shadow: 0 2cqw 4cqw rgba(20,26,51,.18); overflow: hidden; border: .25cqw solid #E3E6EB; }
+.panel .bar { height: 3cqw; background: #F6F7F9; border-bottom: .2cqw solid #E3E6EB; display: flex; align-items: center; gap: .6cqw; padding: 0 1.2cqw; font-size: 1.1cqw; font-weight: 800; }
+.panel .bar i { width: .9cqw; height: .9cqw; border-radius: 50%; background: #D6D9E0; display: block; }
+.field { border: .2cqw solid #E3E6EB; border-radius: .8cqw; padding: .8cqw 1cqw; font-size: 1.3cqw; font-weight: 600; background: #fff; }
+.cursor { position: absolute; width: 2.4cqw; height: 2.4cqw; }
+.num { position: absolute; width: 3.6cqw; height: 3.6cqw; border-radius: 50%; background: var(--accent); color: #fff; font-family: "Archivo Black"; font-size: 2cqw; display: grid; place-items: center; box-shadow: 0 0 0 .6cqw rgba(31,94,255,.18); }
+.notif { position: absolute; background: rgba(255,255,255,.92); border-radius: 1.6cqw; padding: 1.2cqw 1.4cqw; box-shadow: 0 1cqw 2.4cqw rgba(0,0,0,.25); display: flex; gap: 1cqw; align-items: center; }
+.notif .ic { width: 3.2cqw; height: 3.2cqw; border-radius: .8cqw; background: var(--card); flex: none; }
+.tile { position: absolute; background: #fff; border: .3cqw solid var(--fg); border-radius: 1.4cqw; padding: 1.4cqw; font-weight: 800; font-size: 1.7cqw; line-height: 1.15; }
+.tile em { display: block; font-style: normal; font-family: "Archivo Black"; color: var(--accent); font-size: 2.4cqw; margin-bottom: .4cqw; }
+.wave { position: absolute; border: .45cqw solid var(--accent); border-radius: 50%; border-left-color: transparent; border-bottom-color: transparent; transform: rotate(45deg); }
+
+/* closing cells */
+.seams { display: flex; flex-wrap: wrap; gap: 6px; align-content: flex-start; padding: 3cqw; }
+.seams span { font-size: 1.6cqw; font-weight: 700; padding: .4cqw 1cqw; border-radius: 999px; background: #fff; border: .2cqw solid #D6CBB8; }
+.seams span.w { border-color: var(--accent); color: var(--accent); }
+.tokens { padding: 2.6cqw 3cqw; display: grid; grid-template-columns: 1fr 1fr; gap: 1.6cqw 3cqw; font-size: 1.5cqw; }
+.sw { display: flex; align-items: center; gap: 1cqw; font-weight: 700; }
+.sw i { width: 3cqw; height: 3cqw; border-radius: .6cqw; display: block; border: .2cqw solid rgba(0,0,0,.12); }
+footer { margin-top: 40px; color: var(--muted); font-size: 14px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>NFC Wallet · <span>Storyboard v1</span></h1>
+  <p>«Tus clientes vuelven solos: un toque en la mesa, tu tarjeta en su Wallet y promociones en dos clics.» Bocetos fijos: composición, jerarquía y textos. El movimiento llega en la construcción.</p>
+  <span class="tag">1920×1080 · 135 s · 15 escenas · voz Álex + música 140 bpm</span>
+</header>
+
+<main class="grid">
+<div class="act">Acto 1 · La primera visita (0–42 s)</div>
+
+<!-- 01 -->
+<section class="cell" id="frame-01">
+  <div class="frame">
+    <div class="glow" style="width:60cqw;height:60cqw;right:-14cqw;top:-18cqw"></div>
+    <div class="ghost" style="font-size:28cqw;left:-2cqw;bottom:-4cqw">SOLOS</div>
+    <div class="meta" style="left:6cqw;top:5cqw">NFC Wallet · para hostelería</div>
+    <p class="h" style="position:absolute;left:6cqw;top:15cqw;font-size:6cqw">¿Y si tus clientes</p>
+    <p class="h" style="position:absolute;left:6cqw;top:22.5cqw;font-size:6cqw">volvieran</p>
+    <p class="h blue" style="position:absolute;left:6cqw;top:30cqw;font-size:15cqw">SOLOS?</p>
+    <div class="rule" style="left:6cqw;top:12cqw;width:10cqw"></div>
+  </div>
+  <div class="label"><span>01 · GANCHO</span><span>0–6 s</span></div>
+  <p class="note"><b>Se mueve primero:</b> «¿Y si tus clientes» entra de golpe en el primer beat; «volvieran» y «SOLOS?» golpean en los dos siguientes, la última con escala desde 140 %.</p>
+  <span class="chip">corte → push izquierda</span>
+</section>
+
+<!-- 02 -->
+<section class="cell" id="frame-02">
+  <div class="frame">
+    <svg class="f" viewBox="0 0 160 90" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+      <rect width="160" height="90" fill="#FBF5EC"/>
+      <rect x="8" y="14" width="78" height="66" rx="2" fill="#F1E3CC"/>
+      <rect x="8" y="10" width="78" height="9" rx="2" fill="#141A33"/>
+      <text x="47" y="16.6" font-family="Archivo Black" font-size="5" fill="#F4A12B" text-anchor="middle">RESTAURANTE PEPITO</text>
+      <rect x="18" y="28" width="22" height="52" rx="1.5" fill="#B9773E"/>
+      <rect x="20" y="30" width="18" height="24" rx="1" fill="#F4A12B" opacity=".55"/>
+      <rect x="50" y="28" width="28" height="22" rx="1.5" fill="#FFE2B0"/>
+      <rect x="50" y="28" width="28" height="4" fill="#E9852F"/>
+      <circle cx="56" cy="40" r="2" fill="#F4A12B"/><circle cx="64" cy="38" r="2" fill="#F4A12B"/><circle cx="72" cy="40" r="2" fill="#F4A12B"/>
+      <!-- Lucía -->
+      <circle cx="104" cy="38" r="5.2" fill="#E8B48F"/>
+      <path d="M98.6 37 q0-7 5.6-7 q6 0 5.6 6.4 q-2-3.4-5.6-3.4 q-3.6 0-5.6 4z" fill="#2B2A3A"/>
+      <rect x="98" y="44" width="12.5" height="20" rx="5" fill="#F4A12B"/>
+      <rect x="99.5" y="63" width="3.6" height="15" rx="1.6" fill="#141A33"/><rect x="105.6" y="63" width="3.6" height="15" rx="1.6" fill="#141A33"/>
+      <!-- mesa -->
+      <rect x="118" y="58" width="34" height="3" rx="1" fill="#B9773E"/><rect x="133.5" y="61" width="3" height="18" fill="#8E5A2C"/>
+      <rect x="130" y="54.6" width="9" height="3.4" rx=".8" fill="#0E1222"/>
+      <path d="M100 80 h60" stroke="#E3D3BA" stroke-width="1.2"/>
+    </svg>
+    <div class="vo">«Lucía entra en el Restaurante Pepito. Se sienta… y deja el móvil sobre la mesa.»</div>
+  </div>
+  <div class="label"><span>02 · LUCÍA ENTRA</span><span>6–14 s</span></div>
+  <p class="note"><b>Se mueve primero:</b> la cámara recorre de la puerta a la mesa (pan lateral); Lucía cruza, se sienta y el móvil cae sobre la mesa en «deja el móvil».</p>
+  <span class="chip">corte seco al primer plano</span>
+</section>
+
+<!-- 03 -->
+<section class="cell" id="frame-03">
+  <div class="frame">
+    <svg class="f" viewBox="0 0 160 90" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+      <rect width="160" height="90" fill="#C98B4E"/>
+      <path d="M0 22 H160 M0 46 H160 M0 70 H160" stroke="#B9773E" stroke-width="1.4"/>
+      <rect x="20" y="30" width="34" height="34" rx="5" fill="#FBF5EC"/>
+      <text x="37" y="44" font-family="Archivo Black" font-size="5.2" fill="#141A33" text-anchor="middle">TOCA</text>
+      <text x="37" y="51" font-family="Archivo Black" font-size="5.2" fill="#141A33" text-anchor="middle">AQUÍ</text>
+      <text x="37" y="58" font-family="Montserrat" font-weight="800" font-size="2.8" fill="#1F5EFF" text-anchor="middle">NFC · MESA 4</text>
+    </svg>
+    <div class="wave" style="left:23cqw;top:18cqw;width:12cqw;height:12cqw"></div>
+    <div class="wave" style="left:21cqw;top:16cqw;width:16cqw;height:16cqw;opacity:.5"></div>
+    <div class="phone" style="left:44cqw;top:4cqw;transform:rotate(-8deg)">
+      <div class="screen" style="background:var(--card);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1cqw;text-align:center;padding:1.4cqw">
+        <div style="width:5cqw;height:5cqw;border-radius:50%;background:var(--warm)"></div>
+        <div class="h" style="font-size:1.8cqw">Restaurante Pepito</div>
+        <div style="font-size:1cqw;opacity:.8">Guarda nuestra tarjeta en tu móvil</div>
+      </div>
+    </div>
+    <p class="h" style="position:absolute;right:5cqw;top:12cqw;font-size:5.4cqw;text-align:right">Un<br>toque.</p>
+    <div class="vo">«En cada mesa hay una pequeña tag NFC. Basta un toque… y aparece la tarjeta de Pepito.»</div>
+  </div>
+  <div class="label"><span>03 · EL TOQUE NFC</span><span>14–24 s</span></div>
+  <p class="note"><b>Se mueve primero:</b> el móvil baja sobre la tag; en «un toque» salen las ondas y la pantalla se enciende con la página de Pepito (copia fiel de la landing de la tag).</p>
+  <span class="chip">corte → pantalla a pantalla completa</span>
+</section>
+
+<!-- 04 -->
+<section class="cell" id="frame-04">
+  <div class="frame">
+    <div class="glow" style="width:46cqw;height:46cqw;left:22cqw;top:-6cqw"></div>
+    <div class="phone" style="left:12cqw;top:4.5cqw">
+      <div class="screen" style="background:var(--card);color:#fff;padding:1.6cqw;display:flex;flex-direction:column;gap:.9cqw;align-items:stretch;text-align:center">
+        <div style="width:4cqw;height:4cqw;border-radius:50%;background:var(--warm);margin:1cqw auto 0"></div>
+        <div class="h" style="font-size:1.5cqw">Restaurante Pepito</div>
+        <div style="font-size:.85cqw;opacity:.8">Email (opcional)</div>
+        <div style="height:2.4cqw;border-radius:.6cqw;background:#fff;opacity:.9"></div>
+        <span class="btn" style="font-size:1cqw;padding:.8cqw;margin-top:.6cqw;outline:.3cqw solid var(--accent);outline-offset:.3cqw"> Añadir a Apple Wallet</span>
+      </div>
+    </div>
+    <svg class="cursor" style="left:24cqw;top:32cqw" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="rgba(31,94,255,.35)"/><circle cx="12" cy="12" r="5" fill="#1F5EFF"/></svg>
+    <div class="pass" style="left:42cqw;top:12cqw;width:30cqw">
+      <div class="name">Restaurante Pepito</div>
+      <div class="lbl">Sellos</div><div class="val">0 / 5</div>
+      <div class="lbl">Premio</div><div style="font-weight:700;font-size:1.4cqw">Café gratis</div>
+    </div>
+    <p class="h" style="position:absolute;left:42cqw;top:40cqw;font-size:3.6cqw">Sin apps. <span class="blue">Sin registros.</span></p>
+  </div>
+  <div class="label"><span>04 · AÑADIR A WALLET</span><span>24–33 s</span></div>
+  <p class="note"><b>Se mueve primero:</b> el toque en «Añadir a Wallet» (anillo azul); la tarjeta sale del móvil y se coloca a la derecha; «Sin apps. Sin registros.» entra palabra a palabra.</p>
+  <span class="chip">push izquierda</span>
+</section>
+
+<!-- 05 -->
+<section class="cell" id="frame-05">
+  <div class="frame">
+    <div class="pass" style="left:5cqw;top:9cqw;width:30cqw">
+      <div class="name">Restaurante Pepito</div>
+      <div class="lbl">Sellos</div>
+      <div class="stamps"><i class="on"></i><i></i><i></i><i></i><i></i></div>
+      <div class="val" style="margin-top:.8cqw">1 / 5</div>
+    </div>
+    <p class="h blue" style="position:absolute;left:5cqw;top:36cqw;font-size:5cqw">Primer sello.</p>
+    <svg style="position:absolute;right:5cqw;top:7cqw;width:52cqw;height:38cqw" viewBox="0 0 104 76" aria-hidden="true">
+      <rect x="0" y="0" width="32" height="34" rx="3" fill="#FFE2B0"/><circle cx="16" cy="18" r="10" fill="#fff"/><circle cx="16" cy="18" r="6" fill="#E9852F"/>
+      <rect x="36" y="0" width="32" height="34" rx="3" fill="#F1E3CC"/><path d="M45 8 h6 l-1 18 h-4z M56 8 h6 l-1 18 h-4z" fill="#F4A12B"/>
+      <rect x="72" y="0" width="32" height="34" rx="3" fill="#E7ECFF"/><rect x="80" y="7" width="16" height="20" rx="1.5" fill="#fff"/><path d="M83 12h10M83 16h10M83 20h6" stroke="#5B6178" stroke-width="1.2"/>
+      <rect x="0" y="40" width="104" height="36" rx="3" fill="#F1E3CC"/>
+      <rect x="62" y="44" width="16" height="32" rx="1" fill="#B9773E"/>
+      <circle cx="44" cy="52" r="4" fill="#E8B48F"/><rect x="40" y="57" width="8" height="14" rx="3.4" fill="#F4A12B"/>
+      <path d="M50 58 l6 -4" stroke="#E8B48F" stroke-width="2" stroke-linecap="round"/>
+    </svg>
+    <div class="vo">«Primer sello. Lucía come, paga… y se va.»</div>
+  </div>
+  <div class="label"><span>05 · COME Y SE VA</span><span>33–42 s</span></div>
+  <p class="note"><b>Se mueve primero:</b> el sello salta en la tarjeta (pop); luego tres viñetas cortan al compás —plato, cañas, cuenta— y la última: Lucía se despide en la puerta.</p>
+  <span class="chip">corte</span>
+</section>
+
+<div class="act">Acto 2 · La promoción (42–80 s)</div>
+
+<!-- 06 -->
+<section class="cell" id="frame-06">
+  <div class="frame">
+    <div class="ghost" style="font-size:22cqw;right:-3cqw;top:2cqw">DÍAS</div>
+    <div style="position:absolute;left:8cqw;top:9cqw;width:24cqw;height:28cqw;background:#fff;border-radius:1.6cqw;box-shadow:0 1.4cqw 3cqw rgba(20,26,51,.18);overflow:hidden;text-align:center">
+      <div style="background:var(--accent);color:#fff;font-weight:800;font-size:1.8cqw;padding:1cqw">OCTUBRE</div>
+      <div class="h" style="font-size:13cqw;margin-top:2cqw">24</div>
+    </div>
+    <p class="h" style="position:absolute;left:38cqw;top:16cqw;font-size:7.5cqw">3 semanas<br><span class="blue">después</span></p>
+  </div>
+  <div class="label"><span>06 · PASA EL TIEMPO</span><span>42–48 s</span></div>
+  <p class="note"><b>Se mueve primero:</b> las hojas del calendario vuelan una por beat (3→24) acelerando; «3 semanas después» cae en el último golpe.</p>
+  <span class="chip">push izquierda</span>
+</section>
+
+<!-- 07 -->
+<section class="cell" id="frame-07">
+  <div class="frame">
+    <div class="panel" style="left:4cqw;top:5cqw;width:60cqw;height:42cqw">
+      <div class="bar"><i></i><i></i><i></i><span style="margin-left:1cqw">NFC Wallet · Restaurante Pepito · Mensajes</span></div>
+      <div style="padding:2cqw;display:flex;flex-direction:column;gap:1.4cqw">
+        <div style="font-size:1.1cqw;font-weight:800;color:var(--muted);letter-spacing:.1em">NUEVO MENSAJE</div>
+        <div class="field">2x1 en cañas este viernes 🍻</div>
+        <div style="display:flex;gap:1cqw;align-items:center">
+          <span class="field" style="border-color:var(--accent);color:var(--accent)">● Todos los clientes</span>
+          <span class="field">Con premio pendiente</span>
+        </div>
+        <div><span class="btn blue-b">Enviar</span></div>
+      </div>
+    </div>
+    <div class="num" style="left:19.5cqw;top:21.5cqw">1</div>
+    <div class="num" style="left:14.5cqw;top:27cqw">2</div>
+    <svg style="position:absolute;right:4cqw;bottom:6cqw;width:28cqw;height:34cqw" viewBox="0 0 56 68" aria-hidden="true">
+      <circle cx="28" cy="16" r="10" fill="#C98B62"/><path d="M19 20 q9 12 18 0 v3 q-9 10 -18 0z" fill="#3B2A20"/>
+      <rect x="15" y="27" width="26" height="34" rx="9" fill="#1F5EFF"/><rect x="21" y="34" width="14" height="27" rx="3" fill="#FBF5EC" opacity=".25"/>
+    </svg>
+    <div style="position:absolute;right:5cqw;top:6cqw;background:#E8F6EC;color:var(--ok);font-weight:800;font-size:1.6cqw;border-radius:999px;padding:.6cqw 1.4cqw">✓ Enviado a 318 tarjetas</div>
+  </div>
+  <div class="label"><span>07 · PACO: PROMO EN DOS CLICS</span><span>48–62 s</span></div>
+  <p class="note"><b>Se mueve primero:</b> el panel entra desde la derecha; el texto de la promo se teclea; el cursor hace clic ①, clic ② (cada clic suena) y el contador sube hasta 318.</p>
+  <span class="chip accent">whip izquierda</span>
+</section>
+
+<!-- 08 -->
+<section class="cell" id="frame-08">
+  <div class="frame" style="background:#141A33">
+    <div class="phone" style="left:41.5cqw;top:3cqw;width:17cqw">
+      <div class="screen" style="background:linear-gradient(160deg,#2A3A7A,#141A33);">
+        <div class="h" style="color:#fff;text-align:center;font-size:4.4cqw;margin-top:3cqw">19:42</div>
+        <div style="color:#fff;text-align:center;font-size:.9cqw;opacity:.8">jueves, 13 de noviembre</div>
+      </div>
+    </div>
+    <div class="notif" style="left:30cqw;top:21cqw;width:40cqw">
+      <div class="ic"></div>
+      <div><div style="font-weight:800;font-size:1.5cqw">Restaurante Pepito</div><div style="font-size:1.5cqw;font-weight:600">2x1 en cañas este viernes 🍻</div></div>
+    </div>
+    <div class="vo" style="color:#B9C1E8">«Y en el bolsillo de Lucía… ahí está.» · plano quieto 1,5 s con el «ding»</div>
+  </div>
+  <div class="label"><span>08 · LA NOTIFICACIÓN</span><span>62–70 s</span></div>
+  <p class="note"><b>Se mueve primero:</b> la pantalla de bloqueo se enciende; la notificación baja con rebote en el «ding» y <b>todo se queda quieto</b> 1,5 s.</p>
+  <span class="chip">push izquierda</span>
+</section>
+
+<!-- 09 -->
+<section class="cell" id="frame-09">
+  <div class="frame">
+    <svg style="position:absolute;left:3cqw;top:6cqw;width:52cqw;height:44cqw" viewBox="0 0 104 88" aria-hidden="true">
+      <rect x="0" y="66" width="104" height="4" rx="1" fill="#B9773E"/>
+      <circle cx="22" cy="34" r="6" fill="#8C5A3C"/><rect x="15" y="41" width="14" height="24" rx="6" fill="#06A77D"/>
+      <circle cx="52" cy="30" r="6.4" fill="#E8B48F"/><path d="M45.6 29 q0-8 6.4-8 q7 0 6.4 7.4 q-2.4-4-6.4-4 q-4 0-6.4 4.6z" fill="#2B2A3A"/>
+      <rect x="44.6" y="38" width="15" height="27" rx="6.4" fill="#F4A12B"/>
+      <circle cx="82" cy="34" r="6" fill="#F0C9A8"/><rect x="75" y="41" width="14" height="24" rx="6" fill="#E85D75"/>
+      <rect x="49" y="60" width="7" height="5" rx="1" fill="#0E1222"/>
+    </svg>
+    <div class="pass" style="right:5cqw;top:8cqw;width:32cqw">
+      <div class="name">Restaurante Pepito</div>
+      <div class="stamps" style="margin-top:1.2cqw"><i class="on"></i><i class="on"></i><i></i><i></i><i></i></div>
+      <div class="val" style="margin-top:.8cqw">2 / 5</div>
+    </div>
+    <p class="h" style="position:absolute;right:5cqw;top:34cqw;font-size:4.6cqw;text-align:right">¡Sello <span class="blue">sumado!</span></p>
+  </div>
+  <div class="label"><span>09 · LUCÍA VUELVE</span><span>70–80 s</span></div>
+  <p class="note"><b>Se mueve primero:</b> Lucía entra con dos amigos (callback de F02); toque en la tag (callback de F03) y el segundo sello salta con «¡Sello sumado!».</p>
+  <span class="chip">corte</span>
+</section>
+
+<div class="act">Acto 3 · Y además (80–135 s)</div>
+
+<!-- 10 -->
+<section class="cell" id="frame-10">
+  <div class="frame" style="background:var(--accent)">
+    <div class="ghost" style="font-size:24cqw;left:-2cqw;top:6cqw;color:#fff;opacity:.12">MÁS</div>
+    <p class="h" style="position:absolute;left:6cqw;top:17cqw;font-size:7cqw;color:#fff">Y esto es solo<br>el principio.</p>
+  </div>
+  <div class="label"><span>10 · BISAGRA</span><span>80–84 s</span></div>
+  <p class="note"><b>Se mueve primero:</b> barrido azul que tapa la escena anterior; la frase entra en dos líneas con desplazamiento lateral.</p>
+  <span class="chip">push izquierda</span>
+</section>
+
+<!-- 11 -->
+<section class="cell" id="frame-11">
+  <div class="frame">
+    <p class="h" style="position:absolute;left:5cqw;top:6cqw;font-size:5cqw">Tarjeta de<br><span class="blue">fidelidad</span></p>
+    <div class="pass" style="left:5cqw;top:24cqw;width:34cqw">
+      <div class="name">Restaurante Pepito</div>
+      <div class="stamps" style="margin-top:1.2cqw"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></div>
+      <div class="val" style="margin-top:.8cqw;color:var(--warm)">¡Café gratis!</div>
+    </div>
+    <div class="phone" style="right:8cqw;top:5cqw;width:16cqw">
+      <div class="screen" style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1cqw;padding:1.2cqw;text-align:center">
+        <div style="font-weight:800;font-size:1.1cqw;color:var(--muted)">Personal · PIN ✓</div>
+        <div style="font-weight:800;font-size:1.4cqw">5 / 5 sellos</div>
+        <span class="btn" style="background:var(--ok);font-size:1cqw">Canjear premio</span>
+        <div style="color:var(--ok);font-weight:800;font-size:1.1cqw">✓ Premio canjeado</div>
+      </div>
+    </div>
+    <div class="qr" style="position:absolute;left:42cqw;top:30cqw"></div>
+  </div>
+  <div class="label"><span>11 · TARJETA DE FIDELIDAD</span><span>84–94 s</span></div>
+  <p class="note"><b>Se mueve primero:</b> los sellos se encienden 1→5 al compás; «¡Café gratis!» salta; el móvil del camarero escanea el QR y aparece «Premio canjeado».</p>
+  <span class="chip">push izquierda</span>
+</section>
+
+<!-- 12 -->
+<section class="cell" id="frame-12">
+  <div class="frame">
+    <div class="panel" style="left:4cqw;top:7cqw;width:30cqw;height:38cqw">
+      <div class="bar"><i></i><i></i><i></i><span style="margin-left:1cqw">Marca</span></div>
+      <div style="padding:1.6cqw;display:flex;flex-direction:column;gap:1.2cqw;font-size:1.2cqw;font-weight:700">
+        <div>Logo <span class="field" style="display:inline-block;margin-left:1cqw">pepito.png</span></div>
+        <div>Color <span style="display:inline-flex;gap:.6cqw;margin-left:1cqw;vertical-align:middle"><i style="width:2.4cqw;height:2.4cqw;border-radius:50%;background:#1F2937;display:block"></i><i style="width:2.4cqw;height:2.4cqw;border-radius:50%;background:#8B1E3F;display:block;outline:.3cqw solid var(--accent);outline-offset:.2cqw"></i><i style="width:2.4cqw;height:2.4cqw;border-radius:50%;background:#0B6E4F;display:block"></i></span></div>
+        <div>Carta <span class="field" style="display:inline-block;margin-left:1cqw">pepito.es/carta</span></div>
+      </div>
+    </div>
+    <div class="pass" style="left:40cqw;top:8cqw;width:26cqw;background:#8B1E3F">
+      <div style="font-size:.9cqw;opacity:.7;letter-spacing:.12em"> APPLE WALLET</div>
+      <div class="name" style="margin-top:.6cqw">Restaurante Pepito</div>
+      <div class="stamps"><i class="on"></i><i class="on"></i><i></i><i></i><i></i></div>
+    </div>
+    <div class="pass" style="left:68cqw;top:16cqw;width:26cqw;background:#8B1E3F">
+      <div style="font-size:.9cqw;opacity:.7;letter-spacing:.12em">GOOGLE WALLET</div>
+      <div class="name" style="margin-top:.6cqw">Restaurante Pepito</div>
+      <div class="stamps"><i class="on"></i><i class="on"></i><i></i><i></i><i></i></div>
+    </div>
+    <p class="h" style="position:absolute;left:40cqw;top:40cqw;font-size:3.6cqw">Tu marca, <span class="blue">en su bolsillo.</span></p>
+  </div>
+  <div class="label"><span>12 · TU MARCA EN LA WALLET</span><span>94–104 s</span></div>
+  <p class="note"><b>Se mueve primero:</b> el cursor elige el color granate y las dos tarjetas (Apple y Google) cambian a la vez; luego aparece el logo.</p>
+  <span class="chip">push izquierda</span>
+</section>
+
+<!-- 13 -->
+<section class="cell" id="frame-13">
+  <div class="frame">
+    <p class="h" style="position:absolute;left:5cqw;top:6cqw;font-size:4.4cqw">¿Una promoción?</p>
+    <div style="position:absolute;left:5cqw;top:15cqw;display:flex;gap:2cqw;align-items:center">
+      <div class="num" style="position:static">1</div><div class="h" style="font-size:4.6cqw">Escribe</div>
+      <div class="num" style="position:static;margin-left:2cqw">2</div><div class="h blue" style="font-size:4.6cqw">Envía</div>
+    </div>
+    <div style="position:absolute;left:5cqw;right:5cqw;top:27cqw;display:grid;grid-template-columns:repeat(10,1fr);gap:1.2cqw">
+      <i style="aspect-ratio:9/16;border-radius:.8cqw;background:#0E1222;display:block;box-shadow:inset 0 0 0 .4cqw #0E1222,inset 0 0 0 2cqw #2A3A7A"></i>
+      <i style="aspect-ratio:9/16;border-radius:.8cqw;background:#0E1222;display:block;box-shadow:inset 0 0 0 .4cqw #0E1222,inset 0 0 0 2cqw #2A3A7A"></i>
+      <i style="aspect-ratio:9/16;border-radius:.8cqw;background:#0E1222;display:block;box-shadow:inset 0 0 0 .4cqw #0E1222,inset 0 0 0 2cqw #2A3A7A"></i>
+      <i style="aspect-ratio:9/16;border-radius:.8cqw;background:#0E1222;display:block;box-shadow:inset 0 0 0 .4cqw #0E1222,inset 0 0 0 2cqw #2A3A7A"></i>
+      <i style="aspect-ratio:9/16;border-radius:.8cqw;background:#0E1222;display:block;box-shadow:inset 0 0 0 .4cqw #0E1222,inset 0 0 0 2cqw #2A3A7A"></i>
+      <i style="aspect-ratio:9/16;border-radius:.8cqw;background:#0E1222;display:block;box-shadow:inset 0 0 0 .4cqw #0E1222,inset 0 0 0 2cqw #2A3A7A"></i>
+      <i style="aspect-ratio:9/16;border-radius:.8cqw;background:#0E1222;display:block;box-shadow:inset 0 0 0 .4cqw #0E1222,inset 0 0 0 2cqw #2A3A7A"></i>
+      <i style="aspect-ratio:9/16;border-radius:.8cqw;background:#0E1222;display:block;box-shadow:inset 0 0 0 .4cqw #0E1222,inset 0 0 0 2cqw #2A3A7A"></i>
+      <i style="aspect-ratio:9/16;border-radius:.8cqw;background:#0E1222;display:block;box-shadow:inset 0 0 0 .4cqw #0E1222,inset 0 0 0 2cqw #2A3A7A"></i>
+      <i style="aspect-ratio:9/16;border-radius:.8cqw;background:#0E1222;display:block;box-shadow:inset 0 0 0 .4cqw #0E1222,inset 0 0 0 2cqw #2A3A7A"></i>
+    </div>
+    <div class="vo">«¿Una promoción? Dos clics. Y llega a todos tus clientes, al instante.»</div>
+  </div>
+  <div class="label"><span>13 · PROMO EN DOS CLICS</span><span>104–113 s</span></div>
+  <p class="note"><b>Se mueve primero:</b> ① y ② se pulsan (el botón se hunde); en «al instante» una onda enciende los diez móviles de izquierda a derecha con la notificación.</p>
+  <span class="chip">push izquierda</span>
+</section>
+
+<!-- 14 -->
+<section class="cell" id="frame-14">
+  <div class="frame">
+    <p class="h" style="position:absolute;left:5cqw;top:5cqw;font-size:4.4cqw">Y además…</p>
+    <div class="tile" style="left:5cqw;top:14cqw;width:28cqw;height:14cqw"><em>📍</em>Avisos al pasar cerca</div>
+    <div class="tile" style="left:36cqw;top:14cqw;width:28cqw;height:14cqw"><em>📊</em>Estadísticas por mesa</div>
+    <div class="tile" style="left:67cqw;top:14cqw;width:28cqw;height:14cqw;background:var(--accent);color:#fff;border-color:var(--accent)"><em style="color:#fff">🏪</em>Todos tus locales en una cuenta</div>
+    <div class="tile" style="left:5cqw;top:31cqw;width:28cqw;height:14cqw"><em>🔒</em>Tags imposibles de copiar</div>
+    <div class="tile" style="left:36cqw;top:31cqw;width:28cqw;height:14cqw"><em>🧾</em>Facturas automáticas</div>
+    <div class="tile" style="left:67cqw;top:31cqw;width:28cqw;height:14cqw"><em>🛡️</em>RGPD de serie</div>
+  </div>
+  <div class="label"><span>14 · Y ADEMÁS</span><span>113–124 s</span></div>
+  <p class="note"><b>Se mueve primero:</b> las piezas caen en cascada al ritmo de la voz (cada una cuando se nombra); la de los locales se pinta en azul como foco.</p>
+  <span class="chip accent">whip izquierda</span>
+</section>
+
+<!-- 15 -->
+<section class="cell" id="frame-15">
+  <div class="frame">
+    <div class="glow" style="width:70cqw;height:70cqw;left:15cqw;top:-20cqw"></div>
+    <div style="position:absolute;left:0;right:0;top:10cqw;display:flex;align-items:center;justify-content:center;gap:2cqw">
+      <div style="width:9cqw;height:9cqw;border-radius:2.2cqw;background:var(--accent);display:grid;place-items:center">
+        <div style="width:3.4cqw;height:3.4cqw;border:.7cqw solid #fff;border-radius:50%;border-left-color:transparent;border-bottom-color:transparent;transform:rotate(45deg)"></div>
+      </div>
+      <div class="h" style="font-size:8cqw">NFC Wallet</div>
+    </div>
+    <p class="h" style="position:absolute;left:0;right:0;top:25cqw;text-align:center;font-size:3.8cqw">Tus clientes vuelven <span class="blue">solos.</span></p>
+    <p style="position:absolute;left:0;right:0;top:33cqw;text-align:center;font-size:2cqw;font-weight:700">Desde 29 €/mes por restaurante · 14 días gratis</p>
+    <div style="position:absolute;left:50%;top:39.5cqw;transform:translateX(-50%)"><span class="btn blue-b" style="font-size:2cqw;padding:1cqw 3cqw">nfcwallet.es</span></div>
+  </div>
+  <div class="label"><span>15 · CIERRE</span><span>124–135 s</span></div>
+  <p class="note"><b>Se mueve primero:</b> las ondas NFC dibujan el icono y el nombre se ensambla; precio y URL entran después y el fondo sigue respirando hasta el último fotograma (sin cierre estático).</p>
+  <span class="chip">fin · fundido de música</span>
+</section>
+
+<!-- seam map -->
+<section class="cell">
+  <div class="frame"><div class="seams">
+    <span>01 → corte</span><span>02 → push ←</span><span>03 → corte</span><span>04 → corte</span><span>05 → push ←</span>
+    <span>06 → corte</span><span class="w">07 → whip ←</span><span>08 → push ←</span><span>09 → push ←</span><span>10 → corte</span>
+    <span>11 → push ←</span><span>12 → push ←</span><span>13 → push ←</span><span class="w">14 → whip ←</span><span>15 → fin</span>
+  </div></div>
+  <div class="label"><span>MAPA DE TRANSICIONES</span><span>todas ≤ 0,4 s · hacia la izquierda</span></div>
+</section>
+
+<!-- tokens -->
+<section class="cell">
+  <div class="frame"><div class="tokens">
+    <div class="sw"><i style="background:#FBF5EC"></i>Fondo #FBF5EC</div>
+    <div class="sw"><i style="background:#141A33"></i>Texto #141A33</div>
+    <div class="sw"><i style="background:#1F5EFF"></i>Acento #1F5EFF</div>
+    <div class="sw"><i style="background:#F4A12B"></i>Ilustración #F4A12B</div>
+    <div class="sw"><i style="background:#1F2937"></i>Tarjeta #1F2937</div>
+    <div class="sw"><i style="background:#1B7F3B"></i>Éxito #1B7F3B</div>
+    <div style="grid-column:1/-1;font-family:'Archivo Black';font-size:3cqw">Archivo Black · titulares</div>
+    <div style="grid-column:1/-1;font-weight:700">Montserrat · texto · prohibido: gradiente en texto, neón, funciones inventadas, cierre estático</div>
+  </div></div>
+  <div class="label"><span>TOKENS</span><span>frame.md</span></div>
+</section>
+</main>
+
+<footer>Storyboard v1 · bocetos fijos sin movimiento · los textos de voz en off son los aprobados en el plan.</footer>
+</body>
+</html>
