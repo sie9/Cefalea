@@ -12,8 +12,8 @@ import subprocess
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 W, H = 1920, 1080
 
-# Scene boundaries snapped to strong beats of assets/music/bed.wav (see beats/).
-B = [0, 6, 14, 24, 33, 42, 48, 62.067, 70, 79.749, 84, 94.401, 103.944, 113.139, 124, 135]
+# Scene boundaries snapped to strong beats of assets/music/bed-v2.wav (see beats/).
+B = [0, 6, 14, 23.812, 33, 42, 48, 62, 70.066, 80.062, 83.847, 94.4, 103.967, 113, 123.681, 135]
 # Transition INTO each scene: (kind, overlap seconds).
 TIN = {1: ("none", 0), 2: ("push", .35), 3: ("cut", 0), 4: ("cut", 0), 5: ("push", .35),
        6: ("cut", 0), 7: ("push", .35), 8: ("whip", .25), 9: ("push", .35), 10: ("cut", 0),
@@ -875,12 +875,12 @@ VO_OFFSET = {n: (TIN[n][1] + 0.1 if TIN[n][0] != "none" else 0.1) for n in range
 VO_OFFSET[1] = 0.1
 # Scene-local SFX cues: (scene, local time, file, volume)
 SFX = [
-    (1, 1.42, "impact-bass-1", 0.55),
+    (1, 1.42, "impact-bass-1", 0.32),
     (2, 4.6, "pop", 0.45),
     (3, 2.55, "sparkle", 0.45), (3, 2.15, "whoosh-short", 0.35),
     (4, 1.1, "click", 0.7), (4, 1.75, "whoosh-short", 0.4),
     (5, 0.6, "pop", 0.55), (5, 1.55, "click", 0.35), (5, 1.97, "click", 0.35), (5, 2.39, "click", 0.35),
-    (6, 0.35, "riser", 0.25),
+    (6, 0.35, "riser", 0.16),
     (7, 2.9, "typing", 0.45), (7, 5.55, "click", 0.8), (7, 6.45, "click", 0.8), (7, 6.9, "chime", 0.45),
     (8, 1.6, "notification", 0.8),
     (9, 3.1, "sparkle", 0.4), (9, 3.4, "pop", 0.55),
@@ -940,7 +940,21 @@ def build():
 
     # Music bed. Ducking under the voice is done by the carve (EQ dips + level
     # envelope) run after the index is written; here only the bed itself.
-    audio.insert(0, f'      <audio id="bgm" src="assets/music/bed.wav" data-start="0" data-duration="{TOTAL}" '
+    VOICE_CHAIN = {"version": 1, "nodes": [
+        {"type": "highpass", "id": "v1", "params": {"frequency": 90, "q": 0.707}},
+        {"type": "peaking", "id": "v2", "params": {"frequency": 320, "gain": -3, "q": 1.2}},
+        {"type": "compressor", "id": "v3", "params": {"threshold": -24, "ratio": 3, "attack": 8, "release": 160, "makeup": 4}},
+        {"type": "peaking", "id": "v4", "params": {"frequency": 3200, "gain": 3, "q": 0.9}},
+        {"type": "limiter", "id": "v5", "params": {"limit": -1.5, "attack": 2, "release": 60}}]}
+    SFX_CHAIN = {"version": 1, "nodes": [
+        {"type": "compressor", "id": "s1", "params": {"threshold": -18, "ratio": 4, "attack": 2, "release": 120}},
+        {"type": "limiter", "id": "s2", "params": {"limit": -6, "attack": 1, "release": 80}}]}
+    def bus(gid, label, vol, chain):
+        return (f'      <hf-audio-group id="{gid}" data-label="{label}" data-volume="{vol}" '
+                f"data-fx-chain='{json.dumps(chain, separators=(',', ':'))}'></hf-audio-group>")
+    audio.insert(0, bus("sfx", "Efectos", 0.8, SFX_CHAIN))
+    audio.insert(0, bus("voiceover", "Voz en off", 1.0, VOICE_CHAIN))
+    audio.insert(0, f'      <audio id="bgm" src="assets/music/bed-v2.wav" data-start="0" data-duration="{TOTAL}" '
                     f'data-track-index="10" data-volume="0.6" data-audio-group="music"></audio>')
 
     index = f"""<!doctype html>
@@ -981,7 +995,7 @@ def carve_and_fade():
     import os
     import re
     carve = pathlib.Path(os.path.expanduser("~/.claude/skills/hyperframes-audio/scripts/carve.mjs"))
-    subprocess.run(["node", str(carve), "--comp", "index.html"], cwd=ROOT, check=True, capture_output=True)
+    subprocess.run(["node", str(carve), "--comp", "index.html", "--strength", "0.5"], cwd=ROOT, check=True, capture_output=True)
     path = ROOT / "index.html"
     src = path.read_text()
     tag = re.search(r'<audio id="bgm"[^>]*>', src).group(0)

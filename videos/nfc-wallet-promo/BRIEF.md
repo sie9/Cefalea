@@ -24,6 +24,13 @@ Tono (palabras del usuario): "muy ágil de velocidad y sencillez", "música muy 
 - Música generada por IA en local con MusicGen (facebook/musicgen-small): electro pop rápido (~140 bpm), fragmento semilla en bucle con fundidos; el usuario escuchó una muestra y la aceptó.
 - Formatos: máster 16:9 (1920×1080); versión 9:16 (1080×1920) adaptada después de aprobar el máster.
 
+- v2 (mezcla): música reconstruida a partir de los tramos estables de la toma de MusicGen (`tools/make_bed.sh` → `assets/music/bed-v2.wav`), carve 0.5, bus de voz (highpass, de-mud, compresor, presencia, limitador) y bus de efectos con limitador.
+- v3 pedida por el usuario: «darle vida» con **personas reales hechas por IA** en lugar de iconos 2D, y mejor audio. Decisiones confirmadas:
+  - Proveedor: **Google Gemini** con la clave en la variable de entorno `GEMINI_API_KEY` (nueva sesión).
+  - Movimiento: **fotos fotorrealistas generadas por IA con movimientos de cámara** (zoom, paneo, cortes rápidos), no clips de vídeo.
+  - Con la clave: imágenes de personas con personajes consistentes (Lucía, sus dos amigos, Paco) usando imagen de referencia; música con Lyria; voz en off natural en español con Gemini TTS.
+  - Se mantienen las pantallas del producto (landing de la tag, Wallet, panel de Mensajes, tarjeta de fidelidad) recreadas en HTML encima de las fotos.
+
 ## Notes
 
 - Sin credenciales de IA en el entorno: el estilo visual pedido (imágenes generadas por IA) no es posible; se usa ilustración 2D plana animada (SVG/HTML) para personas y escenarios, y recreaciones fieles de las pantallas del producto.
