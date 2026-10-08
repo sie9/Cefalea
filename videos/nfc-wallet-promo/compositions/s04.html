@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="es">
+<head><meta charset="UTF-8" /></head>
+<body>
+<template>
+<style>
+
+@font-face { font-family: "Archivo Black"; src: url("assets/fonts/archivo-black-400.woff2") format("woff2"); font-weight: 400; }
+@font-face { font-family: "Montserrat"; src: url("assets/fonts/montserrat-var.woff2") format("woff2"); font-weight: 100 900; }
+
+.nw-h { font-family: "Archivo Black", sans-serif; font-weight: 400; line-height: .92; letter-spacing: -.01em; margin: 0; }
+.nw-blue { color: #1F5EFF; }
+.nw-abs { position: absolute; }
+.nw-ghost { position: absolute; font-family: "Archivo Black", sans-serif; color: #141A33; opacity: .07; white-space: nowrap; line-height: .8; }
+.nw-glow { position: absolute; border-radius: 50%; background: radial-gradient(circle, rgba(31,94,255,.26), rgba(31,94,255,0) 68%); }
+.nw-meta { position: absolute; font-family: "Montserrat", sans-serif; font-size: 24px; font-weight: 800; letter-spacing: .18em; text-transform: uppercase; color: #5B6178; }
+.nw-phone { position: absolute; width: 380px; height: 800px; background: #0E1222; border-radius: 64px; padding: 16px; box-shadow: 0 40px 80px rgba(20,26,51,.28); }
+.nw-screen { position: relative; width: 100%; height: 100%; border-radius: 50px; overflow: hidden; background: #1F2937; }
+.nw-notch { position: absolute; left: 50%; top: 16px; width: 110px; height: 30px; margin-left: -55px; background: #0E1222; border-radius: 20px; z-index: 5; }
+.nw-pass { position: absolute; border-radius: 30px; background: #1F2937; color: #fff; padding: 34px 38px; box-shadow: 0 30px 60px rgba(20,26,51,.30); font-family: "Montserrat", sans-serif; }
+.nw-pass .row { display: flex; align-items: center; gap: 18px; }
+.nw-pass .name { font-family: "Archivo Black", sans-serif; font-size: 34px; }
+.nw-pass .lbl { font-size: 18px; font-weight: 700; opacity: .72; text-transform: uppercase; letter-spacing: .14em; margin-top: 22px; }
+.nw-pass .val { font-size: 46px; font-weight: 800; }
+.nw-stamps { display: flex; gap: 14px; margin-top: 12px; }
+.nw-stamps i { display: block; width: 52px; height: 52px; border-radius: 50%; border: 5px solid rgba(255,255,255,.45); }
+.nw-stamps i b { display: block; width: 100%; height: 100%; border-radius: 50%; background: #F4A12B; opacity: 0; }
+.nw-stamps i b.on { opacity: 1; }
+.nw-logo { width: 64px; height: 64px; border-radius: 50%; background: #F4A12B; color: #1F2937; display: grid; place-items: center; font-family: "Archivo Black", sans-serif; font-size: 34px; flex: none; }
+.nw-btn { display: inline-block; border-radius: 999px; padding: 18px 36px; font-family: "Montserrat", sans-serif; font-weight: 800; font-size: 26px; background: #000; color: #fff; }
+.nw-panel { position: absolute; background: #fff; border-radius: 28px; border: 3px solid #E3E6EB; box-shadow: 0 40px 80px rgba(20,26,51,.18); overflow: hidden; font-family: "Montserrat", sans-serif; color: #141A33; }
+.nw-panel .bar { height: 64px; background: #F6F7F9; border-bottom: 3px solid #E3E6EB; display: flex; align-items: center; gap: 12px; padding: 0 26px; font-size: 22px; font-weight: 800; }
+.nw-panel .bar i { display: block; width: 16px; height: 16px; border-radius: 50%; background: #D6D9E0; }
+.nw-field { border: 3px solid #E3E6EB; border-radius: 16px; padding: 18px 22px; font-size: 30px; font-weight: 600; background: #fff; }
+.nw-num { position: absolute; width: 70px; height: 70px; border-radius: 50%; background: #1F5EFF; color: #fff; font-family: "Archivo Black", sans-serif; font-size: 38px; display: grid; place-items: center; box-shadow: 0 0 0 12px rgba(31,94,255,.18); }
+.nw-cursor { position: absolute; width: 56px; height: 56px; }
+.nw-notif { position: absolute; background: rgba(255,255,255,.95); border-radius: 30px; padding: 24px 28px; box-shadow: 0 20px 50px rgba(0,0,0,.28); display: flex; gap: 20px; align-items: center; font-family: "Montserrat", sans-serif; color: #141A33; }
+.nw-notif .t1 { font-size: 22px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: #5B6178; }
+.nw-notif .t2 { font-size: 30px; font-weight: 700; }
+.nw-chip { display: inline-block; border-radius: 999px; padding: 12px 26px; font-family: "Montserrat", sans-serif; font-weight: 800; font-size: 28px; }
+
+#s04, #s04 * { box-sizing: border-box; }
+#s04 { position: absolute; inset: 0; overflow: hidden; background: #FBF5EC; color: #141A33; font-family: "Montserrat", sans-serif; }
+
+#s04-passwrap .nw-pass { position: relative; }
+#s04 .s04-qr { width: 150px; height: 150px; margin-top: 14px; border-radius: 12px; border: 10px solid #fff;
+  background: conic-gradient(from 90deg at 50% 50%, #fff 25%, #0E1222 0 50%, #fff 0 75%, #0E1222 0) 0 0 / 32px 32px; }
+
+
+</style>
+<div id="s04" data-composition-id="s04" data-width="1920" data-height="1080" data-duration="9.188">
+
+<div class="nw-glow" id="s04-glow" style="width:1100px;height:1100px;left:420px;top:-200px"></div>
+<div class="nw-phone" id="s04-phone" style="left:200px;top:140px">
+  <div class="nw-notch"></div>
+  <div class="nw-screen" id="s04-landing" style="display:flex;flex-direction:column;align-items:center;padding:110px 34px 0;gap:22px;text-align:center;color:#fff;font-family:Montserrat,sans-serif">
+  <div class="nw-logo" style="width:120px;height:120px;font-size:62px">P</div>
+  <div class="nw-h" style="font-size:40px;line-height:1">Restaurante Pepito</div>
+  <div style="font-size:22px;font-weight:600;opacity:.82;line-height:1.35">Guarda nuestra tarjeta en tu móvil: acumula visitas y recibe nuestras novedades.</div>
+  <div style="width:100%;text-align:left;font-size:18px;font-weight:700;opacity:.8;margin-top:10px">Email (opcional)</div>
+  <div style="width:100%;height:58px;border-radius:12px;background:#fff;opacity:.92"></div>
+  <span class="nw-btn" id="s04-btn" style="width:100%;margin-top:14px;font-size:24px;padding:20px 0;border:2px solid rgba(255,255,255,.35)">Añadir a Apple Wallet</span>
+</div>
+  <div class="nw-abs" id="s04-wallet" data-layout-allow-overlap data-layout-allow-occlusion style="left:16px;top:16px;right:16px;bottom:16px;border-radius:50px;background:#0B0F1C;overflow:hidden">
+    <div style="color:#fff;font-family:Montserrat;font-weight:800;font-size:34px;padding:90px 30px 20px">Wallet</div>
+    <div style="margin:0 22px;height:200px;border-radius:22px;background:#1F2937;padding:22px;display:flex;gap:14px;align-items:center;color:#fff"><div class="nw-logo">P</div><div class="nw-h" style="font-size:26px">Restaurante Pepito</div></div>
+    <div style="margin:-150px 22px 0;height:200px;border-radius:22px;background:#3A4560;opacity:.6;transform:translateY(190px)"></div>
+  </div>
+</div>
+<div class="nw-abs" id="s04-ring" style="left:274px;top:776px;width:232px;height:84px;border-radius:999px;border:6px solid #1F5EFF"></div>
+<div class="nw-abs" id="s04-passwrap" style="left:760px;top:150px"><div class="nw-pass" id="s04-pass" style="width:640px;background:#1F2937">
+  <div class="row"><div class="nw-logo">P</div><div class="name">Restaurante Pepito</div></div>
+  <div class="lbl">Sellos</div><div class="nw-stamps"><i><b class=""></b></i><i><b class=""></b></i><i><b class=""></b></i><i><b class=""></b></i><i><b class=""></b></i></div>
+  <div class="lbl">Premio</div><div class="val" style="font-size:36px">Café gratis</div><div class="lbl">Muéstrala al camarero</div><div class="s04-qr"></div>
+</div></div>
+<div class="nw-abs" style="left:760px;top:800px;width:1040px">
+  <p class="nw-h" style="font-size:96px"><span id="s04-w1" style="display:inline-block">Sin apps.</span> <span id="s04-w2" class="nw-blue" style="display:inline-block">Sin registros.</span></p>
+</div>
+
+<div class="nw-abs" id="s04-wl" style="left:1440px;top:170px;display:flex;flex-direction:column;gap:16px">
+  <span class="nw-chip" id="s04-wa" style="background:#141A33;color:#FBF5EC">Apple Wallet</span>
+  <span class="nw-chip" id="s04-wg" style="background:#fff;color:#141A33;border:3px solid #141A33">Google Wallet</span>
+</div>
+<div class="nw-abs" id="s04-shine" style="left:760px;top:150px;width:640px;height:600px;border-radius:30px;overflow:hidden;pointer-events:none">
+  <div id="s04-gloss" style="position:absolute;top:-50%;left:0;width:140px;height:200%;background:rgba(255,255,255,.22);transform:rotate(18deg)"></div>
+</div>
+
+</div>
+<script>
+(() => {
+  const D = 9.188;      // slot length (s)
+  const IN = 0;      // incoming transition overlap (s): content should be readable from here
+  const S = (q) => "#s04 " + q;
+  const tl = gsap.timeline({ paused: true });
+  const breath = (sel, at, cycle, props) => {
+    const len = Math.max(0, D - at);
+    tl.to(S(sel), Object.assign({ duration: cycle / 2, ease: "sine.inOut", yoyo: true,
+      repeat: Math.max(0, Math.floor(len / cycle) * 2 - 1) }, props), at);
+  };
+  const typeText = (sel, text, at, dur) => {
+    const el = document.querySelector(S(sel));
+    const st = { n: 0 };
+    tl.fromTo(st, { n: 0 }, { n: text.length, duration: dur, ease: "none",
+      onUpdate: () => { el.textContent = text.slice(0, Math.round(st.n)); } }, at);
+  };
+  const countUp = (sel, to, at, dur, fmt) => {
+    const el = document.querySelector(S(sel));
+    const st = { v: 0 };
+    tl.fromTo(st, { v: 0 }, { v: to, duration: dur, ease: "power2.out",
+      onUpdate: () => { el.textContent = (fmt || String)(Math.round(st.v)); } }, at);
+  };
+
+  tl.fromTo(S("#s04-phone"), { y: 40, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, ease: "power3.out" }, 0);
+  tl.fromTo(S("#s04-ring"), { scale: 0.7, opacity: 0 }, { scale: 1.15, opacity: 1, duration: 0.3, ease: "power2.out" }, 1.05);
+  tl.to(S("#s04-ring"), { scale: 1.45, opacity: 0, duration: 0.35, ease: "power2.out" }, 1.35);
+  tl.fromTo(S("#s04-btn"), { scale: 1 }, { scale: 0.93, duration: 0.12, ease: "power2.out", yoyo: true, repeat: 1 }, 1.1);
+  tl.fromTo(S("#s04-wallet"), { yPercent: 100 }, { yPercent: 0, duration: 0.5, ease: "expo.out" }, 1.5);
+  tl.fromTo(S("#s04-landing"), { opacity: 1 }, { opacity: 0, duration: 0.3, ease: "power1.out" }, 1.55);
+  // The card flies out of the phone and parks on the right.
+  tl.fromTo(S("#s04-passwrap"), { x: -520, y: 260, scale: 0.35, rotation: -12, opacity: 0 },
+    { x: 0, y: 0, scale: 1, rotation: 0, opacity: 1, duration: 0.75, ease: "expo.out" }, 1.75);
+  tl.fromTo(S("#s04-w1"), { y: 70, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, ease: "power4.out" }, 2.05);
+  tl.fromTo(S("#s04-w2"), { x: 160, opacity: 0 }, { x: 0, opacity: 1, duration: 0.4, ease: "expo.out" }, 2.65);
+  breath("#s04-glow", 0, 2.6, { scale: 1.1 });
+  breath("#s04-passwrap", 3.2, 2.4, { y: -12 });
+
+  tl.fromTo(S("#s04-wa"), { x: 60, opacity: 0 }, { x: 0, opacity: 1, duration: 0.35, ease: "power3.out" }, 4.9);
+  tl.fromTo(S("#s04-wg"), { x: 60, opacity: 0 }, { x: 0, opacity: 1, duration: 0.35, ease: "power3.out" }, 5.3);
+  tl.fromTo(S("#s04-gloss"), { x: -260 }, { x: 900, duration: 0.8, ease: "power2.inOut" }, 6.2);
+  tl.fromTo(S("#s04-passwrap"), { rotationY: 0 }, { rotationY: 8, duration: 0.6, yoyo: true, repeat: 1, ease: "sine.inOut", transformPerspective: 1200 }, 7.0);
+
+  window.__timelines["s04"] = tl;
+})();
+</script>
+</template>
+</body>
+</html>

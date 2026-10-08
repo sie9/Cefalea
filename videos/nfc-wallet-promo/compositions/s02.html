@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="es">
+<head><meta charset="UTF-8" /></head>
+<body>
+<template>
+<style>
+
+@font-face { font-family: "Archivo Black"; src: url("assets/fonts/archivo-black-400.woff2") format("woff2"); font-weight: 400; }
+@font-face { font-family: "Montserrat"; src: url("assets/fonts/montserrat-var.woff2") format("woff2"); font-weight: 100 900; }
+
+.nw-h { font-family: "Archivo Black", sans-serif; font-weight: 400; line-height: .92; letter-spacing: -.01em; margin: 0; }
+.nw-blue { color: #1F5EFF; }
+.nw-abs { position: absolute; }
+.nw-ghost { position: absolute; font-family: "Archivo Black", sans-serif; color: #141A33; opacity: .07; white-space: nowrap; line-height: .8; }
+.nw-glow { position: absolute; border-radius: 50%; background: radial-gradient(circle, rgba(31,94,255,.26), rgba(31,94,255,0) 68%); }
+.nw-meta { position: absolute; font-family: "Montserrat", sans-serif; font-size: 24px; font-weight: 800; letter-spacing: .18em; text-transform: uppercase; color: #5B6178; }
+.nw-phone { position: absolute; width: 380px; height: 800px; background: #0E1222; border-radius: 64px; padding: 16px; box-shadow: 0 40px 80px rgba(20,26,51,.28); }
+.nw-screen { position: relative; width: 100%; height: 100%; border-radius: 50px; overflow: hidden; background: #1F2937; }
+.nw-notch { position: absolute; left: 50%; top: 16px; width: 110px; height: 30px; margin-left: -55px; background: #0E1222; border-radius: 20px; z-index: 5; }
+.nw-pass { position: absolute; border-radius: 30px; background: #1F2937; color: #fff; padding: 34px 38px; box-shadow: 0 30px 60px rgba(20,26,51,.30); font-family: "Montserrat", sans-serif; }
+.nw-pass .row { display: flex; align-items: center; gap: 18px; }
+.nw-pass .name { font-family: "Archivo Black", sans-serif; font-size: 34px; }
+.nw-pass .lbl { font-size: 18px; font-weight: 700; opacity: .72; text-transform: uppercase; letter-spacing: .14em; margin-top: 22px; }
+.nw-pass .val { font-size: 46px; font-weight: 800; }
+.nw-stamps { display: flex; gap: 14px; margin-top: 12px; }
+.nw-stamps i { display: block; width: 52px; height: 52px; border-radius: 50%; border: 5px solid rgba(255,255,255,.45); }
+.nw-stamps i b { display: block; width: 100%; height: 100%; border-radius: 50%; background: #F4A12B; opacity: 0; }
+.nw-stamps i b.on { opacity: 1; }
+.nw-logo { width: 64px; height: 64px; border-radius: 50%; background: #F4A12B; color: #1F2937; display: grid; place-items: center; font-family: "Archivo Black", sans-serif; font-size: 34px; flex: none; }
+.nw-btn { display: inline-block; border-radius: 999px; padding: 18px 36px; font-family: "Montserrat", sans-serif; font-weight: 800; font-size: 26px; background: #000; color: #fff; }
+.nw-panel { position: absolute; background: #fff; border-radius: 28px; border: 3px solid #E3E6EB; box-shadow: 0 40px 80px rgba(20,26,51,.18); overflow: hidden; font-family: "Montserrat", sans-serif; color: #141A33; }
+.nw-panel .bar { height: 64px; background: #F6F7F9; border-bottom: 3px solid #E3E6EB; display: flex; align-items: center; gap: 12px; padding: 0 26px; font-size: 22px; font-weight: 800; }
+.nw-panel .bar i { display: block; width: 16px; height: 16px; border-radius: 50%; background: #D6D9E0; }
+.nw-field { border: 3px solid #E3E6EB; border-radius: 16px; padding: 18px 22px; font-size: 30px; font-weight: 600; background: #fff; }
+.nw-num { position: absolute; width: 70px; height: 70px; border-radius: 50%; background: #1F5EFF; color: #fff; font-family: "Archivo Black", sans-serif; font-size: 38px; display: grid; place-items: center; box-shadow: 0 0 0 12px rgba(31,94,255,.18); }
+.nw-cursor { position: absolute; width: 56px; height: 56px; }
+.nw-notif { position: absolute; background: rgba(255,255,255,.95); border-radius: 30px; padding: 24px 28px; box-shadow: 0 20px 50px rgba(0,0,0,.28); display: flex; gap: 20px; align-items: center; font-family: "Montserrat", sans-serif; color: #141A33; }
+.nw-notif .t1 { font-size: 22px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: #5B6178; }
+.nw-notif .t2 { font-size: 30px; font-weight: 700; }
+.nw-chip { display: inline-block; border-radius: 999px; padding: 12px 26px; font-family: "Montserrat", sans-serif; font-weight: 800; font-size: 28px; }
+
+#s02, #s02 * { box-sizing: border-box; }
+#s02 { position: absolute; inset: 0; overflow: hidden; background: #FBF5EC; color: #141A33; font-family: "Montserrat", sans-serif; }
+#s02-lucia svg { display: block; }
+#s02 .s02-ring { position: absolute; inset: 0; border-radius: 50%; border: 6px solid #1F5EFF; opacity: 0; }
+</style>
+<div id="s02" data-composition-id="s02" data-width="1920" data-height="1080" data-duration="8.35">
+
+<div id="s02-world" class="nw-abs" data-layout-allow-overflow style="left:0;top:0;width:2700px;height:1080px">
+  <svg class="nw-abs" style="left:0;top:0" width="2700" height="1080" viewBox="0 0 2700 1080">
+    <rect width="2700" height="1080" fill="#FBF5EC"/>
+    <rect x="0" y="930" width="2700" height="150" fill="#EFE2CC"/>
+    <rect x="120" y="210" width="1080" height="720" rx="18" fill="#F1E3CC"/>
+    <rect x="120" y="150" width="1080" height="110" rx="18" fill="#141A33"/>
+    <text x="660" y="225" font-family="Archivo Black" font-size="64" fill="#F4A12B" text-anchor="middle">RESTAURANTE PEPITO</text>
+    <rect x="250" y="360" width="290" height="570" rx="14" fill="#B9773E"/>
+    <rect x="276" y="390" width="238" height="300" rx="10" fill="#F4A12B" opacity=".5"/>
+    <circle cx="500" cy="660" r="12" fill="#F4A12B"/>
+    <rect x="680" y="360" width="400" height="300" rx="14" fill="#FFE2B0"/>
+    <rect x="680" y="360" width="400" height="56" fill="#E9852F"/>
+    <path d="M680 416 h400" stroke="#C9661F" stroke-width="6"/>
+    <circle cx="760" cy="520" r="26" fill="#F4A12B"/><circle cx="880" cy="500" r="26" fill="#F4A12B"/><circle cx="1000" cy="520" r="26" fill="#F4A12B"/>
+    <rect x="1400" y="250" width="1200" height="680" rx="18" fill="#F6EBDA"/>
+    <g fill="#F4A12B"><circle cx="1600" cy="300" r="20"/><circle cx="1900" cy="300" r="20"/><circle cx="2200" cy="300" r="20"/><circle cx="2500" cy="300" r="20"/></g>
+    <g stroke="#E3D3BA" stroke-width="4"><path d="M1600 250 v30 M1900 250 v30 M2200 250 v30 M2500 250 v30"/></g>
+    <rect x="1950" y="700" width="560" height="26" rx="10" fill="#B9773E"/>
+    <rect x="2210" y="726" width="40" height="204" fill="#8E5A2C"/>
+    <rect x="2120" y="900" width="220" height="30" rx="10" fill="#8E5A2C"/>
+    <rect x="1800" y="640" width="150" height="20" rx="8" fill="#141A33"/><rect x="1800" y="640" width="20" height="290" rx="8" fill="#141A33"/>
+    <rect x="1930" y="640" width="20" height="290" rx="8" fill="#141A33"/>
+    <rect x="2330" y="672" width="40" height="28" rx="6" fill="#FBF5EC"/>
+    <text x="2350" y="694" font-family="Archivo Black" font-size="16" fill="#1F5EFF" text-anchor="middle">NFC</text>
+  </svg>
+  <div class="nw-abs" id="s02-lucia" style="left:420px;top:380px"><svg class="s02-fig" viewBox="0 0 220 560" width="220" height="560">
+  <g class="legs"><rect x="72" y="380" width="30" height="170" rx="14" fill="#141A33"/><rect x="118" y="380" width="30" height="170" rx="14" fill="#141A33"/>
+  <ellipse cx="86" cy="552" rx="26" ry="10" fill="#0E1222"/><ellipse cx="134" cy="552" rx="26" ry="10" fill="#0E1222"/></g>
+  <rect class="arm-l" x="38" y="200" width="30" height="170" rx="15" fill="#F4A12B"/>
+  <rect class="arm-r" x="152" y="200" width="30" height="170" rx="15" fill="#F4A12B"/>
+  <rect x="58" y="180" width="104" height="220" rx="46" fill="#F4A12B"/>
+  <rect x="98" y="182" width="24" height="60" rx="8" fill="#E8B48F"/>
+  <circle cx="110" cy="120" r="58" fill="#E8B48F"/>
+  <path d="M52 118 q0-72 58-72 q62 0 58 66 q-18-34-58-34 q-36 0-58 40z" fill="#2B2A3A"/>
+  <circle cx="92" cy="128" r="6" fill="#2B2A3A"/><circle cx="128" cy="128" r="6" fill="#2B2A3A"/>
+  <path d="M96 150 q14 12 28 0" stroke="#2B2A3A" stroke-width="5" fill="none" stroke-linecap="round"/>
+</svg></div>
+  <div class="nw-abs" id="s02-phone" style="left:2280px;top:672px;width:84px;height:28px;border-radius:8px;background:#0E1222"></div>
+</div>
+<div class="nw-meta" style="left:120px;top:70px" id="s02-tag">Restaurante Pepito · 14:05</div>
+
+<div class="nw-abs" id="s02-mesa" style="left:1560px;top:500px"><span class="nw-chip" style="background:#141A33;color:#FBF5EC">Mesa 4</span></div>
+<div class="nw-abs" id="s02-rings" style="left:1480px;top:600px;width:120px;height:120px"><div class="s02-ring"></div><div class="s02-ring"></div></div>
+
+</div>
+<script>
+(() => {
+  const D = 8.35;      // slot length (s)
+  const IN = 0.35;      // incoming transition overlap (s): content should be readable from here
+  const S = (q) => "#s02 " + q;
+  const tl = gsap.timeline({ paused: true });
+  const breath = (sel, at, cycle, props) => {
+    const len = Math.max(0, D - at);
+    tl.to(S(sel), Object.assign({ duration: cycle / 2, ease: "sine.inOut", yoyo: true,
+      repeat: Math.max(0, Math.floor(len / cycle) * 2 - 1) }, props), at);
+  };
+  const typeText = (sel, text, at, dur) => {
+    const el = document.querySelector(S(sel));
+    const st = { n: 0 };
+    tl.fromTo(st, { n: 0 }, { n: text.length, duration: dur, ease: "none",
+      onUpdate: () => { el.textContent = text.slice(0, Math.round(st.n)); } }, at);
+  };
+  const countUp = (sel, to, at, dur, fmt) => {
+    const el = document.querySelector(S(sel));
+    const st = { v: 0 };
+    tl.fromTo(st, { v: 0 }, { v: to, duration: dur, ease: "power2.out",
+      onUpdate: () => { el.textContent = (fmt || String)(Math.round(st.v)); } }, at);
+  };
+
+  // Camera pan door → table (the world moves left).
+  tl.fromTo(S("#s02-world"), { x: 0 }, { x: -780, duration: 5.6, ease: "power2.inOut" }, 0.2);
+  tl.fromTo(S("#s02-tag"), { opacity: 0, y: -20 }, { opacity: 1, y: 0, duration: 0.4, ease: "power3.out" }, IN);
+  // Lucía walks from the door to the chair (bob while walking).
+  tl.fromTo(S("#s02-lucia"), { x: 0 }, { x: 1400, duration: 4.3, ease: "power1.inOut" }, 0.5);
+  tl.fromTo(S("#s02-lucia"), { y: 0 }, { y: -14, duration: 0.27, ease: "sine.inOut", yoyo: true, repeat: 15 }, 0.5);
+  // Sits down.
+  tl.to(S("#s02-lucia"), { y: 70, scaleY: 0.9, transformOrigin: "50% 100%", duration: 0.45, ease: "power3.out" }, 4.85);
+  // Phone lands on the table on "deja el móvil".
+  tl.fromTo(S("#s02-phone"), { y: -150, opacity: 0, rotation: -18 },
+    { y: 0, opacity: 1, rotation: 0, duration: 0.45, ease: "bounce.out" }, 4.55);
+
+  tl.fromTo(S("#s02-mesa"), { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 0.35, ease: "back.out(2)" }, 5.4);
+  gsap.utils.toArray(S(".s02-ring")).forEach((r, i) => {
+    tl.fromTo(r, { scale: 0.3, opacity: 0.9 }, { scale: 1.8, opacity: 0, duration: 0.8, ease: "power2.out", repeat: 2, repeatDelay: 0.1 }, 5.9 + i * 0.25);
+  });
+
+  window.__timelines["s02"] = tl;
+})();
+</script>
+</template>
+</body>
+</html>
