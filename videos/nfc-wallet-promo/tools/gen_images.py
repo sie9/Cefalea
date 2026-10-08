@@ -15,7 +15,10 @@ import base64
 import json
 import os
 import pathlib
+import subprocess
 import sys
+import time
+import urllib.error
 import urllib.request
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
@@ -30,17 +33,34 @@ def key():
     return k
 
 
-def call(path, body=None):
+def call(path, body=None, tries=6):
+    """POST/GET with backoff on overload (429/500/503) and read timeouts."""
     req = urllib.request.Request(f"{API}/{path}", data=json.dumps(body).encode() if body else None,
                                  headers={"x-goog-api-key": key(), "Content-Type": "application/json"})
-    with urllib.request.urlopen(req, timeout=300) as r:
-        return json.load(r)
+    for i in range(tries):
+        try:
+            with urllib.request.urlopen(req, timeout=600) as r:
+                return json.load(r)
+        except urllib.error.HTTPError as e:
+            if e.code not in (429, 500, 503) or i == tries - 1:
+                raise RuntimeError(f"{e.code}: {e.read().decode()[:400]}") from None
+            reason = e.code
+        except TimeoutError:
+            if i == tries - 1:
+                raise
+            reason = "timeout"
+        wait = 15 * 2 ** i
+        print(f"  retry {i + 1} in {wait}s ({reason})", file=sys.stderr, flush=True)
+        time.sleep(wait)
 
 
 def generate(model, prompt, refs=(), aspect="16:9"):
     parts = [{"text": prompt}]
     for ref in refs:
-        parts.append({"inline_data": {"mime_type": "image/png", "data": base64.b64encode(ref.read_bytes()).decode()}})
+        # Full-size PNG refs make the API fail with 500s; send a 768 px JPEG instead.
+        jpg = subprocess.run(["ffmpeg", "-v", "error", "-i", str(ref), "-vf", "scale=-2:768", "-q:v", "3",
+                              "-f", "image2", "-c:v", "mjpeg", "-"], capture_output=True, check=True).stdout
+        parts.append({"inline_data": {"mime_type": "image/jpeg", "data": base64.b64encode(jpg).decode()}})
     body = {"contents": [{"parts": parts}],
             "generationConfig": {"responseModalities": ["IMAGE"], "imageConfig": {"aspectRatio": aspect}}}
     res = call(f"models/{model}:generateContent", body)
@@ -85,10 +105,16 @@ def main():
         for shot in spec["shots"]:
             if a.only and a.only != shot["id"]:
                 continue
+            if not a.only and (OUT / f"{shot['id']}.jpg").exists():
+                continue  # resumable: pass --only to regenerate one shot
             refs = [chars / f"{r}.png" for r in shot["refs"] if (chars / f"{r}.png").exists()]
             who = "; ".join(spec["characters"][r] for r in shot["refs"])
             prompt = f"{shot['prompt']}. {('People: ' + who + '. Keep their faces and clothes identical to the reference images. ') if who else ''}{style}"
-            (OUT / f"{shot['id']}.png").write_bytes(generate(a.model, prompt, refs))
+            png = OUT / f"{shot['id']}.png"
+            png.write_bytes(generate(a.model, prompt, refs))
+            # Plates ship as JPEG: PNGs are over the 2 MB inline limit of the bundler.
+            subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", str(png), "-q:v", "2", str(png.with_suffix(".jpg"))], check=True)
+            png.unlink()
             print("shot", shot["id"])
 
 

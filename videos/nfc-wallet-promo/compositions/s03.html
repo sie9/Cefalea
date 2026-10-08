@@ -8,6 +8,12 @@
 @font-face { font-family: "Archivo Black"; src: url("assets/fonts/archivo-black-400.woff2") format("woff2"); font-weight: 400; }
 @font-face { font-family: "Montserrat"; src: url("assets/fonts/montserrat-var.woff2") format("woff2"); font-weight: 100 900; }
 
+.nw-ph { position: absolute; inset: 0; overflow: hidden; }
+.nw-scrim { position: absolute; inset: 0; pointer-events: none; }
+.nw-ink.nw-ink { color: #FBF5EC; }
+.nw-ink .nw-blue, .nw-blue-l { color: #8FB0FF; }
+.nw-ph img { position: absolute; left: 0; top: 0; width: 100%; height: 100%; object-fit: cover; transform-origin: 50% 50%; }
+
 .nw-h { font-family: "Archivo Black", sans-serif; font-weight: 400; line-height: .92; letter-spacing: -.01em; margin: 0; }
 .nw-blue { color: #1F5EFF; }
 .nw-abs { position: absolute; }
@@ -47,13 +53,8 @@
 
 
 </style>
-<div id="s03" data-composition-id="s03" data-width="1920" data-height="1080" data-duration="9.812">
-
-<svg class="nw-abs" style="left:0;top:0" width="1920" height="1080" viewBox="0 0 1920 1080">
-  <rect width="1920" height="1080" fill="#C98B4E"/>
-  <g stroke="#B9773E" stroke-width="10"><path d="M0 250 H1920 M0 520 H1920 M0 790 H1920"/></g>
-  <g stroke="#D69A5C" stroke-width="4" opacity=".6"><path d="M0 120 H1920 M0 380 H1920 M0 650 H1920 M0 930 H1920"/></g>
-</svg>
+<div id="s03" data-composition-id="s03" data-width="1920" data-height="1080" data-duration="9.473">
+<div class="nw-abs" id="s03-photo" style="inset:0;overflow:hidden;border-radius:0px"><div class="nw-ph" id="s03-ph0" style="opacity:1"><img src="assets/photos/s03-mesa.jpg" alt="" /></div></div><div class="nw-scrim" id="s03-scrim" style="background:rgba(14,18,34,.58)"></div>
 <div class="nw-abs" id="s03-tag" style="left:250px;top:330px;width:420px;height:420px;border-radius:52px;background:#FBF5EC;box-shadow:0 30px 60px rgba(60,30,10,.35);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px">
   <div style="color:#1F5EFF"><svg viewBox="0 0 48 48" width="90" height="90"><g fill="none" stroke="#1F5EFF" stroke-width="6" stroke-linecap="round"><path d="M14 16 a12 12 0 0 1 0 16"/><path d="M22 10 a20 20 0 0 1 0 28"/><path d="M30 4 a28 28 0 0 1 0 40"/></g></svg></div>
   <div class="nw-h" style="font-size:66px;text-align:center;line-height:.95">TOCA<br>AQUÍ</div>
@@ -83,7 +84,7 @@
 </div>
 <script>
 (() => {
-  const D = 9.812;      // slot length (s)
+  const D = 9.473;      // slot length (s)
   const IN = 0;      // incoming transition overlap (s): content should be readable from here
   const S = (q) => "#s03 " + q;
   const tl = gsap.timeline({ paused: true });
@@ -104,7 +105,9 @@
     tl.fromTo(st, { v: 0 }, { v: to, duration: dur, ease: "power2.out",
       onUpdate: () => { el.textContent = (fmt || String)(Math.round(st.v)); } }, at);
   };
+  tl.fromTo(S("#s03-ph0 img"), { scale: 1.05, x: 0, y: 0 }, { scale: 1.18, x: -30, y: 20, duration: D - 0, ease: "none" }, 0);
 
+  tl.fromTo(S("#s03-scrim"), { opacity: 0.25 }, { opacity: 1, duration: 0.8, ease: "power2.out" }, 0.4);
   tl.fromTo(S("#s03-tag"), { scale: 0.85, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.5, ease: "power3.out" }, 0.05);
   tl.fromTo(S("#s03-phone"), { x: 420, y: -820, rotation: 22 }, { x: 0, y: 0, rotation: -6, duration: 1.0, ease: "power3.inOut" }, 0.9);
   // Tap: the phone dips onto the tag, rings radiate, the screen wakes.

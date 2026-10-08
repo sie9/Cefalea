@@ -8,6 +8,12 @@
 @font-face { font-family: "Archivo Black"; src: url("assets/fonts/archivo-black-400.woff2") format("woff2"); font-weight: 400; }
 @font-face { font-family: "Montserrat"; src: url("assets/fonts/montserrat-var.woff2") format("woff2"); font-weight: 100 900; }
 
+.nw-ph { position: absolute; inset: 0; overflow: hidden; }
+.nw-scrim { position: absolute; inset: 0; pointer-events: none; }
+.nw-ink.nw-ink { color: #FBF5EC; }
+.nw-ink .nw-blue, .nw-blue-l { color: #8FB0FF; }
+.nw-ph img { position: absolute; left: 0; top: 0; width: 100%; height: 100%; object-fit: cover; transform-origin: 50% 50%; }
+
 .nw-h { font-family: "Archivo Black", sans-serif; font-weight: 400; line-height: .92; letter-spacing: -.01em; margin: 0; }
 .nw-blue { color: #1F5EFF; }
 .nw-abs { position: absolute; }
@@ -43,18 +49,19 @@
 #s08 { position: absolute; inset: 0; overflow: hidden; background: #FBF5EC; color: #141A33; font-family: "Montserrat", sans-serif; }
 
 </style>
-<div id="s08" data-composition-id="s08" data-width="1920" data-height="1080" data-duration="8.316">
-
-<div class="nw-abs" style="inset:0;background:#141A33"></div>
-<div class="nw-abs" id="s08-glow" style="left:460px;top:-200px;width:1000px;height:1000px;border-radius:50%;background:radial-gradient(circle,rgba(31,94,255,.35),rgba(31,94,255,0) 66%)"></div>
-<div class="nw-phone" id="s08-phone" style="left:770px;top:120px">
+<div id="s08" data-composition-id="s08" data-width="1920" data-height="1080" data-duration="8.37">
+<div class="nw-abs" id="s08-photo" style="inset:0;overflow:hidden;border-radius:0px"><div class="nw-ph" id="s08-ph0" style="opacity:1"><img src="assets/photos/s08-bolsillo.jpg" alt="" /></div></div>
+<div class="nw-scrim" style="background:linear-gradient(to right, rgba(14,18,34,0) 35%, rgba(14,18,34,.7) 70%), linear-gradient(to top, rgba(14,18,34,.8) 0%, rgba(14,18,34,0) 40%)"></div>
+<p class="nw-h nw-abs nw-ink" id="s08-h1" style="left:110px;top:800px;font-size:84px;white-space:nowrap">Y en el bolsillo de Lucía…</p>
+<p class="nw-h nw-abs nw-ink" id="s08-h2" style="left:110px;top:900px;font-size:84px;white-space:nowrap"><span class="nw-blue">ahí está.</span></p>
+<div class="nw-phone" id="s08-phone" style="left:1400px;top:120px">
   <div class="nw-notch"></div>
   <div class="nw-screen" style="background:#22305F">
     <div class="nw-h" style="color:#fff;text-align:center;font-size:110px;margin-top:120px">19:42</div>
     <div style="color:#fff;text-align:center;font-size:24px;font-weight:600;opacity:.85">jueves, 23 de octubre</div>
   </div>
 </div>
-<div class="nw-notif" id="s08-notif" style="left:560px;top:420px;width:800px">
+<div class="nw-notif" id="s08-notif" style="left:1180px;top:420px;width:690px">
   <div class="nw-logo" style="width:84px;height:84px;font-size:44px">P</div>
   <div style="flex:1"><div class="t1">Restaurante Pepito · ahora</div><div class="t2">2x1 en cañas este viernes</div></div>
   <svg viewBox="0 0 40 40" width="70" height="70"><rect x="8" y="10" width="20" height="26" rx="3" fill="#F4A12B"/><path d="M8 10 q0-6 10-6 q10 0 10 6z" fill="#fff"/><path d="M28 16 h4 q4 0 4 5 v3 q0 5-4 5 h-4" fill="none" stroke="#F4A12B" stroke-width="3"/></svg>
@@ -63,7 +70,7 @@
 </div>
 <script>
 (() => {
-  const D = 8.316;      // slot length (s)
+  const D = 8.37;      // slot length (s)
   const IN = 0.25;      // incoming transition overlap (s): content should be readable from here
   const S = (q) => "#s08 " + q;
   const tl = gsap.timeline({ paused: true });
@@ -84,13 +91,15 @@
     tl.fromTo(st, { v: 0 }, { v: to, duration: dur, ease: "power2.out",
       onUpdate: () => { el.textContent = (fmt || String)(Math.round(st.v)); } }, at);
   };
+  tl.fromTo(S("#s08-ph0 img"), { scale: 1.15, x: -140, y: 0 }, { scale: 1.22, x: -150, y: -20, duration: D - 0, ease: "none" }, 0);
 
   tl.fromTo(S("#s08-phone"), { y: 120, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, ease: "power3.out" }, 0);
+  tl.fromTo(S("#s08-h1"), { y: 50, opacity: 0 }, { y: 0, opacity: 1, duration: 0.45, ease: "power4.out" }, 0.3);
   tl.fromTo(S("#s08-notif"), { y: -260, opacity: 0, scale: 0.9 }, { y: 0, opacity: 1, scale: 1, duration: 0.55, ease: "back.out(1.5)" }, 1.6);
+  tl.fromTo(S("#s08-h2"), { scale: 1.3, opacity: 0, transformOrigin: "0% 50%" }, { scale: 1, opacity: 1, duration: 0.4, ease: "power4.out" }, 1.75);
   // Held frame: nothing moves from 2.15 to 3.6.
   tl.fromTo(S("#s08-phone"), { scale: 1 }, { scale: 1.06, duration: D - 3.6, ease: "sine.inOut" }, 3.6);
   tl.fromTo(S("#s08-notif"), { scale: 1 }, { scale: 1.08, duration: D - 3.6, ease: "sine.inOut" }, 3.6);
-  breath("#s08-glow", 3.6, 2.4, { scale: 1.12 });
 
   window.__timelines["s08"] = tl;
 })();

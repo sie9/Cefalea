@@ -32,3 +32,20 @@ Requiere `GEMINI_API_KEY` en el entorno (se lee al empezar la sesión). Comproba
 ## Licencia de la música
 
 La música generada con Lyria a través de la API de Gemini no usa obras de terceros; según los términos de Google, el contenido generado pertenece a quien lo genera (lleva marca de agua SynthID). Indicarlo así al usuario, sin prometer más de lo que dicen los términos vigentes.
+
+## Estado (8 oct 2026)
+
+Hecho: pasos 0-6. Máster en `renders/nfc-wallet-v3-16x9-master.mp4` (no versionado).
+
+- Imagen: `gemini-2.5-flash-image` (el Pro daba 503 por demanda). Las referencias de personaje se mandan como JPEG de 768 px
+  (los PNG enteros provocaban errores 500); los planos se guardan en JPEG porque los PNG pasan del límite de 2 MB del bundler.
+- Fotos en S02, S03, S05, S07, S08, S09, S11 y S15; sin narración, cada escena lleva su titular en pantalla.
+- Cortes reajustados al beat más fuerte a ±0,35 s de los de la v2 sobre `lyria.wav`.
+- Masterizado (el `loudnorm` lineal no cabía: subir +6,4 dB con −1,3 dBTP de pico):
+  ```
+  ffmpeg -i renders/nfc-wallet-v3-16x9.mp4 -af "volume=6.8dB,aresample=192000,alimiter=limit=0.75:level=false:attack=1:release=60,aresample=48000" -c:a pcm_s16le t.wav
+  ffmpeg -i renders/nfc-wallet-v3-16x9.mp4 -i t.wav -map 0:v -map 1:a -c:v copy -c:a aac -aac_coder twoloop -b:a 256k -movflags +faststart renders/nfc-wallet-v3-16x9-master.mp4
+  ```
+  Resultado: −14,1 LUFS, −1,7 dBTP. El codificador AAC por defecto (`fast`) subía el pico a +0,8 dBTP; `twoloop` no.
+
+Pendiente: versión 9:16.

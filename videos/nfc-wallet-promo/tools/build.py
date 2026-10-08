@@ -2,9 +2,10 @@
 """Generates the NFC Wallet promo compositions (16:9 master).
 
 Writes compositions/sNN.html (one sub-composition per storyboard frame) and
-index.html (slots, leftward push/whip transitions, voice-over, SFX and the
-ducked music bed). Run from the project root: python3 tools/build.py
+index.html (slots, leftward push/whip transitions and the Lyria music bed;
+v3 has no voice-over and no SFX). Run from the project root: python3 tools/build.py
 """
+import html
 import json
 import pathlib
 import subprocess
@@ -12,8 +13,9 @@ import subprocess
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 W, H = 1920, 1080
 
-# Scene boundaries snapped to strong beats of assets/music/bed-v2.wav (see beats/).
-B = [0, 6, 14, 23.812, 33, 42, 48, 62, 70.066, 80.062, 83.847, 94.4, 103.967, 113, 123.681, 135]
+# Scene boundaries snapped to the strongest beat within ±0.35 s of the v2 cuts,
+# on assets/music/lyria.wav (see beats/).
+B = [0, 5.767, 14.339, 23.812, 32.835, 41.857, 48.173, 61.707, 69.827, 79.978, 83.587, 94.414, 103.887, 113.136, 123.512, 135]
 # Transition INTO each scene: (kind, overlap seconds).
 TIN = {1: ("none", 0), 2: ("push", .35), 3: ("cut", 0), 4: ("cut", 0), 5: ("push", .35),
        6: ("cut", 0), 7: ("push", .35), 8: ("whip", .25), 9: ("push", .35), 10: ("cut", 0),
@@ -40,7 +42,15 @@ FONTS = """
 @font-face { font-family: "Montserrat"; src: url("assets/fonts/montserrat-var.woff2") format("woff2"); font-weight: 100 900; }
 """
 
-SHARED_CSS = FONTS + """
+PHOTO_CSS = """
+.nw-ph { position: absolute; inset: 0; overflow: hidden; }
+.nw-scrim { position: absolute; inset: 0; pointer-events: none; }
+.nw-ink.nw-ink { color: #FBF5EC; }
+.nw-ink .nw-blue, .nw-blue-l { color: #8FB0FF; }
+.nw-ph img { position: absolute; left: 0; top: 0; width: 100%; height: 100%; object-fit: cover; transform-origin: 50% 50%; }
+"""
+
+SHARED_CSS = FONTS + PHOTO_CSS + """
 .nw-h { font-family: "Archivo Black", sans-serif; font-weight: 400; line-height: .92; letter-spacing: -.01em; margin: 0; }
 .nw-blue { color: #1F5EFF; }
 .nw-abs { position: absolute; }
@@ -79,49 +89,6 @@ CURSOR_SVG = ('<svg viewBox="0 0 24 24"><path d="M4 2 L20 13 L12.5 14.2 L16.6 22
 BEER_SVG = ('<svg viewBox="0 0 40 40" width="{s}" height="{s}"><rect x="8" y="10" width="20" height="26" rx="3" fill="#F4A12B"/>'
             '<path d="M8 10 q0-6 10-6 q10 0 10 6z" fill="#fff"/><path d="M28 16 h4 q4 0 4 5 v3 q0 5-4 5 h-4" '
             'fill="none" stroke="#F4A12B" stroke-width="3"/></svg>')
-
-
-def lucia(cls="", jacket="#F4A12B"):
-    """Flat Lucía figure, 220x560 viewBox, feet at y=560."""
-    return f"""<svg class="{cls}" viewBox="0 0 220 560" width="220" height="560">
-  <g class="legs"><rect x="72" y="380" width="30" height="170" rx="14" fill="#141A33"/><rect x="118" y="380" width="30" height="170" rx="14" fill="#141A33"/>
-  <ellipse cx="86" cy="552" rx="26" ry="10" fill="#0E1222"/><ellipse cx="134" cy="552" rx="26" ry="10" fill="#0E1222"/></g>
-  <rect class="arm-l" x="38" y="200" width="30" height="170" rx="15" fill="{jacket}"/>
-  <rect class="arm-r" x="152" y="200" width="30" height="170" rx="15" fill="{jacket}"/>
-  <rect x="58" y="180" width="104" height="220" rx="46" fill="{jacket}"/>
-  <rect x="98" y="182" width="24" height="60" rx="8" fill="#E8B48F"/>
-  <circle cx="110" cy="120" r="58" fill="#E8B48F"/>
-  <path d="M52 118 q0-72 58-72 q62 0 58 66 q-18-34-58-34 q-36 0-58 40z" fill="#2B2A3A"/>
-  <circle cx="92" cy="128" r="6" fill="#2B2A3A"/><circle cx="128" cy="128" r="6" fill="#2B2A3A"/>
-  <path d="M96 150 q14 12 28 0" stroke="#2B2A3A" stroke-width="5" fill="none" stroke-linecap="round"/>
-</svg>"""
-
-
-def friend(cls, skin, top, hair):
-    return f"""<svg class="{cls}" viewBox="0 0 220 560" width="200" height="510">
-  <rect x="72" y="380" width="30" height="170" rx="14" fill="#141A33"/><rect x="118" y="380" width="30" height="170" rx="14" fill="#141A33"/>
-  <rect x="40" y="200" width="30" height="160" rx="15" fill="{top}"/><rect x="150" y="200" width="30" height="160" rx="15" fill="{top}"/>
-  <rect x="58" y="180" width="104" height="220" rx="46" fill="{top}"/>
-  <circle cx="110" cy="120" r="56" fill="{skin}"/>
-  <path d="M54 112 q4-64 56-64 q54 0 56 64 q-20-28-56-28 q-38 0-56 28z" fill="{hair}"/>
-  <circle cx="92" cy="128" r="6" fill="#2B2A3A"/><circle cx="128" cy="128" r="6" fill="#2B2A3A"/>
-  <path d="M96 150 q14 12 28 0" stroke="#2B2A3A" stroke-width="5" fill="none" stroke-linecap="round"/>
-</svg>"""
-
-
-def paco(cls=""):
-    """Flat Paco (owner) figure, bust, 360x520 viewBox."""
-    return f"""<svg class="{cls}" viewBox="0 0 360 520" width="360" height="520">
-  <rect x="70" y="250" width="220" height="270" rx="90" fill="#141A33"/>
-  <rect x="110" y="270" width="140" height="250" rx="22" fill="#1F5EFF"/>
-  <rect class="paco-arm" x="250" y="280" width="54" height="190" rx="27" fill="#141A33" style="transform-origin:277px 300px"/>
-  <rect x="50" y="280" width="54" height="190" rx="27" fill="#141A33"/>
-  <circle cx="180" cy="150" r="92" fill="#C98B62"/>
-  <path d="M100 170 q80 120 160 0 v20 q-80 100 -160 0z" fill="#3B2A20"/>
-  <circle cx="148" cy="138" r="9" fill="#2B2A3A"/><circle cx="212" cy="138" r="9" fill="#2B2A3A"/>
-  <path d="M130 108 h34 M196 108 h34" stroke="#3B2A20" stroke-width="9" stroke-linecap="round"/>
-  <path d="M158 196 q22 16 44 0" stroke="#FBF5EC" stroke-width="7" fill="none" stroke-linecap="round"/>
-</svg>"""
 
 
 def pass_card(pid, stamps_on=0, w=600, extra="", reward="Café gratis", bg="#1F2937", top_label=""):
@@ -213,6 +180,29 @@ def scene(sid, n, body, css, js):
 """
 
 
+# ---------------------------------------------------------------- v3 photo plates (helpers)
+# Photorealistic plates generated with Gemini (tools/gen_images.py, shots.json).
+# photo(): one full-frame layer per shot, stacked in order; each later shot hard-cuts
+# in at its start time. Ken Burns: (scale0, x0, y0) -> (scale1, x1, y1) over the shot.
+
+
+def photo(sid, shots, box="inset:0", radius=0):
+    """shots: [(shot_id, start, (s0, x0, y0), (s1, x1, y1))]. Returns (body, js)."""
+    layers, js = [], []
+    for i, (shot, t0, a, b) in enumerate(shots):
+        lid = f"{sid}-ph{i}"
+        layers.append(f'<div class="nw-ph" id="{lid}" style="opacity:{1 if i == 0 else 0}">'
+                      f'<img src="assets/photos/{shot}.jpg" alt="" /></div>')
+        t1 = shots[i + 1][1] if i + 1 < len(shots) else None
+        js.append(f'  tl.fromTo(S("#{lid} img"), {{ scale: {a[0]}, x: {a[1]}, y: {a[2]} }}, '
+                  f'{{ scale: {b[0]}, x: {b[1]}, y: {b[2]}, duration: {f"{t1} - {t0}" if t1 is not None else f"D - {t0}"}, ease: "none" }}, {t0});')
+        if i:
+            js.append(f'  tl.set(S("#{lid}"), {{ opacity: 1 }}, {t0});')
+    body = (f'<div class="nw-abs" id="{sid}-photo" style="{box};overflow:hidden;border-radius:{radius}px">'
+            + "".join(layers) + "</div>")
+    return body, "\n".join(js) + "\n"
+
+
 SCENES = {}
 
 # ---------------------------------------------------------------- 01 hook
@@ -240,61 +230,27 @@ SCENES[1] = dict(
 """)
 
 # ---------------------------------------------------------------- 02 arrive
+S02_PH = photo("s02", [("s02-entra", 0, (1.08, 0, 0), (1.2, -40, 10)),
+                       ("s02-sienta", 4.4, (1.16, 60, 0), (1.05, 0, 0))])
 SCENES[2] = dict(
-    body=f"""
-<div id="s02-world" class="nw-abs" data-layout-allow-overflow style="left:0;top:0;width:2700px;height:1080px">
-  <svg class="nw-abs" style="left:0;top:0" width="2700" height="1080" viewBox="0 0 2700 1080">
-    <rect width="2700" height="1080" fill="#FBF5EC"/>
-    <rect x="0" y="930" width="2700" height="150" fill="#EFE2CC"/>
-    <rect x="120" y="210" width="1080" height="720" rx="18" fill="#F1E3CC"/>
-    <rect x="120" y="150" width="1080" height="110" rx="18" fill="#141A33"/>
-    <text x="660" y="225" font-family="Archivo Black" font-size="64" fill="#F4A12B" text-anchor="middle">RESTAURANTE PEPITO</text>
-    <rect x="250" y="360" width="290" height="570" rx="14" fill="#B9773E"/>
-    <rect x="276" y="390" width="238" height="300" rx="10" fill="#F4A12B" opacity=".5"/>
-    <circle cx="500" cy="660" r="12" fill="#F4A12B"/>
-    <rect x="680" y="360" width="400" height="300" rx="14" fill="#FFE2B0"/>
-    <rect x="680" y="360" width="400" height="56" fill="#E9852F"/>
-    <path d="M680 416 h400" stroke="#C9661F" stroke-width="6"/>
-    <circle cx="760" cy="520" r="26" fill="#F4A12B"/><circle cx="880" cy="500" r="26" fill="#F4A12B"/><circle cx="1000" cy="520" r="26" fill="#F4A12B"/>
-    <rect x="1400" y="250" width="1200" height="680" rx="18" fill="#F6EBDA"/>
-    <g fill="#F4A12B"><circle cx="1600" cy="300" r="20"/><circle cx="1900" cy="300" r="20"/><circle cx="2200" cy="300" r="20"/><circle cx="2500" cy="300" r="20"/></g>
-    <g stroke="#E3D3BA" stroke-width="4"><path d="M1600 250 v30 M1900 250 v30 M2200 250 v30 M2500 250 v30"/></g>
-    <rect x="1950" y="700" width="560" height="26" rx="10" fill="#B9773E"/>
-    <rect x="2210" y="726" width="40" height="204" fill="#8E5A2C"/>
-    <rect x="2120" y="900" width="220" height="30" rx="10" fill="#8E5A2C"/>
-    <rect x="1800" y="640" width="150" height="20" rx="8" fill="#141A33"/><rect x="1800" y="640" width="20" height="290" rx="8" fill="#141A33"/>
-    <rect x="1930" y="640" width="20" height="290" rx="8" fill="#141A33"/>
-    <rect x="2330" y="672" width="40" height="28" rx="6" fill="#FBF5EC"/>
-    <text x="2350" y="694" font-family="Archivo Black" font-size="16" fill="#1F5EFF" text-anchor="middle">NFC</text>
-  </svg>
-  <div class="nw-abs" id="s02-lucia" style="left:420px;top:380px">{lucia("s02-fig")}</div>
-  <div class="nw-abs" id="s02-phone" style="left:2280px;top:672px;width:84px;height:28px;border-radius:8px;background:#0E1222"></div>
-</div>
-<div class="nw-meta" style="left:120px;top:70px" id="s02-tag">Restaurante Pepito · 14:05</div>
+    body=S02_PH[0] + """
+<div class="nw-scrim" style="background:linear-gradient(to top, rgba(14,18,34,.82) 0%, rgba(14,18,34,0) 46%), linear-gradient(to bottom, rgba(14,18,34,.55) 0%, rgba(14,18,34,0) 22%)"></div>
+<div class="nw-meta nw-ink" style="left:120px;top:70px" id="s02-tag">Restaurante Pepito · 14:05</div>
+<p class="nw-h nw-abs nw-ink" id="s02-h1" style="left:120px;top:800px;font-size:110px;white-space:nowrap">Lucía entra en <span class="nw-blue">Pepito.</span></p>
+<p class="nw-h nw-abs nw-ink" id="s02-h2" style="left:120px;top:800px;font-size:110px;white-space:nowrap">Deja el móvil <span class="nw-blue">en la mesa.</span></p>
 """,
-    css="#s02-lucia svg { display: block; }",
-    js="""
-  // Camera pan door → table (the world moves left).
-  tl.fromTo(S("#s02-world"), { x: 0 }, { x: -780, duration: 5.6, ease: "power2.inOut" }, 0.2);
+    css="",
+    js=S02_PH[1] + """
   tl.fromTo(S("#s02-tag"), { opacity: 0, y: -20 }, { opacity: 1, y: 0, duration: 0.4, ease: "power3.out" }, IN);
-  // Lucía walks from the door to the chair (bob while walking).
-  tl.fromTo(S("#s02-lucia"), { x: 0 }, { x: 1400, duration: 4.3, ease: "power1.inOut" }, 0.5);
-  tl.fromTo(S("#s02-lucia"), { y: 0 }, { y: -14, duration: 0.27, ease: "sine.inOut", yoyo: true, repeat: 15 }, 0.5);
-  // Sits down.
-  tl.to(S("#s02-lucia"), { y: 70, scaleY: 0.9, transformOrigin: "50% 100%", duration: 0.45, ease: "power3.out" }, 4.85);
-  // Phone lands on the table on "deja el móvil".
-  tl.fromTo(S("#s02-phone"), { y: -150, opacity: 0, rotation: -18 },
-    { y: 0, opacity: 1, rotation: 0, duration: 0.45, ease: "bounce.out" }, 4.55);
+  tl.fromTo(S("#s02-h1"), { y: 60, opacity: 0 }, { y: 0, opacity: 1, duration: 0.45, ease: "power4.out" }, 0.6);
+  tl.to(S("#s02-h1"), { y: -40, opacity: 0, duration: 0.25, ease: "power2.in" }, 4.15);
+  tl.fromTo(S("#s02-h2"), { y: 60, opacity: 0 }, { y: 0, opacity: 1, duration: 0.45, ease: "power4.out" }, 4.55);
 """)
 
 # ---------------------------------------------------------------- 03 tap
+S03_PH = photo("s03", [("s03-mesa", 0, (1.05, 0, 0), (1.18, -30, 20))])
 SCENES[3] = dict(
-    body=f"""
-<svg class="nw-abs" style="left:0;top:0" width="1920" height="1080" viewBox="0 0 1920 1080">
-  <rect width="1920" height="1080" fill="#C98B4E"/>
-  <g stroke="#B9773E" stroke-width="10"><path d="M0 250 H1920 M0 520 H1920 M0 790 H1920"/></g>
-  <g stroke="#D69A5C" stroke-width="4" opacity=".6"><path d="M0 120 H1920 M0 380 H1920 M0 650 H1920 M0 930 H1920"/></g>
-</svg>
+    body=S03_PH[0] + """<div class="nw-scrim" id="s03-scrim" style="background:rgba(14,18,34,.58)"></div>""" + f"""
 <div class="nw-abs" id="s03-tag" style="left:250px;top:330px;width:420px;height:420px;border-radius:52px;background:#FBF5EC;box-shadow:0 30px 60px rgba(60,30,10,.35);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px">
   <div style="color:#1F5EFF">{NFC_WAVES("#1F5EFF", 90, 6)}</div>
   <div class="nw-h" style="font-size:66px;text-align:center;line-height:.95">TOCA<br>AQUÍ</div>
@@ -318,7 +274,8 @@ SCENES[3] = dict(
 #s03 .s03-ring { position: absolute; inset: 0; border-radius: 50%; border: 8px solid #FBF5EC; opacity: 0; }
 #s03-on { overflow: hidden; border-radius: 50px; }
 """,
-    js="""
+    js=S03_PH[1] + """
+  tl.fromTo(S("#s03-scrim"), { opacity: 0.25 }, { opacity: 1, duration: 0.8, ease: "power2.out" }, 0.4);
   tl.fromTo(S("#s03-tag"), { scale: 0.85, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.5, ease: "power3.out" }, 0.05);
   tl.fromTo(S("#s03-phone"), { x: 420, y: -820, rotation: 22 }, { x: 0, y: 0, rotation: -6, duration: 1.0, ease: "power3.inOut" }, 0.9);
   // Tap: the phone dips onto the tag, rings radiate, the screen wakes.
@@ -377,45 +334,26 @@ SCENES[4] = dict(
 """)
 
 # ---------------------------------------------------------------- 05 eats & leaves
+S05_PH = photo("s05", [("s05-come", 0, (1.06, 0, 0), (1.16, 20, -10)),
+                       ("s05-sale", 2.8, (1.14, -30, 0), (1.04, 0, 0))],
+               box="left:860px;top:130px;width:940px;height:820px", radius=30)
 SCENES[5] = dict(
     body=f"""
 <div class="nw-abs" id="s05-passwrap" style="left:120px;top:150px">{pass_card("s05-pass", 0, 600)}</div>
 <p class="nw-h nw-abs nw-blue" id="s05-title" style="left:120px;top:730px;font-size:92px;white-space:nowrap">Primer sello.</p>
-<div class="nw-abs s05-tile" id="s05-t1" style="left:860px;top:130px;background:#FFE2B0">
-  <svg viewBox="0 0 200 200" width="200" height="200"><circle cx="100" cy="100" r="84" fill="#fff"/><circle cx="100" cy="100" r="56" fill="#E9852F"/><circle cx="84" cy="88" r="10" fill="#F4A12B"/><circle cx="114" cy="110" r="12" fill="#B9773E"/></svg>
-</div>
-<div class="nw-abs s05-tile" id="s05-t2" style="left:1190px;top:130px;background:#F1E3CC">
-  <svg viewBox="0 0 200 200" width="200" height="200"><g id="s05-glass-l"><rect x="40" y="60" width="50" height="110" rx="8" fill="#F4A12B"/><rect x="40" y="48" width="50" height="22" rx="10" fill="#fff"/></g><g id="s05-glass-r"><rect x="110" y="60" width="50" height="110" rx="8" fill="#F4A12B"/><rect x="110" y="48" width="50" height="22" rx="10" fill="#fff"/></g></svg>
-</div>
-<div class="nw-abs s05-tile" id="s05-t3" style="left:1520px;top:130px;background:#E7ECFF">
-  <svg viewBox="0 0 200 200" width="200" height="200"><rect x="50" y="30" width="100" height="140" rx="10" fill="#fff"/><path d="M68 64h64M68 90h64M68 116h40" stroke="#5B6178" stroke-width="9" stroke-linecap="round"/><text x="100" y="158" font-family="Archivo Black" font-size="26" text-anchor="middle" fill="#1F5EFF">PAGADO</text></svg>
-</div>
-<div class="nw-abs" id="s05-door" style="left:860px;top:450px;width:940px;height:500px;border-radius:30px;background:#F1E3CC;overflow:hidden">
-  <svg class="nw-abs" style="left:0;top:0" width="940" height="500" viewBox="0 0 940 500"><rect x="560" y="60" width="220" height="440" rx="12" fill="#B9773E"/><rect x="580" y="84" width="180" height="200" rx="8" fill="#F4A12B" opacity=".5"/><text x="300" y="120" font-family="Archivo Black" font-size="46" fill="#141A33" text-anchor="middle">¡Hasta pronto!</text></svg>
-  <div class="nw-abs" id="s05-lucia" style="left:330px;top:150px;transform-origin:50% 100%">{lucia("s05-fig")}</div>
-</div>
+""" + S05_PH[0] + """
+<p class="nw-abs" id="s05-sub" style="left:126px;top:850px;font-size:48px;font-weight:700;color:#5B6178">Come, paga… y se va.</p>
 """,
     css="""
-#s05 .s05-tile { width: 280px; height: 280px; border-radius: 30px; display: grid; place-items: center; box-shadow: 0 20px 40px rgba(20,26,51,.12); }
+#s05-photo { box-shadow: 0 30px 60px rgba(20,26,51,.22); }
 #s05-passwrap .nw-pass { position: relative; }
-#s05-lucia svg { width: 150px; height: 382px; display: block; }
 """,
     js="""
   tl.fromTo(S("#s05-passwrap"), { x: -60, opacity: 0 }, { x: 0, opacity: 1, duration: 0.4, ease: "power3.out" }, 0.1);
   tl.fromTo(S("#s05-pass .nw-stamps i:first-child b"), { scale: 0, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.45, ease: "back.out(2.2)" }, 0.6);
   tl.fromTo(S("#s05-title"), { y: 60, opacity: 0 }, { y: 0, opacity: 1, duration: 0.42, ease: "power4.out" }, 0.75);
-  ["#s05-t1", "#s05-t2", "#s05-t3"].forEach((id, i) => {
-    tl.fromTo(S(id), { scale: 0, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.35, ease: "power3.out" }, 1.55 + i * 0.42);
-  });
-  tl.fromTo(S("#s05-glass-l"), { rotation: 0, transformOrigin: "50% 100%" }, { rotation: 12, duration: 0.18, yoyo: true, repeat: 1, ease: "power2.out" }, 2.1);
-  tl.fromTo(S("#s05-glass-r"), { rotation: 0, transformOrigin: "50% 100%" }, { rotation: -12, duration: 0.18, yoyo: true, repeat: 1, ease: "power2.out" }, 2.1);
-  tl.fromTo(S("#s05-door"), { y: 80, opacity: 0 }, { y: 0, opacity: 1, duration: 0.45, ease: "expo.out" }, 2.8);
-  // Lucía waves and walks out through the door.
-  tl.fromTo(S("#s05-lucia .arm-r"), { rotation: 0, transformOrigin: "167px 210px" }, { rotation: -150, duration: 0.3, ease: "power2.out" }, 3.2);
-  tl.to(S("#s05-lucia .arm-r"), { rotation: -120, duration: 0.22, yoyo: true, repeat: 5, ease: "sine.inOut" }, 3.5);
-  tl.to(S("#s05-lucia .arm-r"), { rotation: 0, duration: 0.25, ease: "power2.in" }, 4.9);
-  tl.fromTo(S("#s05-lucia"), { x: 0 }, { x: 330, duration: 1.4, ease: "power1.in" }, 5.2);
-  tl.fromTo(S("#s05-lucia"), { opacity: 1 }, { opacity: 0, duration: 0.3 }, 6.3);
+  tl.fromTo(S("#s05-photo"), { x: 120, opacity: 0 }, { x: 0, opacity: 1, duration: 0.5, ease: "expo.out" }, 0.2);
+  tl.fromTo(S("#s05-sub"), { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, ease: "power3.out" }, 2.9);
 """)
 
 # ---------------------------------------------------------------- 06 time passes
@@ -456,9 +394,12 @@ SCENES[6] = dict(
 """)
 
 # ---------------------------------------------------------------- 07 owner sends a promo
+S07_PH = photo("s07", [("s07-paco", 0, (1.04, 0, 0), (1.18, 60, -20))])
 SCENES[7] = dict(
-    body=f"""
-<div class="nw-ghost" style="font-size:420px;left:-40px;bottom:-90px">PROMO</div>
+    body=S07_PH[0] + f"""
+<div class="nw-scrim" id="s07-scrim" style="background:rgba(14,18,34,.62)"></div>
+<div class="nw-scrim" id="s07-low" style="background:linear-gradient(to top, rgba(14,18,34,.8) 0%, rgba(14,18,34,0) 40%)"></div>
+<p class="nw-h nw-abs nw-ink" id="s07-intro" style="left:120px;top:800px;font-size:110px;white-space:nowrap">Paco manda <span class="nw-blue">una promo.</span></p>
 <div class="nw-panel" id="s07-panel" style="left:110px;top:120px;width:1140px;height:760px">
   <div class="bar"><i></i><i></i><i></i><span style="margin-left:16px">NFC Wallet · Restaurante Pepito · Mensajes</span></div>
   <div style="padding:44px 48px;display:flex;flex-direction:column;gap:30px">
@@ -478,17 +419,18 @@ SCENES[7] = dict(
 <div class="nw-num" id="s07-n1" style="left:40px;top:548px">1</div>
 <div class="nw-num" id="s07-n2" style="left:40px;top:708px">2</div>
 <div class="nw-cursor" id="s07-cursor" style="left:1180px;top:860px">{CURSOR_SVG}</div>
-<div class="nw-abs" id="s07-paco" style="left:1370px;top:380px">{paco("s07-fig")}</div>
-<div class="nw-abs" id="s07-label" style="left:1350px;top:150px;font-weight:800;font-size:30px;color:#5B6178">Paco · dueño de Pepito</div>
+<span class="nw-chip nw-abs" id="s07-label" style="left:120px;top:690px;background:#FBF5EC;color:#141A33">Paco · dueño de Pepito</span>
 <div class="nw-abs" id="s07-fly" style="left:330px;top:745px"></div>
 """,
     css="""
-#s07-paco svg { width: 430px; height: 621px; display: block; }
 #s07 .s07-bubble { position: absolute; left: 0; top: 0; white-space: nowrap; background: #fff; border: 3px solid #E3E6EB; border-radius: 999px; padding: 10px 22px; font-weight: 800; font-size: 22px; box-shadow: 0 10px 24px rgba(20,26,51,.14); }
 """,
-    js="""
-  tl.fromTo(S("#s07-panel"), { x: 140, opacity: 0, scale: 0.96 }, { x: 0, opacity: 1, scale: 1, duration: 0.5, ease: "expo.out" }, 0.45);
-  tl.fromTo(S("#s07-paco"), { y: 120, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, ease: "power3.out" }, 0.6);
+    js=S07_PH[1] + """
+  tl.fromTo(S("#s07-scrim"), { opacity: 0 }, { opacity: 1, duration: 0.4, ease: "power2.out" }, 2.0);
+  tl.fromTo(S("#s07-intro"), { y: 60, opacity: 0 }, { y: 0, opacity: 1, duration: 0.45, ease: "power4.out" }, 0.5);
+  tl.to(S("#s07-intro, #s07-label"), { y: -30, opacity: 0, duration: 0.25, ease: "power2.in" }, 2.0);
+  tl.fromTo(S("#s07-panel"), { x: 140, opacity: 0, scale: 0.96 }, { x: 0, opacity: 1, scale: 1, duration: 0.5, ease: "expo.out" }, 2.2);
+  tl.fromTo(S("#s07-cursor"), { opacity: 0 }, { opacity: 1, duration: 0.2, ease: "power1.out" }, 2.6);
   typeText("#s07-text", "2x1 en cañas este viernes", 2.9, 1.7);
   tl.fromTo(S("#s07-caret"), { opacity: 1 }, { opacity: 0, duration: 0.25, yoyo: true, repeat: 15, ease: "steps(1)" }, 0.5);
   // Cursor: click 1 on "Todos los clientes", click 2 on "Enviar".
@@ -500,7 +442,6 @@ SCENES[7] = dict(
   tl.fromTo(S("#s07-n2"), { scale: 0, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.35, ease: "back.out(2)" }, 6.45);
   tl.fromTo(S("#s07-sent"), { x: -30, opacity: 0 }, { x: 0, opacity: 1, duration: 0.35, ease: "power3.out" }, 6.9);
   countUp("#s07-count", 318, 6.95, 1.3);
-  tl.fromTo(S("#s07-paco .paco-arm"), { rotation: 0 }, { rotation: -150, duration: 0.4, ease: "back.out(1.6)" }, 7.6);
   tl.to(S("#s07-n1, #s07-n2"), { scale: 0, opacity: 0, duration: 0.25, ease: "power2.in" }, 8.0);
   // The promo flies out to customers' phones.
   const fly = document.querySelector(S("#s07-fly"));
@@ -514,75 +455,62 @@ SCENES[7] = dict(
       { x: -260 - 120 * Math.cos(a) * 3, y: -420 * Math.sin(a) - 120, scale: 1, opacity: 1, duration: 0.9, ease: "power2.out" }, 8.3 + i * 0.12);
     tl.to(b, { x: -1100, opacity: 0, duration: 0.8, ease: "power2.in" }, 9.6 + i * 0.12);
   }
-  breath("#s07-paco", 8.2, 2.4, { y: -10 });
 """)
 
 # ---------------------------------------------------------------- 08 notification (held)
+S08_PH = photo("s08", [("s08-bolsillo", 0, (1.15, -140, 0), (1.22, -150, -20))])
 SCENES[8] = dict(
-    body=f"""
-<div class="nw-abs" style="inset:0;background:#141A33"></div>
-<div class="nw-abs" id="s08-glow" style="left:460px;top:-200px;width:1000px;height:1000px;border-radius:50%;background:radial-gradient(circle,rgba(31,94,255,.35),rgba(31,94,255,0) 66%)"></div>
-<div class="nw-phone" id="s08-phone" style="left:770px;top:120px">
+    body=S08_PH[0] + f"""
+<div class="nw-scrim" style="background:linear-gradient(to right, rgba(14,18,34,0) 35%, rgba(14,18,34,.7) 70%), linear-gradient(to top, rgba(14,18,34,.8) 0%, rgba(14,18,34,0) 40%)"></div>
+<p class="nw-h nw-abs nw-ink" id="s08-h1" style="left:110px;top:800px;font-size:84px;white-space:nowrap">Y en el bolsillo de Lucía…</p>
+<p class="nw-h nw-abs nw-ink" id="s08-h2" style="left:110px;top:900px;font-size:84px;white-space:nowrap"><span class="nw-blue">ahí está.</span></p>
+<div class="nw-phone" id="s08-phone" style="left:1400px;top:120px">
   <div class="nw-notch"></div>
   <div class="nw-screen" style="background:#22305F">
     <div class="nw-h" style="color:#fff;text-align:center;font-size:110px;margin-top:120px">19:42</div>
     <div style="color:#fff;text-align:center;font-size:24px;font-weight:600;opacity:.85">jueves, 23 de octubre</div>
   </div>
 </div>
-<div class="nw-notif" id="s08-notif" style="left:560px;top:420px;width:800px">
+<div class="nw-notif" id="s08-notif" style="left:1180px;top:420px;width:690px">
   <div class="nw-logo" style="width:84px;height:84px;font-size:44px">P</div>
   <div style="flex:1"><div class="t1">Restaurante Pepito · ahora</div><div class="t2">2x1 en cañas este viernes</div></div>
   {BEER_SVG.format(s=70)}
 </div>
 """,
     css="",
-    js="""
+    js=S08_PH[1] + """
   tl.fromTo(S("#s08-phone"), { y: 120, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, ease: "power3.out" }, 0);
+  tl.fromTo(S("#s08-h1"), { y: 50, opacity: 0 }, { y: 0, opacity: 1, duration: 0.45, ease: "power4.out" }, 0.3);
   tl.fromTo(S("#s08-notif"), { y: -260, opacity: 0, scale: 0.9 }, { y: 0, opacity: 1, scale: 1, duration: 0.55, ease: "back.out(1.5)" }, 1.6);
+  tl.fromTo(S("#s08-h2"), { scale: 1.3, opacity: 0, transformOrigin: "0% 50%" }, { scale: 1, opacity: 1, duration: 0.4, ease: "power4.out" }, 1.75);
   // Held frame: nothing moves from 2.15 to 3.6.
   tl.fromTo(S("#s08-phone"), { scale: 1 }, { scale: 1.06, duration: D - 3.6, ease: "sine.inOut" }, 3.6);
   tl.fromTo(S("#s08-notif"), { scale: 1 }, { scale: 1.08, duration: D - 3.6, ease: "sine.inOut" }, 3.6);
-  breath("#s08-glow", 3.6, 2.4, { scale: 1.12 });
 """)
 
 # ---------------------------------------------------------------- 09 she comes back
 S09_PASS = pass_card("s09-pass", 1, 600)
+S09_PH = photo("s09", [("s09-vuelve", 0, (1.05, 0, 0), (1.14, 20, 0)),
+                       ("s09-brindis", 2.7, (1.14, 0, 0), (1.04, 0, 0))],
+               box="left:80px;top:150px;width:1000px;height:800px", radius=30)
 SCENES[9] = dict(
     body=f"""
-<svg class="nw-abs" style="left:0;top:0" width="1920" height="1080" viewBox="0 0 1920 1080">
-  <rect width="1920" height="1080" fill="#F6EBDA"/><rect y="930" width="1920" height="150" fill="#EFE2CC"/>
-  <g fill="#F4A12B"><circle cx="200" cy="120" r="20"/><circle cx="500" cy="120" r="20"/><circle cx="800" cy="120" r="20"/></g>
-  <rect x="80" y="760" width="1000" height="26" rx="10" fill="#B9773E"/><rect x="560" y="786" width="40" height="144" fill="#8E5A2C"/>
-  <rect x="520" y="732" width="40" height="28" rx="6" fill="#FBF5EC"/>
-</svg>
-<div class="nw-chip nw-abs" id="s09-day" style="left:110px;top:80px;background:#141A33;color:#FBF5EC">VIERNES · 20:30</div>
-<div class="nw-abs" id="s09-group" style="left:140px;top:250px;display:flex;align-items:flex-end;gap:30px">
-  <div id="s09-f1">{friend("s09-a", "#8C5A3C", "#06A77D", "#2B2A3A")}</div>
-  <div id="s09-l">{lucia("s09-lu")}</div>
-  <div id="s09-f2">{friend("s09-b", "#F0C9A8", "#E85D75", "#B9773E")}</div>
-</div>
-<div class="nw-abs" id="s09-phone" style="left:508px;top:640px;width:70px;height:120px;border-radius:14px;background:#0E1222"></div>
-<div class="nw-abs" id="s09-rings" style="left:470px;top:650px;width:150px;height:150px"><div class="s09-ring"></div><div class="s09-ring"></div></div>
+""" + S09_PH[0] + f"""
+<p class="nw-h nw-abs" id="s09-h" style="left:1140px;top:360px;font-size:96px;line-height:1">El viernes vuelve.<br><span class="nw-blue">Y no viene sola.</span></p>
+<div class="nw-chip nw-abs" id="s09-day" style="left:110px;top:70px;background:#141A33;color:#FBF5EC">VIERNES · 20:30</div>
 <div class="nw-abs" id="s09-passwrap" style="left:1140px;top:170px">{S09_PASS}</div>
 <p class="nw-h nw-abs" id="s09-t1" style="left:1140px;top:730px;font-size:88px;white-space:nowrap">¡Sello <span class="nw-blue">sumado!</span></p>
 <p class="nw-abs" id="s09-t2" style="left:1146px;top:850px;font-size:40px;font-weight:700;color:#5B6178">Llevas 2 de 5</p>
 """,
     css="""
 #s09-passwrap .nw-pass { position: relative; }
-#s09-group svg { display: block; }
-#s09 .s09-ring { position: absolute; inset: 0; border-radius: 50%; border: 7px solid #1F5EFF; opacity: 0; }
+#s09-photo { box-shadow: 0 30px 60px rgba(20,26,51,.22); }
 """,
-    js="""
+    js=S09_PH[1] + """
   tl.fromTo(S("#s09-day"), { y: -30, opacity: 0 }, { y: 0, opacity: 1, duration: 0.35, ease: "power3.out" }, IN);
-  tl.fromTo(S("#s09-group"), { x: -900 }, { x: 0, duration: 1.7, ease: "power2.out" }, 0.3);
-  tl.fromTo(S("#s09-group"), { y: 0 }, { y: -12, duration: 0.26, yoyo: true, repeat: 5, ease: "sine.inOut" }, 0.3);
-  tl.fromTo(S("#s09-f1"), { scale: 0.9 }, { scale: 1, duration: 0.35, ease: "back.out(2)" }, 2.1);
-  tl.fromTo(S("#s09-f2"), { scale: 0.9 }, { scale: 1, duration: 0.35, ease: "back.out(2)" }, 2.25);
-  // Tap on the table tag.
-  tl.fromTo(S("#s09-phone"), { y: -300, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, ease: "power3.out" }, 2.7);
-  gsap.utils.toArray(S(".s09-ring")).forEach((r, i) => {
-    tl.fromTo(r, { scale: 0.3, opacity: 0.9 }, { scale: 1.8, opacity: 0, duration: 0.7, ease: "power2.out" }, 3.1 + i * 0.16);
-  });
+  tl.fromTo(S("#s09-photo"), { x: -120, opacity: 0 }, { x: 0, opacity: 1, duration: 0.5, ease: "expo.out" }, 0.15);
+  tl.fromTo(S("#s09-h"), { y: 50, opacity: 0 }, { y: 0, opacity: 1, duration: 0.45, ease: "power4.out" }, 0.6);
+  tl.to(S("#s09-h"), { y: -40, opacity: 0, duration: 0.25, ease: "power2.in" }, 2.7);
   tl.fromTo(S("#s09-passwrap"), { x: 120, opacity: 0 }, { x: 0, opacity: 1, duration: 0.45, ease: "expo.out" }, 3.0);
   tl.fromTo(S("#s09-pass .nw-stamps i:nth-child(2) b"), { scale: 0, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.45, ease: "back.out(2.2)" }, 3.4);
   tl.fromTo(S("#s09-t1"), { scale: 1.3, opacity: 0, transformOrigin: "0% 50%" }, { scale: 1, opacity: 1, duration: 0.4, ease: "power4.out" }, 3.55);
@@ -606,8 +534,10 @@ SCENES[10] = dict(
 """)
 
 # ---------------------------------------------------------------- 11 loyalty
+S11_PH = photo("s11", [("s11-camarero", 0, (1.04, 0, 0), (1.16, -10, 10))],
+               box="left:1240px;top:110px;width:600px;height:860px", radius=30)
 SCENES[11] = dict(
-    body=f"""
+    body=S11_PH[0] + f"""
 <p class="nw-h nw-abs" id="s11-title" style="left:120px;top:120px;font-size:100px;white-space:nowrap">Tarjeta de <span class="nw-blue">fidelidad</span></p>
 <div class="nw-abs" id="s11-passwrap" style="left:120px;top:330px">{pass_card("s11-pass", 0, 700, reward='<span id="s11-reward">Café gratis</span>')}</div>
 <div class="nw-abs" id="s11-qr" style="left:880px;top:430px;width:200px;height:200px;border-radius:16px;border:14px solid #fff;box-shadow:0 20px 40px rgba(20,26,51,.2);background:conic-gradient(from 90deg at 50% 50%, #fff 25%, #0E1222 0 50%, #fff 0 75%, #0E1222 0) 0 0 / 43px 43px"></div>
@@ -623,8 +553,9 @@ SCENES[11] = dict(
   </div>
 </div>
 """,
-    css="#s11-passwrap .nw-pass { position: relative; } #s11-reward { display: inline-block; }",
-    js="""
+    css="#s11-passwrap .nw-pass { position: relative; } #s11-reward { display: inline-block; } #s11-photo { box-shadow: 0 30px 60px rgba(20,26,51,.22); }",
+    js=S11_PH[1] + """
+  tl.fromTo(S("#s11-photo"), { x: 120, opacity: 0 }, { x: 0, opacity: 1, duration: 0.5, ease: "expo.out" }, 0.3);
   tl.fromTo(S("#s11-title"), { y: 60, opacity: 0 }, { y: 0, opacity: 1, duration: 0.42, ease: "power4.out" }, IN);
   tl.fromTo(S("#s11-passwrap"), { x: -80, opacity: 0 }, { x: 0, opacity: 1, duration: 0.45, ease: "expo.out" }, 0.75);
   gsap.utils.toArray(S("#s11-pass .nw-stamps i b")).forEach((b, i) => {
@@ -751,19 +682,20 @@ SCENES[14] = dict(
 """)
 
 # ---------------------------------------------------------------- 15 close
+S15_PH = photo("s15", [("s15-local", 0, (1.06, 0, 0), (1.16, 0, -20))])
 SCENES[15] = dict(
-    body=f"""
-<div class="nw-glow" id="s15-glow" style="width:1500px;height:1500px;left:210px;top:-560px"></div>
+    body=S15_PH[0] + f"""
+<div class="nw-scrim" id="s15-scrim" style="background:rgba(14,18,34,.66)"></div>
 <div class="nw-abs" style="left:0;right:0;top:250px;display:flex;align-items:center;justify-content:center;gap:40px">
   <div id="s15-icon" style="width:190px;height:190px;border-radius:46px;background:#1F5EFF;display:grid;place-items:center">{NFC_WAVES("#fff", 120, 6)}</div>
-  <div class="nw-h" id="s15-word" style="font-size:180px">NFC Wallet</div>
+  <div class="nw-h nw-ink" id="s15-word" style="font-size:180px">NFC Wallet</div>
 </div>
-<p class="nw-h nw-abs" id="s15-claim" style="left:0;right:0;top:530px;text-align:center;font-size:92px">Tus clientes vuelven <span class="nw-blue">solos.</span></p>
-<p class="nw-abs" id="s15-price" style="left:0;right:0;top:680px;text-align:center;font-size:44px;font-weight:700">Desde 29 €/mes por restaurante · 14 días gratis</p>
+<p class="nw-h nw-abs nw-ink" id="s15-claim" style="left:0;right:0;top:530px;text-align:center;font-size:92px">Tus clientes vuelven <span class="nw-blue">solos.</span></p>
+<p class="nw-abs nw-ink" id="s15-price" style="left:0;right:0;top:680px;text-align:center;font-size:44px;font-weight:700">Desde 29 €/mes por restaurante · 14 días gratis</p>
 <div class="nw-abs" id="s15-url" style="left:0;right:0;top:790px;display:flex;justify-content:center"><span class="nw-btn" id="s15-btn" style="background:#1F5EFF;font-size:52px;padding:26px 70px">nfcwallet.es</span></div>
 """,
     css="#s15-icon path { stroke-dasharray: 60; }",
-    js="""
+    js=S15_PH[1] + """
   tl.fromTo(S("#s15-icon"), { scale: 0, rotation: -20 }, { scale: 1, rotation: 0, duration: 0.5, ease: "power3.out" }, IN);
   tl.fromTo(S("#s15-icon path"), { strokeDashoffset: 60 }, { strokeDashoffset: 0, duration: 0.5, ease: "power2.out", stagger: 0.12 }, 0.45);
   tl.fromTo(S("#s15-word"), { x: -80, opacity: 0, scale: 1.08, transformOrigin: "0% 50%" }, { x: 0, opacity: 1, scale: 1, duration: 0.6, ease: "expo.out" }, 0.5);
@@ -771,7 +703,7 @@ SCENES[15] = dict(
   tl.fromTo(S("#s15-price"), { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, ease: "power3.out" }, 3.0);
   tl.fromTo(S("#s15-url"), { scale: 0.6, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.45, ease: "back.out(1.8)" }, 4.3);
   tl.fromTo(S("#s15-btn"), { boxShadow: "0 0 0 0px rgba(31,94,255,.35)" }, { boxShadow: "0 0 0 26px rgba(31,94,255,0)", duration: 1.1, ease: "power2.out", repeat: 4 }, 5.0);
-  breath("#s15-glow", 0, 2.6, { scale: 1.1 });
+  tl.fromTo(S("#s15-scrim"), { opacity: 0.35 }, { opacity: 1, duration: 0.6, ease: "power2.out" }, 0);
 """)
 
 
@@ -779,13 +711,9 @@ SCENES[15] = dict(
 # Extra beats that fill the holds flagged by the animation map (no dead zone > 1 s).
 EXTRA = {
     2: dict(body="""
-<div class="nw-abs" id="s02-mesa" style="left:1560px;top:500px"><span class="nw-chip" style="background:#141A33;color:#FBF5EC">Mesa 4</span></div>
-<div class="nw-abs" id="s02-rings" style="left:1480px;top:600px;width:120px;height:120px"><div class="s02-ring"></div><div class="s02-ring"></div></div>
-""", css="#s02 .s02-ring { position: absolute; inset: 0; border-radius: 50%; border: 6px solid #1F5EFF; opacity: 0; }", js="""
-  tl.fromTo(S("#s02-mesa"), { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 0.35, ease: "back.out(2)" }, 5.4);
-  gsap.utils.toArray(S(".s02-ring")).forEach((r, i) => {
-    tl.fromTo(r, { scale: 0.3, opacity: 0.9 }, { scale: 1.8, opacity: 0, duration: 0.8, ease: "power2.out", repeat: 2, repeatDelay: 0.1 }, 5.9 + i * 0.25);
-  });
+<div class="nw-abs" id="s02-mesa" style="left:1560px;top:80px"><span class="nw-chip" style="background:#FBF5EC;color:#141A33">Mesa 4</span></div>
+""", css="", js="""
+  tl.fromTo(S("#s02-mesa"), { y: -30, opacity: 0 }, { y: 0, opacity: 1, duration: 0.35, ease: "back.out(2)" }, 5.4);
 """),
     3: dict(body="""<span class="nw-chip nw-abs" id="s03-c3" style="right:120px;top:780px;background:#141A33;color:#FBF5EC">Funciona en iPhone y Android</span>""",
             css="", js="""
@@ -807,27 +735,17 @@ EXTRA = {
   tl.fromTo(S("#s04-passwrap"), { rotationY: 0 }, { rotationY: 8, duration: 0.6, yoyo: true, repeat: 1, ease: "sine.inOut", transformPerspective: 1200 }, 7.0);
 """),
     5: dict(body="", css="", js="""
-  tl.fromTo(S("#s05-door svg rect:nth-of-type(1)"), { scaleX: 1 }, { scaleX: 0.15, duration: 0.4, ease: "power3.in", transformOrigin: "100% 50%" }, 6.7);
-  tl.fromTo(S("#s05-door"), { rotation: 0 }, { rotation: -1.2, duration: 0.08, yoyo: true, repeat: 3, ease: "sine.inOut" }, 7.1);
   tl.fromTo(S("#s05-title"), { scale: 1 }, { scale: 1.06, duration: 0.25, yoyo: true, repeat: 1, ease: "power2.out", transformOrigin: "0% 50%" }, 7.6);
 """),
-    7: dict(body="""<p class="nw-h nw-abs" id="s07-done" style="left:110px;top:910px;font-size:96px;white-space:nowrap">Dos clics. <span class="nw-blue">Listo.</span></p>""",
+    7: dict(body="""<p class="nw-h nw-abs nw-ink" id="s07-done" style="left:110px;top:910px;font-size:96px;white-space:nowrap">Dos clics. <span class="nw-blue">Listo.</span></p>""",
             css="", js="""
-  tl.fromTo(S("#s07-label"), { x: 60, opacity: 0 }, { x: 0, opacity: 1, duration: 0.4, ease: "power3.out" }, 1.5);
+  tl.fromTo(S("#s07-label"), { x: -40, opacity: 0 }, { x: 0, opacity: 1, duration: 0.4, ease: "power3.out" }, 0.9);
   tl.fromTo(S("#s07-done"), { y: 60, opacity: 0 }, { y: 0, opacity: 1, duration: 0.42, ease: "power4.out" }, 11.2);
-  tl.fromTo(S("#s07-paco .paco-arm"), { rotation: -150 }, { rotation: -120, duration: 0.25, yoyo: true, repeat: 5, ease: "sine.inOut", immediateRender: false }, 12.0);
 """),
     9: dict(body="""
 <p class="nw-abs" id="s09-t3" style="left:1146px;top:920px;font-size:40px;font-weight:800;color:#1F5EFF">Ha vuelto gracias a tu promo.</p>
-<div class="nw-abs" id="s09-cheers" style="left:890px;top:640px;display:flex;gap:6px">
-  <div id="s09-g1">""" + BEER_SVG.format(s=110) + """</div><div id="s09-g2" style="transform:scaleX(-1)">""" + BEER_SVG.format(s=110) + """</div>
-</div>
 """, css="", js="""
-  tl.fromTo(S("#s09-cheers"), { y: 120, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, ease: "power3.out" }, 4.6);
-  tl.fromTo(S("#s09-g1"), { rotation: 0 }, { rotation: 14, duration: 0.18, yoyo: true, repeat: 1, ease: "power2.out", transformOrigin: "50% 100%" }, 5.2);
-  tl.fromTo(S("#s09-g2"), { rotation: 0 }, { rotation: -14, duration: 0.18, yoyo: true, repeat: 1, ease: "power2.out", transformOrigin: "50% 100%" }, 5.2);
   tl.fromTo(S("#s09-t3"), { x: -40, opacity: 0 }, { x: 0, opacity: 1, duration: 0.4, ease: "power3.out" }, 6.1);
-  tl.fromTo(S("#s09-group"), { scale: 1 }, { scale: 1.04, duration: 2.6, ease: "sine.inOut", transformOrigin: "50% 100%" }, 7.0);
 """),
     11: dict(body="""<span class="nw-chip nw-abs" id="s11-cfg" style="left:120px;top:830px;background:#141A33;color:#FBF5EC">Tú eliges el premio y los sellos</span>""",
              css="", js="""
@@ -871,25 +789,9 @@ for n, ex in EXTRA.items():
 
 
 # ---------------------------------------------------------------- audio plan
-VO_OFFSET = {n: (TIN[n][1] + 0.1 if TIN[n][0] != "none" else 0.1) for n in range(1, 16)}
-VO_OFFSET[1] = 0.1
-# Scene-local SFX cues: (scene, local time, file, volume)
-SFX = [
-    (1, 1.42, "impact-bass-1", 0.32),
-    (2, 4.6, "pop", 0.45),
-    (3, 2.55, "sparkle", 0.45), (3, 2.15, "whoosh-short", 0.35),
-    (4, 1.1, "click", 0.7), (4, 1.75, "whoosh-short", 0.4),
-    (5, 0.6, "pop", 0.55), (5, 1.55, "click", 0.35), (5, 1.97, "click", 0.35), (5, 2.39, "click", 0.35),
-    (6, 0.35, "riser", 0.16),
-    (7, 2.9, "typing", 0.45), (7, 5.55, "click", 0.8), (7, 6.45, "click", 0.8), (7, 6.9, "chime", 0.45),
-    (8, 1.6, "notification", 0.8),
-    (9, 3.1, "sparkle", 0.4), (9, 3.4, "pop", 0.55),
-    (11, 1.95, "pop", 0.4), (11, 3.6, "sparkle", 0.45), (11, 6.3, "click", 0.7), (11, 6.5, "chime", 0.4),
-    (12, 1.62, "click", 0.7),
-    (13, 1.55, "click", 0.8), (13, 2.05, "click", 0.8), (13, 3.15, "sparkle", 0.45),
-    (14, 0.6, "pop", 0.35), (14, 2.1, "pop", 0.35), (14, 3.5, "pop", 0.35), (14, 5.6, "pop", 0.35),
-    (15, 0.45, "sparkle", 0.45), (15, 4.3, "pop", 0.5),
-]
+# v3: no voice-over and no SFX; the only audio is the Lyria music bed.
+MUSIC = "assets/music/lyria.wav"
+FADE_IN, FADE_OUT = 0.4, 2.0
 
 
 def build():
@@ -913,49 +815,13 @@ def build():
             ease = "power4.inOut" if kind == "push" else "expo.inOut"
             trans.append(f'      tl.fromTo("#{prev}", {{ xPercent: 0, filter: "blur(0px)" }}, {{ xPercent: -100, filter: "{blur}", duration: {ov}, ease: "{ease}", immediateRender: false }}, {start});')
             trans.append(f'      tl.fromTo("#el-{sid}", {{ xPercent: 100, filter: "{blur}" }}, {{ xPercent: 0, filter: "blur(0px)", duration: {ov}, ease: "{ease}" }}, {start});')
-            sfx_file = "whoosh" if kind == "whip" else "whoosh-short"
-            audio.append(f'      <audio id="sfx-tr-{sid}" src="assets/sfx/{sfx_file}.mp3" data-start="{max(0, start - 0.05):.3f}" data-duration="0.57" data-track-index="13" data-volume="0.35" data-audio-group="sfx"></audio>')
 
-    vo_windows = []
-    for n in range(1, 16):
-        start, dur, ov = slot(n)
-        f = ROOT / "assets" / "voice" / f"vo-{n:02d}.wav"
-        length = round(wav_len(f), 3)
-        t0 = round(start + VO_OFFSET[n], 3)
-        assert t0 + length <= start + dur + 1e-6, f"voice {n} overruns its scene"
-        vo_windows.append((t0, t0 + length))
-        audio.append(f'      <audio id="vo-{n:02d}" src="assets/voice/vo-{n:02d}.wav" data-start="{t0}" '
-                     f'data-duration="{length}" data-track-index="11" data-volume="1" data-audio-group="voiceover"></audio>')
-
-    lanes_end = {12: -1.0, 14: -1.0, 15: -1.0}  # SFX tracks: first free lane, no overlaps per track
-    for i, (n, t, name, vol) in sorted(enumerate(SFX), key=lambda x: slot(x[1][0])[0] + x[1][1]):
-        start, dur, ov = slot(n)
-        f = ROOT / "assets" / "sfx" / f"{name}.mp3"
-        t0 = round(start + t, 3)
-        length = round(min(wav_len(f), start + dur - t0), 3)
-        track = next(k for k, end in lanes_end.items() if end <= t0)
-        lanes_end[track] = t0 + length
-        audio.append(f'      <audio id="sfx-{i:02d}" src="assets/sfx/{name}.mp3" data-start="{t0}" '
-                     f'data-duration="{length}" data-track-index="{track}" data-volume="{vol}" data-audio-group="sfx"></audio>')
-
-    # Music bed. Ducking under the voice is done by the carve (EQ dips + level
-    # envelope) run after the index is written; here only the bed itself.
-    VOICE_CHAIN = {"version": 1, "nodes": [
-        {"type": "highpass", "id": "v1", "params": {"frequency": 90, "q": 0.707}},
-        {"type": "peaking", "id": "v2", "params": {"frequency": 320, "gain": -3, "q": 1.2}},
-        {"type": "compressor", "id": "v3", "params": {"threshold": -24, "ratio": 3, "attack": 8, "release": 160, "makeup": 4}},
-        {"type": "peaking", "id": "v4", "params": {"frequency": 3200, "gain": 3, "q": 0.9}},
-        {"type": "limiter", "id": "v5", "params": {"limit": -1.5, "attack": 2, "release": 60}}]}
-    SFX_CHAIN = {"version": 1, "nodes": [
-        {"type": "compressor", "id": "s1", "params": {"threshold": -18, "ratio": 4, "attack": 2, "release": 120}},
-        {"type": "limiter", "id": "s2", "params": {"limit": -6, "attack": 1, "release": 80}}]}
-    def bus(gid, label, vol, chain):
-        return (f'      <hf-audio-group id="{gid}" data-label="{label}" data-volume="{vol}" '
-                f"data-fx-chain='{json.dumps(chain, separators=(',', ':'))}'></hf-audio-group>")
-    audio.insert(0, bus("sfx", "Efectos", 0.8, SFX_CHAIN))
-    audio.insert(0, bus("voiceover", "Voz en off", 1.0, VOICE_CHAIN))
-    audio.insert(0, f'      <audio id="bgm" src="assets/music/bed-v2.wav" data-start="0" data-duration="{TOTAL}" '
-                    f'data-track-index="10" data-volume="0.6" data-audio-group="music"></audio>')
+    # Music bed with a fade-in/out volume lane; nothing to duck under.
+    auto = {"version": 1, "lanes": [{"target": "volume", "points": [
+        {"t": 0, "v": 0}, {"t": FADE_IN, "v": 1}, {"t": TOTAL - FADE_OUT, "v": 1}, {"t": TOTAL, "v": 0}]}]}
+    value = html.escape(json.dumps(auto, separators=(",", ":")), quote=True)
+    audio.append(f'      <audio id="bgm" src="{MUSIC}" data-start="0" data-duration="{TOTAL}" '
+                 f'data-track-index="10" data-volume="0.8" data-automation="{value}"></audio>')
 
     index = f"""<!doctype html>
 <html lang="es">
@@ -985,29 +851,7 @@ def build():
 </html>
 """
     (ROOT / "index.html").write_text(index)
-    carve_and_fade()
     print("built", len(SCENES), "scenes;", len(audio), "audio clips; total", TOTAL, "s")
-
-
-def carve_and_fade():
-    """Voice-over carve on the bed, then fold a fade-in/out volume lane into its automation."""
-    import html
-    import os
-    import re
-    carve = pathlib.Path(os.path.expanduser("~/.claude/skills/hyperframes-audio/scripts/carve.mjs"))
-    subprocess.run(["node", str(carve), "--comp", "index.html", "--strength", "0.5"], cwd=ROOT, check=True, capture_output=True)
-    path = ROOT / "index.html"
-    src = path.read_text()
-    tag = re.search(r'<audio id="bgm"[^>]*>', src).group(0)
-    m = re.search(r'data-automation=("([^"]*)"|\'([^\']*)\')', tag)
-    auto = json.loads(html.unescape(m.group(2) or m.group(3))) if m else {"version": 1, "lanes": []}
-    auto["lanes"] = [l for l in auto["lanes"] if l["target"] != "volume"]
-    auto["lanes"].insert(0, {"target": "volume", "points": [
-        {"t": 0, "v": 0}, {"t": 0.4, "v": 1}, {"t": TOTAL - 2.0, "v": 1}, {"t": TOTAL, "v": 0}]})
-    value = html.escape(json.dumps(auto, separators=(",", ":")), quote=True)
-    new_tag = (tag.replace(m.group(0), f'data-automation="{value}"') if m
-               else tag[:-1] + f' data-automation="{value}">')
-    path.write_text(src.replace(tag, new_tag))
 
 
 if __name__ == "__main__":
