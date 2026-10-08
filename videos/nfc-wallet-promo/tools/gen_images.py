@@ -15,6 +15,7 @@ import base64
 import json
 import os
 import pathlib
+import subprocess
 import sys
 import time
 import urllib.error
@@ -56,7 +57,10 @@ def call(path, body=None, tries=6):
 def generate(model, prompt, refs=(), aspect="16:9"):
     parts = [{"text": prompt}]
     for ref in refs:
-        parts.append({"inline_data": {"mime_type": "image/png", "data": base64.b64encode(ref.read_bytes()).decode()}})
+        # Full-size PNG refs make the API fail with 500s; send a 768 px JPEG instead.
+        jpg = subprocess.run(["ffmpeg", "-v", "error", "-i", str(ref), "-vf", "scale=-2:768", "-q:v", "3",
+                              "-f", "image2", "-c:v", "mjpeg", "-"], capture_output=True, check=True).stdout
+        parts.append({"inline_data": {"mime_type": "image/jpeg", "data": base64.b64encode(jpg).decode()}})
     body = {"contents": [{"parts": parts}],
             "generationConfig": {"responseModalities": ["IMAGE"], "imageConfig": {"aspectRatio": aspect}}}
     res = call(f"models/{model}:generateContent", body)
@@ -101,6 +105,8 @@ def main():
         for shot in spec["shots"]:
             if a.only and a.only != shot["id"]:
                 continue
+            if not a.only and (OUT / f"{shot['id']}.png").exists():
+                continue  # resumable: pass --only to regenerate one shot
             refs = [chars / f"{r}.png" for r in shot["refs"] if (chars / f"{r}.png").exists()]
             who = "; ".join(spec["characters"][r] for r in shot["refs"])
             prompt = f"{shot['prompt']}. {('People: ' + who + '. Keep their faces and clothes identical to the reference images. ') if who else ''}{style}"
