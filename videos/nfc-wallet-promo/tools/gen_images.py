@@ -16,6 +16,8 @@ import json
 import os
 import pathlib
 import sys
+import time
+import urllib.error
 import urllib.request
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
@@ -30,11 +32,25 @@ def key():
     return k
 
 
-def call(path, body=None):
+def call(path, body=None, tries=6):
+    """POST/GET with backoff on overload (429/500/503) and read timeouts."""
     req = urllib.request.Request(f"{API}/{path}", data=json.dumps(body).encode() if body else None,
                                  headers={"x-goog-api-key": key(), "Content-Type": "application/json"})
-    with urllib.request.urlopen(req, timeout=300) as r:
-        return json.load(r)
+    for i in range(tries):
+        try:
+            with urllib.request.urlopen(req, timeout=600) as r:
+                return json.load(r)
+        except urllib.error.HTTPError as e:
+            if e.code not in (429, 500, 503) or i == tries - 1:
+                raise RuntimeError(f"{e.code}: {e.read().decode()[:400]}") from None
+            reason = e.code
+        except TimeoutError:
+            if i == tries - 1:
+                raise
+            reason = "timeout"
+        wait = 15 * 2 ** i
+        print(f"  retry {i + 1} in {wait}s ({reason})", file=sys.stderr, flush=True)
+        time.sleep(wait)
 
 
 def generate(model, prompt, refs=(), aspect="16:9"):
