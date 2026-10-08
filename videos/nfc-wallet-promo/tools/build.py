@@ -13,8 +13,9 @@ import subprocess
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 W, H = 1920, 1080
 
-# Scene boundaries snapped to strong beats of assets/music/bed-v2.wav (see beats/).
-B = [0, 6, 14, 23.812, 33, 42, 48, 62, 70.066, 80.062, 83.847, 94.4, 103.967, 113, 123.681, 135]
+# Scene boundaries snapped to the strongest beat within ±0.35 s of the v2 cuts,
+# on assets/music/lyria.wav (see beats/).
+B = [0, 5.767, 14.339, 23.812, 32.835, 41.857, 48.173, 61.707, 69.827, 79.978, 83.587, 94.414, 103.887, 113.136, 123.512, 135]
 # Transition INTO each scene: (kind, overlap seconds).
 TIN = {1: ("none", 0), 2: ("push", .35), 3: ("cut", 0), 4: ("cut", 0), 5: ("push", .35),
        6: ("cut", 0), 7: ("push", .35), 8: ("whip", .25), 9: ("push", .35), 10: ("cut", 0),
