@@ -1,0 +1,27 @@
+{
+  "style": "Photorealistic commercial photography, 35mm lens, shallow depth of field, warm natural light, modern Spanish tapas bar, cinematic color grade with warm amber highlights and soft blue accents, high detail, no text, no logos, no watermarks",
+  "characters": {
+    "lucia": "Lucía, a Spanish woman around 30, short dark wavy hair, warm smile, mustard yellow jacket over a white t-shirt, dark jeans",
+    "paco": "Paco, a Spanish bar owner around 50, bald with a short dark beard, friendly face, dark t-shirt and a blue apron",
+    "amigo": "a Spanish man around 30, curly black hair, green sweater",
+    "amiga": "a Spanish woman around 30, auburn hair in a ponytail, pink sweater"
+  },
+  "shots": [
+    {"id": "s02-entra", "scene": 2, "refs": ["lucia"], "prompt": "Lucía walking through the door of a bright, cozy Spanish tapas bar called Pepito at lunchtime, wooden tables, hanging warm bulbs, wide shot, she looks happy"},
+    {"id": "s02-sienta", "scene": 2, "refs": ["lucia"], "prompt": "Lucía sitting at a wooden table by the window in the tapas bar, placing her smartphone face up on the table next to a small white square table sign, medium shot"},
+    {"id": "s03-mesa", "scene": 3, "refs": [], "prompt": "Top-down close-up of a wooden bar table with a small white square NFC table sign standing on it, a smartphone being lowered towards the sign by a woman's hand with a mustard yellow sleeve, warm light"},
+    {"id": "s05-come", "scene": 5, "refs": ["lucia"], "prompt": "Lucía enjoying a plate of tapas and a small beer at the bar table, laughing, medium close-up"},
+    {"id": "s05-sale", "scene": 5, "refs": ["lucia", "paco"], "prompt": "Lucía waving goodbye at the door of the tapas bar while the owner Paco waves back from behind the bar counter, medium wide shot"},
+    {"id": "s07-paco", "scene": 7, "refs": ["paco"], "prompt": "Paco the bar owner standing behind the bar counter in the empty afternoon, looking at a laptop on the counter and smiling, side light from the window, medium shot, space on the left side of the frame"},
+    {"id": "s08-bolsillo", "scene": 8, "refs": ["lucia"], "prompt": "Lucía on a city street at dusk taking her smartphone out of her jacket pocket and looking at the screen with a surprised smile, shallow depth of field, phone screen not visible, medium close-up"},
+    {"id": "s09-vuelve", "scene": 9, "refs": ["lucia", "amigo", "amiga"], "prompt": "Lucía walking into the busy tapas bar on a Friday evening with two friends, all smiling, warm evening light, wide shot"},
+    {"id": "s09-brindis", "scene": 9, "refs": ["lucia", "amigo", "amiga"], "prompt": "Lucía and her two friends toasting with beer glasses at a wooden table in the tapas bar, joyful, a smartphone on the table, medium shot"},
+    {"id": "s11-camarero", "scene": 11, "refs": [], "prompt": "A young waiter in a blue apron scanning a customer's phone with his own smartphone at a bar table, hands and phones in focus, close-up"},
+    {"id": "s15-local", "scene": 15, "refs": ["paco"], "prompt": "Paco the owner standing proudly at the entrance of his full, lively tapas bar at night, arms crossed, smiling at camera, wide shot, space above for a title"}
+  ],
+  "music": {
+    "prompt": "Upbeat energetic electro pop for a fast-paced product promo, punchy four-on-the-floor kick, bright plucky synths, claps, driving bassline, optimistic and modern, no vocals",
+    "bpm": 132,
+    "duration": 137
+  }
+}

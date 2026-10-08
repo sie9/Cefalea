@@ -31,6 +31,8 @@ Tono (palabras del usuario): "muy ágil de velocidad y sencillez", "música muy 
   - Con la clave: imágenes de personas con personajes consistentes (Lucía, sus dos amigos, Paco) usando imagen de referencia; música con Lyria; voz en off natural en español con Gemini TTS.
   - Se mantienen las pantallas del producto (landing de la tag, Wallet, panel de Mensajes, tarjeta de fidelidad) recreadas en HTML encima de las fotos.
 
+- v3 (petición literal): «quiero que quites todo el audio del nuevo video y generes música nueva libre de licencias y crees con personas reales (hechas con IA) el video». Sin voz en off ni efectos: solo música nueva de Lyria. Plan detallado en `PLAN-v3.md`, planos en `shots.json`, generador en `tools/gen_images.py`.
+
 ## Notes
 
 - Sin credenciales de IA en el entorno: el estilo visual pedido (imágenes generadas por IA) no es posible; se usa ilustración 2D plana animada (SVG/HTML) para personas y escenarios, y recreaciones fieles de las pantallas del producto.
