@@ -10,7 +10,7 @@ Requiere `GEMINI_API_KEY` en el entorno (se lee al empezar la sesión). Comproba
 - **Audio:** se quita todo lo anterior (voz en off Kokoro, efectos y música MusicGen). Solo música nueva generada con **Google Lyria** (`media-use/audio/scripts/lyria-recipe.py`), electro pop rápido ~128-140 bpm, 137 s.
   Si el usuario quiere volver a tener voz, ofrecer Gemini TTS en español (no incluido en esta petición).
 - **Imagen:** fotos fotorrealistas generadas con el modelo de imagen de Gemini, con movimientos de cámara (Ken Burns, paneos, punch-ins) y cortes rápidos. Sin clips de vídeo.
-- **Personajes consistentes:** primero se genera una hoja de referencia de cada personaje y se reutiliza como imagen de referencia en cada plano (`tools/gen_images.py --ref`).
+- **Personajes consistentes:** primero se genera una hoja de referencia de cada personaje y se reutiliza como imagen de referencia en cada plano (campo `refs` de `shots.json`; `tools/gen_images.py --shots` las adjunta).
 - Se mantienen encima de las fotos las pantallas del producto recreadas en HTML (landing de la tag, Wallet, panel de Mensajes, tarjeta de fidelidad, notificación) y los textos de la v2.
 - Sin narración, el mensaje lo llevan los textos en pantalla: revisar que cada escena tenga su titular (los de `STORYBOARD.md`).
 
