@@ -2,9 +2,10 @@
 """Generates the NFC Wallet promo compositions (16:9 master).
 
 Writes compositions/sNN.html (one sub-composition per storyboard frame) and
-index.html (slots, leftward push/whip transitions, voice-over, SFX and the
-ducked music bed). Run from the project root: python3 tools/build.py
+index.html (slots, leftward push/whip transitions and the Lyria music bed;
+v3 has no voice-over and no SFX). Run from the project root: python3 tools/build.py
 """
+import html
 import json
 import pathlib
 import subprocess
@@ -871,25 +872,9 @@ for n, ex in EXTRA.items():
 
 
 # ---------------------------------------------------------------- audio plan
-VO_OFFSET = {n: (TIN[n][1] + 0.1 if TIN[n][0] != "none" else 0.1) for n in range(1, 16)}
-VO_OFFSET[1] = 0.1
-# Scene-local SFX cues: (scene, local time, file, volume)
-SFX = [
-    (1, 1.42, "impact-bass-1", 0.32),
-    (2, 4.6, "pop", 0.45),
-    (3, 2.55, "sparkle", 0.45), (3, 2.15, "whoosh-short", 0.35),
-    (4, 1.1, "click", 0.7), (4, 1.75, "whoosh-short", 0.4),
-    (5, 0.6, "pop", 0.55), (5, 1.55, "click", 0.35), (5, 1.97, "click", 0.35), (5, 2.39, "click", 0.35),
-    (6, 0.35, "riser", 0.16),
-    (7, 2.9, "typing", 0.45), (7, 5.55, "click", 0.8), (7, 6.45, "click", 0.8), (7, 6.9, "chime", 0.45),
-    (8, 1.6, "notification", 0.8),
-    (9, 3.1, "sparkle", 0.4), (9, 3.4, "pop", 0.55),
-    (11, 1.95, "pop", 0.4), (11, 3.6, "sparkle", 0.45), (11, 6.3, "click", 0.7), (11, 6.5, "chime", 0.4),
-    (12, 1.62, "click", 0.7),
-    (13, 1.55, "click", 0.8), (13, 2.05, "click", 0.8), (13, 3.15, "sparkle", 0.45),
-    (14, 0.6, "pop", 0.35), (14, 2.1, "pop", 0.35), (14, 3.5, "pop", 0.35), (14, 5.6, "pop", 0.35),
-    (15, 0.45, "sparkle", 0.45), (15, 4.3, "pop", 0.5),
-]
+# v3: no voice-over and no SFX; the only audio is the Lyria music bed.
+MUSIC = "assets/music/lyria.wav"
+FADE_IN, FADE_OUT = 0.4, 2.0
 
 
 def build():
@@ -913,49 +898,13 @@ def build():
             ease = "power4.inOut" if kind == "push" else "expo.inOut"
             trans.append(f'      tl.fromTo("#{prev}", {{ xPercent: 0, filter: "blur(0px)" }}, {{ xPercent: -100, filter: "{blur}", duration: {ov}, ease: "{ease}", immediateRender: false }}, {start});')
             trans.append(f'      tl.fromTo("#el-{sid}", {{ xPercent: 100, filter: "{blur}" }}, {{ xPercent: 0, filter: "blur(0px)", duration: {ov}, ease: "{ease}" }}, {start});')
-            sfx_file = "whoosh" if kind == "whip" else "whoosh-short"
-            audio.append(f'      <audio id="sfx-tr-{sid}" src="assets/sfx/{sfx_file}.mp3" data-start="{max(0, start - 0.05):.3f}" data-duration="0.57" data-track-index="13" data-volume="0.35" data-audio-group="sfx"></audio>')
 
-    vo_windows = []
-    for n in range(1, 16):
-        start, dur, ov = slot(n)
-        f = ROOT / "assets" / "voice" / f"vo-{n:02d}.wav"
-        length = round(wav_len(f), 3)
-        t0 = round(start + VO_OFFSET[n], 3)
-        assert t0 + length <= start + dur + 1e-6, f"voice {n} overruns its scene"
-        vo_windows.append((t0, t0 + length))
-        audio.append(f'      <audio id="vo-{n:02d}" src="assets/voice/vo-{n:02d}.wav" data-start="{t0}" '
-                     f'data-duration="{length}" data-track-index="11" data-volume="1" data-audio-group="voiceover"></audio>')
-
-    lanes_end = {12: -1.0, 14: -1.0, 15: -1.0}  # SFX tracks: first free lane, no overlaps per track
-    for i, (n, t, name, vol) in sorted(enumerate(SFX), key=lambda x: slot(x[1][0])[0] + x[1][1]):
-        start, dur, ov = slot(n)
-        f = ROOT / "assets" / "sfx" / f"{name}.mp3"
-        t0 = round(start + t, 3)
-        length = round(min(wav_len(f), start + dur - t0), 3)
-        track = next(k for k, end in lanes_end.items() if end <= t0)
-        lanes_end[track] = t0 + length
-        audio.append(f'      <audio id="sfx-{i:02d}" src="assets/sfx/{name}.mp3" data-start="{t0}" '
-                     f'data-duration="{length}" data-track-index="{track}" data-volume="{vol}" data-audio-group="sfx"></audio>')
-
-    # Music bed. Ducking under the voice is done by the carve (EQ dips + level
-    # envelope) run after the index is written; here only the bed itself.
-    VOICE_CHAIN = {"version": 1, "nodes": [
-        {"type": "highpass", "id": "v1", "params": {"frequency": 90, "q": 0.707}},
-        {"type": "peaking", "id": "v2", "params": {"frequency": 320, "gain": -3, "q": 1.2}},
-        {"type": "compressor", "id": "v3", "params": {"threshold": -24, "ratio": 3, "attack": 8, "release": 160, "makeup": 4}},
-        {"type": "peaking", "id": "v4", "params": {"frequency": 3200, "gain": 3, "q": 0.9}},
-        {"type": "limiter", "id": "v5", "params": {"limit": -1.5, "attack": 2, "release": 60}}]}
-    SFX_CHAIN = {"version": 1, "nodes": [
-        {"type": "compressor", "id": "s1", "params": {"threshold": -18, "ratio": 4, "attack": 2, "release": 120}},
-        {"type": "limiter", "id": "s2", "params": {"limit": -6, "attack": 1, "release": 80}}]}
-    def bus(gid, label, vol, chain):
-        return (f'      <hf-audio-group id="{gid}" data-label="{label}" data-volume="{vol}" '
-                f"data-fx-chain='{json.dumps(chain, separators=(',', ':'))}'></hf-audio-group>")
-    audio.insert(0, bus("sfx", "Efectos", 0.8, SFX_CHAIN))
-    audio.insert(0, bus("voiceover", "Voz en off", 1.0, VOICE_CHAIN))
-    audio.insert(0, f'      <audio id="bgm" src="assets/music/bed-v2.wav" data-start="0" data-duration="{TOTAL}" '
-                    f'data-track-index="10" data-volume="0.6" data-audio-group="music"></audio>')
+    # Music bed with a fade-in/out volume lane; nothing to duck under.
+    auto = {"version": 1, "lanes": [{"target": "volume", "points": [
+        {"t": 0, "v": 0}, {"t": FADE_IN, "v": 1}, {"t": TOTAL - FADE_OUT, "v": 1}, {"t": TOTAL, "v": 0}]}]}
+    value = html.escape(json.dumps(auto, separators=(",", ":")), quote=True)
+    audio.append(f'      <audio id="bgm" src="{MUSIC}" data-start="0" data-duration="{TOTAL}" '
+                 f'data-track-index="10" data-volume="0.8" data-automation="{value}"></audio>')
 
     index = f"""<!doctype html>
 <html lang="es">
@@ -985,29 +934,7 @@ def build():
 </html>
 """
     (ROOT / "index.html").write_text(index)
-    carve_and_fade()
     print("built", len(SCENES), "scenes;", len(audio), "audio clips; total", TOTAL, "s")
-
-
-def carve_and_fade():
-    """Voice-over carve on the bed, then fold a fade-in/out volume lane into its automation."""
-    import html
-    import os
-    import re
-    carve = pathlib.Path(os.path.expanduser("~/.claude/skills/hyperframes-audio/scripts/carve.mjs"))
-    subprocess.run(["node", str(carve), "--comp", "index.html", "--strength", "0.5"], cwd=ROOT, check=True, capture_output=True)
-    path = ROOT / "index.html"
-    src = path.read_text()
-    tag = re.search(r'<audio id="bgm"[^>]*>', src).group(0)
-    m = re.search(r'data-automation=("([^"]*)"|\'([^\']*)\')', tag)
-    auto = json.loads(html.unescape(m.group(2) or m.group(3))) if m else {"version": 1, "lanes": []}
-    auto["lanes"] = [l for l in auto["lanes"] if l["target"] != "volume"]
-    auto["lanes"].insert(0, {"target": "volume", "points": [
-        {"t": 0, "v": 0}, {"t": 0.4, "v": 1}, {"t": TOTAL - 2.0, "v": 1}, {"t": TOTAL, "v": 0}]})
-    value = html.escape(json.dumps(auto, separators=(",", ":")), quote=True)
-    new_tag = (tag.replace(m.group(0), f'data-automation="{value}"') if m
-               else tag[:-1] + f' data-automation="{value}">')
-    path.write_text(src.replace(tag, new_tag))
 
 
 if __name__ == "__main__":
