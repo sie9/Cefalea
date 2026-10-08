@@ -1,0 +1,48 @@
+{
+  "version": 1,
+  "preferences": {
+    "destination": {
+      "value": "youtube",
+      "confirmed_in": [
+        "nfc-wallet-promo"
+      ],
+      "updated_at": "2026-10-08T06:11:54.631Z"
+    },
+    "aspect": {
+      "value": "1920x1080",
+      "confirmed_in": [
+        "nfc-wallet-promo"
+      ],
+      "updated_at": "2026-10-08T06:11:54.684Z"
+    },
+    "language": {
+      "value": "es",
+      "confirmed_in": [
+        "nfc-wallet-promo"
+      ],
+      "updated_at": "2026-10-08T06:11:54.750Z"
+    },
+    "flow": {
+      "value": "automation",
+      "confirmed_in": [
+        "nfc-wallet-promo"
+      ],
+      "updated_at": "2026-10-08T06:11:54.805Z"
+    },
+    "storyboard": {
+      "value": "yes",
+      "confirmed_in": [
+        "nfc-wallet-promo"
+      ],
+      "updated_at": "2026-10-08T06:11:54.861Z"
+    },
+    "voice": {
+      "value": "kokoro:em_alex",
+      "confirmed_in": [
+        "nfc-wallet-promo"
+      ],
+      "updated_at": "2026-10-08T06:11:54.917Z"
+    }
+  },
+  "sightings": {}
+}
