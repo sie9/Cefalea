@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="es">
+<head><meta charset="UTF-8" /></head>
+<body>
+<template>
+<style>
+
+@font-face { font-family: "Archivo Black"; src: url("assets/fonts/archivo-black-400.woff2") format("woff2"); font-weight: 400; }
+@font-face { font-family: "Montserrat"; src: url("assets/fonts/montserrat-var.woff2") format("woff2"); font-weight: 100 900; }
+
+.nw-h { font-family: "Archivo Black", sans-serif; font-weight: 400; line-height: .92; letter-spacing: -.01em; margin: 0; }
+.nw-blue { color: #1F5EFF; }
+.nw-abs { position: absolute; }
+.nw-ghost { position: absolute; font-family: "Archivo Black", sans-serif; color: #141A33; opacity: .07; white-space: nowrap; line-height: .8; }
+.nw-glow { position: absolute; border-radius: 50%; background: radial-gradient(circle, rgba(31,94,255,.26), rgba(31,94,255,0) 68%); }
+.nw-meta { position: absolute; font-family: "Montserrat", sans-serif; font-size: 24px; font-weight: 800; letter-spacing: .18em; text-transform: uppercase; color: #5B6178; }
+.nw-phone { position: absolute; width: 380px; height: 800px; background: #0E1222; border-radius: 64px; padding: 16px; box-shadow: 0 40px 80px rgba(20,26,51,.28); }
+.nw-screen { position: relative; width: 100%; height: 100%; border-radius: 50px; overflow: hidden; background: #1F2937; }
+.nw-notch { position: absolute; left: 50%; top: 16px; width: 110px; height: 30px; margin-left: -55px; background: #0E1222; border-radius: 20px; z-index: 5; }
+.nw-pass { position: absolute; border-radius: 30px; background: #1F2937; color: #fff; padding: 34px 38px; box-shadow: 0 30px 60px rgba(20,26,51,.30); font-family: "Montserrat", sans-serif; }
+.nw-pass .row { display: flex; align-items: center; gap: 18px; }
+.nw-pass .name { font-family: "Archivo Black", sans-serif; font-size: 34px; }
+.nw-pass .lbl { font-size: 18px; font-weight: 700; opacity: .72; text-transform: uppercase; letter-spacing: .14em; margin-top: 22px; }
+.nw-pass .val { font-size: 46px; font-weight: 800; }
+.nw-stamps { display: flex; gap: 14px; margin-top: 12px; }
+.nw-stamps i { display: block; width: 52px; height: 52px; border-radius: 50%; border: 5px solid rgba(255,255,255,.45); }
+.nw-stamps i b { display: block; width: 100%; height: 100%; border-radius: 50%; background: #F4A12B; opacity: 0; }
+.nw-stamps i b.on { opacity: 1; }
+.nw-logo { width: 64px; height: 64px; border-radius: 50%; background: #F4A12B; color: #1F2937; display: grid; place-items: center; font-family: "Archivo Black", sans-serif; font-size: 34px; flex: none; }
+.nw-btn { display: inline-block; border-radius: 999px; padding: 18px 36px; font-family: "Montserrat", sans-serif; font-weight: 800; font-size: 26px; background: #000; color: #fff; }
+.nw-panel { position: absolute; background: #fff; border-radius: 28px; border: 3px solid #E3E6EB; box-shadow: 0 40px 80px rgba(20,26,51,.18); overflow: hidden; font-family: "Montserrat", sans-serif; color: #141A33; }
+.nw-panel .bar { height: 64px; background: #F6F7F9; border-bottom: 3px solid #E3E6EB; display: flex; align-items: center; gap: 12px; padding: 0 26px; font-size: 22px; font-weight: 800; }
+.nw-panel .bar i { display: block; width: 16px; height: 16px; border-radius: 50%; background: #D6D9E0; }
+.nw-field { border: 3px solid #E3E6EB; border-radius: 16px; padding: 18px 22px; font-size: 30px; font-weight: 600; background: #fff; }
+.nw-num { position: absolute; width: 70px; height: 70px; border-radius: 50%; background: #1F5EFF; color: #fff; font-family: "Archivo Black", sans-serif; font-size: 38px; display: grid; place-items: center; box-shadow: 0 0 0 12px rgba(31,94,255,.18); }
+.nw-cursor { position: absolute; width: 56px; height: 56px; }
+.nw-notif { position: absolute; background: rgba(255,255,255,.95); border-radius: 30px; padding: 24px 28px; box-shadow: 0 20px 50px rgba(0,0,0,.28); display: flex; gap: 20px; align-items: center; font-family: "Montserrat", sans-serif; color: #141A33; }
+.nw-notif .t1 { font-size: 22px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: #5B6178; }
+.nw-notif .t2 { font-size: 30px; font-weight: 700; }
+.nw-chip { display: inline-block; border-radius: 999px; padding: 12px 26px; font-family: "Montserrat", sans-serif; font-weight: 800; font-size: 28px; }
+
+#s06, #s06 * { box-sizing: border-box; }
+#s06 { position: absolute; inset: 0; overflow: hidden; background: #FBF5EC; color: #141A33; font-family: "Montserrat", sans-serif; }
+
+</style>
+<div id="s06" data-composition-id="s06" data-width="1920" data-height="1080" data-duration="6">
+
+<div class="nw-ghost" id="s06-ghost" style="font-size:520px;right:-120px;top:20px">DÍAS</div>
+<div class="nw-abs" id="s06-cal" style="left:170px;top:220px;width:520px;height:620px;background:#fff;border-radius:40px;box-shadow:0 40px 80px rgba(20,26,51,.18);overflow:hidden;text-align:center">
+  <div style="background:#1F5EFF;color:#fff;font-weight:800;font-size:44px;letter-spacing:.12em;padding:28px 0">OCTUBRE</div>
+  <div class="nw-h" id="s06-day" style="font-size:340px;margin-top:40px;line-height:1">3</div>
+</div>
+<div class="nw-abs" id="s06-sheet" style="left:170px;top:340px;width:520px;height:500px;background:#fff;border-radius:0 0 40px 40px;transform-origin:50% 0"></div>
+<p class="nw-h nw-abs" id="s06-a" style="left:820px;top:330px;font-size:170px">3 semanas</p>
+<p class="nw-h nw-abs nw-blue" id="s06-b" style="left:820px;top:510px;font-size:170px">después</p>
+
+</div>
+<script>
+(() => {
+  const D = 6;      // slot length (s)
+  const IN = 0;      // incoming transition overlap (s): content should be readable from here
+  const S = (q) => "#s06 " + q;
+  const tl = gsap.timeline({ paused: true });
+  const breath = (sel, at, cycle, props) => {
+    const len = Math.max(0, D - at);
+    tl.to(S(sel), Object.assign({ duration: cycle / 2, ease: "sine.inOut", yoyo: true,
+      repeat: Math.max(0, Math.floor(len / cycle) * 2 - 1) }, props), at);
+  };
+  const typeText = (sel, text, at, dur) => {
+    const el = document.querySelector(S(sel));
+    const st = { n: 0 };
+    tl.fromTo(st, { n: 0 }, { n: text.length, duration: dur, ease: "none",
+      onUpdate: () => { el.textContent = text.slice(0, Math.round(st.n)); } }, at);
+  };
+  const countUp = (sel, to, at, dur, fmt) => {
+    const el = document.querySelector(S(sel));
+    const st = { v: 0 };
+    tl.fromTo(st, { v: 0 }, { v: to, duration: dur, ease: "power2.out",
+      onUpdate: () => { el.textContent = (fmt || String)(Math.round(st.v)); } }, at);
+  };
+
+  tl.fromTo(S("#s06-cal"), { y: 60, opacity: 0 }, { y: 0, opacity: 1, duration: 0.35, ease: "power3.out" }, 0);
+  // Pages fly faster and faster: 3 → 24.
+  const days = [4, 6, 8, 10, 12, 14, 16, 17, 18, 19, 20, 21, 22, 23, 24];
+  const el = document.querySelector(S("#s06-day"));
+  const flips = [];
+  let t = 0.35, step = 0.26;
+  days.forEach(() => {
+    tl.fromTo(S("#s06-sheet"), { rotationX: 0, opacity: 0.9 }, { rotationX: -95, opacity: 0, duration: step * 0.9, ease: "power2.in", immediateRender: false }, t);
+    flips.push(t + step * 0.5);
+    t += step; step = Math.max(0.1, step * 0.88);
+  });
+  // The day number is a pure function of time (seek-safe).
+  const clock = { t: 0 };
+  tl.fromTo(clock, { t: 0 }, { t: 3, duration: 3, ease: "none", onUpdate: () => {
+    let d = 3;
+    flips.forEach((ft, i) => { if (clock.t >= ft) d = days[i]; });
+    el.textContent = String(d);
+  } }, 0);
+  tl.fromTo(S("#s06-a"), { scale: 1.4, filter: "blur(12px)", opacity: 0, transformOrigin: "0% 50%" }, { scale: 1, filter: "blur(0px)", opacity: 1, duration: 0.4, ease: "power4.out" }, 2.5);
+  tl.fromTo(S("#s06-b"), { x: -200, opacity: 0 }, { x: 0, opacity: 1, duration: 0.4, ease: "expo.out" }, 2.85);
+  tl.fromTo(S("#s06-ghost"), { x: 0 }, { x: -260, duration: D, ease: "none" }, 0);
+
+  window.__timelines["s06"] = tl;
+})();
+</script>
+</template>
+</body>
+</html>

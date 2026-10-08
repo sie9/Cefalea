@@ -27,7 +27,7 @@ mode: collaborative
 - scene: "¿Y si tus clientes" / "volvieran" / "SOLOS?" golpean al ritmo
 - duration: 6s
 - transition_in: cut
-- status: built
+- status: animated
 - src: compositions/01-hook.html
 - blueprint: kinetic-type-beats (rules: kinetic-beat-slam)
 - voiceover: "¿Y si tus clientes volvieran… solos?"
@@ -39,7 +39,7 @@ Tres golpes de texto sobre el crema, la última palabra en azul y enorme. Por qu
 - scene: Fachada del "Restaurante Pepito", Lucía entra, se sienta y deja el móvil en la mesa
 - duration: 8s
 - transition_in: push-left
-- status: built
+- status: animated
 - src: compositions/02-arrive.html
 - blueprint: spatial-pan-stations (cámara: puerta → mesa)
 - voiceover: "Lucía entra en el Restaurante Pepito. Se sienta… y deja el móvil sobre la mesa."
@@ -51,7 +51,7 @@ Por qué: sitúa la historia en el local del cliente objetivo.
 - scene: Primer plano de la mesa con la tag "Toca aquí" (logo NFC); el móvil se apoya, ondas NFC, la pantalla se enciende con la página de Pepito
 - duration: 10s
 - transition_in: cut
-- status: built
+- status: animated
 - src: compositions/03-tap.html
 - blueprint: device-surface-showcase
 - voiceover: "En cada mesa hay una pequeña tag NFC. Basta un toque… y aparece la tarjeta de Pepito."
@@ -63,7 +63,7 @@ Por qué: el gesto clave del producto, tal y como funciona (sin app, sin QR).
 - scene: Pantalla del móvil: botón "Añadir a Apple Wallet" pulsado → la tarjeta de Pepito entra en la Wallet
 - duration: 9s
 - transition_in: cut
-- status: built
+- status: animated
 - src: compositions/04-wallet.html
 - blueprint: device-surface-showcase (stepwise flow)
 - voiceover: "Un toque más en «Añadir a Wallet». Sin apps. Sin registros. Ya la lleva en el móvil."
@@ -75,7 +75,7 @@ Por qué: muestra la fricción cero para el cliente final.
 - scene: Sello "1/5" en la tarjeta; ráfaga: plato, brindis, cuenta, Lucía sale por la puerta
 - duration: 9s
 - transition_in: push-left
-- status: built
+- status: animated
 - src: compositions/05-leave.html
 - rules: kinetic-beat-slam, stat-bars-and-fills (sello)
 - voiceover: "Primer sello. Lucía come, paga… y se va."
@@ -85,7 +85,7 @@ Por qué: muestra la fricción cero para el cliente final.
 - scene: Calendario que pasa hojas a toda velocidad: "3 semanas después"
 - duration: 6s
 - transition_in: cut
-- status: built
+- status: animated
 - src: compositions/06-time.html
 - rules: vertical-spring-ticker
 - voiceover: "Pasan los días…"
@@ -95,7 +95,7 @@ Por qué: muestra la fricción cero para el cliente final.
 - scene: Paco con el portátil; panel NFC Wallet → Mensajes; escribe "2x1 en cañas este viernes"; cursor: clic ① "Todos los clientes", clic ② "Enviar"; contador "Enviado a 318 tarjetas"
 - duration: 14s
 - transition_in: push-left
-- status: built
+- status: animated
 - src: compositions/07-owner.html
 - blueprint: cursor-ui-demo
 - voiceover: "Paco, el dueño, abre NFC Wallet. Escribe su promoción: dos por uno en cañas este viernes. Clic… y clic. Enviada a todos sus clientes."
@@ -107,7 +107,7 @@ Por qué: el beneficio para el dueño, y la sencillez (dos clics) que pide el gu
 - scene: Pantalla de bloqueo de Lucía: notificación "Restaurante Pepito — 2x1 en cañas este viernes 🍻"
 - duration: 8s
 - transition_in: whip-left
-- status: built
+- status: animated
 - src: compositions/08-notify.html
 - blueprint: device-surface-showcase
 - voiceover: "Y en el bolsillo de Lucía… ahí está."
@@ -119,7 +119,7 @@ Plano quieto 1,5 s con el «ding». Por qué: el momento de retorno, el corazón
 - scene: Lucía entra con dos amigos, toca la tag: "¡Sello sumado! Llevas 2 de 5"
 - duration: 10s
 - transition_in: push-left
-- status: built
+- status: animated
 - src: compositions/09-return.html
 - voiceover: "El viernes, Lucía vuelve. Y no viene sola. Toque, sello… y a disfrutar."
 
@@ -130,7 +130,7 @@ Por qué: cierra el círculo: el cliente vuelve gracias a la promo. Callback de 
 - scene: "Y esto es solo el principio."
 - duration: 4s
 - transition_in: cut
-- status: built
+- status: animated
 - src: compositions/10-hinge.html
 - blueprint: kinetic-type-beats
 - voiceover: "Y esto es solo el principio."
@@ -140,7 +140,7 @@ Por qué: cierra el círculo: el cliente vuelve gracias a la promo. Callback de 
 - scene: La tarjeta se llena de sellos 1→5, "¡Café gratis!"; el camarero escanea el QR de la tarjeta y "Premio canjeado"
 - duration: 10s
 - transition_in: push-left
-- status: built
+- status: animated
 - src: compositions/11-loyalty.html
 - rules: stat-bars-and-fills, counting-dynamic-scale
 - voiceover: "Tarjeta de fidelidad: cada visita, un sello. Al completarla, premio. Y el camarero lo canjea escaneando la tarjeta."
@@ -150,7 +150,7 @@ Por qué: cierra el círculo: el cliente vuelve gracias a la promo. Callback de 
 - scene: Editor de marca del panel a la izquierda; a la derecha la tarjeta en Apple Wallet y Google Wallet cambia de color y logo en directo
 - duration: 10s
 - transition_in: push-left
-- status: built
+- status: animated
 - src: compositions/12-brand.html
 - blueprint: panel-edit-live-sync
 - voiceover: "Tu logo, tus colores, tu carta. En Apple Wallet y en Google Wallet, siempre en el móvil de tus clientes."
@@ -160,7 +160,7 @@ Por qué: cierra el círculo: el cliente vuelve gracias a la promo. Callback de 
 - scene: "① Escribe ② Envía" con el cursor; decenas de móviles se encienden a la vez
 - duration: 9s
 - transition_in: push-left
-- status: built
+- status: animated
 - src: compositions/13-two-clicks.html
 - blueprint: cta-morph-press
 - voiceover: "¿Una promoción? Dos clics. Y llega a todos tus clientes, al instante."
@@ -170,7 +170,7 @@ Por qué: cierra el círculo: el cliente vuelve gracias a la promo. Callback de 
 - scene: Se montan seis piezas: "Avisos al pasar cerca", "Estadísticas por mesa", "Todos tus locales en una cuenta", "Tags NFC imposibles de copiar", "Facturas automáticas", "RGPD de serie"
 - duration: 11s
 - transition_in: push-left
-- status: built
+- status: animated
 - src: compositions/14-features.html
 - blueprint: grid-card-assemble
 - voiceover: "Avisos cuando pasan cerca. Estadísticas por mesa. Todos tus locales en una sola cuenta. Y tags NFC imposibles de copiar."
@@ -180,7 +180,7 @@ Por qué: cierra el círculo: el cliente vuelve gracias a la promo. Callback de 
 - scene: Logo "NFC Wallet" se ensambla; "Tus clientes vuelven solos." · "Desde 29 €/mes · 14 días gratis" · "nfcwallet.es"
 - duration: 11s
 - transition_in: whip-left
-- status: built
+- status: animated
 - src: compositions/15-cta.html
 - blueprint: logo-assemble-lockup
 - voiceover: "NFC Wallet. Tus clientes vuelven solos. Pruébalo gratis catorce días en nfcwallet punto es."

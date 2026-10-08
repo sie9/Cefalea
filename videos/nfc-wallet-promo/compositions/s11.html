@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="es">
+<head><meta charset="UTF-8" /></head>
+<body>
+<template>
+<style>
+
+@font-face { font-family: "Archivo Black"; src: url("assets/fonts/archivo-black-400.woff2") format("woff2"); font-weight: 400; }
+@font-face { font-family: "Montserrat"; src: url("assets/fonts/montserrat-var.woff2") format("woff2"); font-weight: 100 900; }
+
+.nw-h { font-family: "Archivo Black", sans-serif; font-weight: 400; line-height: .92; letter-spacing: -.01em; margin: 0; }
+.nw-blue { color: #1F5EFF; }
+.nw-abs { position: absolute; }
+.nw-ghost { position: absolute; font-family: "Archivo Black", sans-serif; color: #141A33; opacity: .07; white-space: nowrap; line-height: .8; }
+.nw-glow { position: absolute; border-radius: 50%; background: radial-gradient(circle, rgba(31,94,255,.26), rgba(31,94,255,0) 68%); }
+.nw-meta { position: absolute; font-family: "Montserrat", sans-serif; font-size: 24px; font-weight: 800; letter-spacing: .18em; text-transform: uppercase; color: #5B6178; }
+.nw-phone { position: absolute; width: 380px; height: 800px; background: #0E1222; border-radius: 64px; padding: 16px; box-shadow: 0 40px 80px rgba(20,26,51,.28); }
+.nw-screen { position: relative; width: 100%; height: 100%; border-radius: 50px; overflow: hidden; background: #1F2937; }
+.nw-notch { position: absolute; left: 50%; top: 16px; width: 110px; height: 30px; margin-left: -55px; background: #0E1222; border-radius: 20px; z-index: 5; }
+.nw-pass { position: absolute; border-radius: 30px; background: #1F2937; color: #fff; padding: 34px 38px; box-shadow: 0 30px 60px rgba(20,26,51,.30); font-family: "Montserrat", sans-serif; }
+.nw-pass .row { display: flex; align-items: center; gap: 18px; }
+.nw-pass .name { font-family: "Archivo Black", sans-serif; font-size: 34px; }
+.nw-pass .lbl { font-size: 18px; font-weight: 700; opacity: .72; text-transform: uppercase; letter-spacing: .14em; margin-top: 22px; }
+.nw-pass .val { font-size: 46px; font-weight: 800; }
+.nw-stamps { display: flex; gap: 14px; margin-top: 12px; }
+.nw-stamps i { display: block; width: 52px; height: 52px; border-radius: 50%; border: 5px solid rgba(255,255,255,.45); }
+.nw-stamps i b { display: block; width: 100%; height: 100%; border-radius: 50%; background: #F4A12B; opacity: 0; }
+.nw-stamps i b.on { opacity: 1; }
+.nw-logo { width: 64px; height: 64px; border-radius: 50%; background: #F4A12B; color: #1F2937; display: grid; place-items: center; font-family: "Archivo Black", sans-serif; font-size: 34px; flex: none; }
+.nw-btn { display: inline-block; border-radius: 999px; padding: 18px 36px; font-family: "Montserrat", sans-serif; font-weight: 800; font-size: 26px; background: #000; color: #fff; }
+.nw-panel { position: absolute; background: #fff; border-radius: 28px; border: 3px solid #E3E6EB; box-shadow: 0 40px 80px rgba(20,26,51,.18); overflow: hidden; font-family: "Montserrat", sans-serif; color: #141A33; }
+.nw-panel .bar { height: 64px; background: #F6F7F9; border-bottom: 3px solid #E3E6EB; display: flex; align-items: center; gap: 12px; padding: 0 26px; font-size: 22px; font-weight: 800; }
+.nw-panel .bar i { display: block; width: 16px; height: 16px; border-radius: 50%; background: #D6D9E0; }
+.nw-field { border: 3px solid #E3E6EB; border-radius: 16px; padding: 18px 22px; font-size: 30px; font-weight: 600; background: #fff; }
+.nw-num { position: absolute; width: 70px; height: 70px; border-radius: 50%; background: #1F5EFF; color: #fff; font-family: "Archivo Black", sans-serif; font-size: 38px; display: grid; place-items: center; box-shadow: 0 0 0 12px rgba(31,94,255,.18); }
+.nw-cursor { position: absolute; width: 56px; height: 56px; }
+.nw-notif { position: absolute; background: rgba(255,255,255,.95); border-radius: 30px; padding: 24px 28px; box-shadow: 0 20px 50px rgba(0,0,0,.28); display: flex; gap: 20px; align-items: center; font-family: "Montserrat", sans-serif; color: #141A33; }
+.nw-notif .t1 { font-size: 22px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: #5B6178; }
+.nw-notif .t2 { font-size: 30px; font-weight: 700; }
+.nw-chip { display: inline-block; border-radius: 999px; padding: 12px 26px; font-family: "Montserrat", sans-serif; font-weight: 800; font-size: 28px; }
+
+#s11, #s11 * { box-sizing: border-box; }
+#s11 { position: absolute; inset: 0; overflow: hidden; background: #FBF5EC; color: #141A33; font-family: "Montserrat", sans-serif; }
+#s11-passwrap .nw-pass { position: relative; } #s11-reward { display: inline-block; }
+
+</style>
+<div id="s11" data-composition-id="s11" data-width="1920" data-height="1080" data-duration="10.751">
+
+<p class="nw-h nw-abs" id="s11-title" style="left:120px;top:120px;font-size:100px;white-space:nowrap">Tarjeta de <span class="nw-blue">fidelidad</span></p>
+<div class="nw-abs" id="s11-passwrap" style="left:120px;top:330px"><div class="nw-pass" id="s11-pass" style="width:700px;background:#1F2937">
+  <div class="row"><div class="nw-logo">P</div><div class="name">Restaurante Pepito</div></div>
+  <div class="lbl">Sellos</div><div class="nw-stamps"><i><b class=""></b></i><i><b class=""></b></i><i><b class=""></b></i><i><b class=""></b></i><i><b class=""></b></i></div>
+  <div class="lbl">Premio</div><div class="val" style="font-size:36px"><span id="s11-reward">Café gratis</span></div>
+</div></div>
+<div class="nw-abs" id="s11-qr" style="left:880px;top:430px;width:200px;height:200px;border-radius:16px;border:14px solid #fff;box-shadow:0 20px 40px rgba(20,26,51,.2);background:conic-gradient(from 90deg at 50% 50%, #fff 25%, #0E1222 0 50%, #fff 0 75%, #0E1222 0) 0 0 / 43px 43px"></div>
+<div class="nw-abs" id="s11-scan" style="left:880px;top:430px;width:200px;height:6px;background:#1B7F3B;box-shadow:0 0 18px #1B7F3B"></div>
+<div class="nw-phone" id="s11-staff" style="left:1360px;top:150px">
+  <div class="nw-notch"></div>
+  <div class="nw-screen" style="background:#fff;display:flex;flex-direction:column;align-items:center;padding:110px 30px 0;gap:26px;text-align:center">
+    <div style="font-weight:800;font-size:24px;color:#5B6178;letter-spacing:.1em">PERSONAL · PIN ✓</div>
+    <div class="nw-logo" style="width:110px;height:110px;font-size:56px">P</div>
+    <div style="font-weight:800;font-size:34px">5 / 5 sellos</div>
+    <span class="nw-btn" id="s11-redeem" style="background:#1B7F3B;font-size:26px">Canjear premio</span>
+    <div id="s11-ok" style="font-weight:800;font-size:30px;color:#1B7F3B">✓ Premio canjeado</div>
+  </div>
+</div>
+<span class="nw-chip nw-abs" id="s11-cfg" style="left:120px;top:830px;background:#141A33;color:#FBF5EC">Tú eliges el premio y los sellos</span>
+</div>
+<script>
+(() => {
+  const D = 10.751;      // slot length (s)
+  const IN = 0.35;      // incoming transition overlap (s): content should be readable from here
+  const S = (q) => "#s11 " + q;
+  const tl = gsap.timeline({ paused: true });
+  const breath = (sel, at, cycle, props) => {
+    const len = Math.max(0, D - at);
+    tl.to(S(sel), Object.assign({ duration: cycle / 2, ease: "sine.inOut", yoyo: true,
+      repeat: Math.max(0, Math.floor(len / cycle) * 2 - 1) }, props), at);
+  };
+  const typeText = (sel, text, at, dur) => {
+    const el = document.querySelector(S(sel));
+    const st = { n: 0 };
+    tl.fromTo(st, { n: 0 }, { n: text.length, duration: dur, ease: "none",
+      onUpdate: () => { el.textContent = text.slice(0, Math.round(st.n)); } }, at);
+  };
+  const countUp = (sel, to, at, dur, fmt) => {
+    const el = document.querySelector(S(sel));
+    const st = { v: 0 };
+    tl.fromTo(st, { v: 0 }, { v: to, duration: dur, ease: "power2.out",
+      onUpdate: () => { el.textContent = (fmt || String)(Math.round(st.v)); } }, at);
+  };
+
+  tl.fromTo(S("#s11-title"), { y: 60, opacity: 0 }, { y: 0, opacity: 1, duration: 0.42, ease: "power4.out" }, IN);
+  tl.fromTo(S("#s11-passwrap"), { x: -80, opacity: 0 }, { x: 0, opacity: 1, duration: 0.45, ease: "expo.out" }, 0.75);
+  gsap.utils.toArray(S("#s11-pass .nw-stamps i b")).forEach((b, i) => {
+    tl.fromTo(b, { scale: 0, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.35, ease: "back.out(2.2)" }, 1.95 + i * 0.3);
+  });
+  tl.fromTo(S("#s11-reward"), { scale: 1, color: "#FFFFFF" }, { scale: 1.25, color: "#F4A12B", duration: 0.3, ease: "power3.out", transformOrigin: "0% 50%" }, 3.6);
+  tl.to(S("#s11-reward"), { scale: 1, duration: 0.3, ease: "power3.out" }, 3.95);
+  tl.fromTo(S("#s11-qr"), { scale: 0, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.4, ease: "power3.out" }, 4.55);
+  tl.fromTo(S("#s11-staff"), { x: 500, rotation: 10 }, { x: 0, rotation: 0, duration: 0.6, ease: "expo.out" }, 4.75);
+  tl.fromTo(S("#s11-scan"), { y: 0, opacity: 0 }, { y: 194, opacity: 1, duration: 0.45, ease: "sine.inOut", yoyo: true, repeat: 1 }, 5.3);
+  tl.fromTo(S("#s11-redeem"), { scale: 1 }, { scale: 0.92, duration: 0.1, yoyo: true, repeat: 1 }, 6.3);
+  tl.fromTo(S("#s11-ok"), { y: 20, opacity: 0 }, { y: 0, opacity: 1, duration: 0.35, ease: "back.out(2)" }, 6.5);
+  tl.set(S("#s11-scan"), { opacity: 0 }, 6.25);
+  breath("#s11-staff", 7, 2.4, { y: -10 });
+
+  tl.fromTo(S("#s11-cfg"), { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, ease: "power3.out" }, 8.1);
+  tl.fromTo(S("#s11-passwrap"), { rotation: 0 }, { rotation: -2, duration: 0.5, yoyo: true, repeat: 1, ease: "sine.inOut" }, 8.6);
+
+  window.__timelines["s11"] = tl;
+})();
+</script>
+</template>
+</body>
+</html>

@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="es">
+<head><meta charset="UTF-8" /></head>
+<body>
+<template>
+<style>
+
+@font-face { font-family: "Archivo Black"; src: url("assets/fonts/archivo-black-400.woff2") format("woff2"); font-weight: 400; }
+@font-face { font-family: "Montserrat"; src: url("assets/fonts/montserrat-var.woff2") format("woff2"); font-weight: 100 900; }
+
+.nw-h { font-family: "Archivo Black", sans-serif; font-weight: 400; line-height: .92; letter-spacing: -.01em; margin: 0; }
+.nw-blue { color: #1F5EFF; }
+.nw-abs { position: absolute; }
+.nw-ghost { position: absolute; font-family: "Archivo Black", sans-serif; color: #141A33; opacity: .07; white-space: nowrap; line-height: .8; }
+.nw-glow { position: absolute; border-radius: 50%; background: radial-gradient(circle, rgba(31,94,255,.26), rgba(31,94,255,0) 68%); }
+.nw-meta { position: absolute; font-family: "Montserrat", sans-serif; font-size: 24px; font-weight: 800; letter-spacing: .18em; text-transform: uppercase; color: #5B6178; }
+.nw-phone { position: absolute; width: 380px; height: 800px; background: #0E1222; border-radius: 64px; padding: 16px; box-shadow: 0 40px 80px rgba(20,26,51,.28); }
+.nw-screen { position: relative; width: 100%; height: 100%; border-radius: 50px; overflow: hidden; background: #1F2937; }
+.nw-notch { position: absolute; left: 50%; top: 16px; width: 110px; height: 30px; margin-left: -55px; background: #0E1222; border-radius: 20px; z-index: 5; }
+.nw-pass { position: absolute; border-radius: 30px; background: #1F2937; color: #fff; padding: 34px 38px; box-shadow: 0 30px 60px rgba(20,26,51,.30); font-family: "Montserrat", sans-serif; }
+.nw-pass .row { display: flex; align-items: center; gap: 18px; }
+.nw-pass .name { font-family: "Archivo Black", sans-serif; font-size: 34px; }
+.nw-pass .lbl { font-size: 18px; font-weight: 700; opacity: .72; text-transform: uppercase; letter-spacing: .14em; margin-top: 22px; }
+.nw-pass .val { font-size: 46px; font-weight: 800; }
+.nw-stamps { display: flex; gap: 14px; margin-top: 12px; }
+.nw-stamps i { display: block; width: 52px; height: 52px; border-radius: 50%; border: 5px solid rgba(255,255,255,.45); }
+.nw-stamps i b { display: block; width: 100%; height: 100%; border-radius: 50%; background: #F4A12B; opacity: 0; }
+.nw-stamps i b.on { opacity: 1; }
+.nw-logo { width: 64px; height: 64px; border-radius: 50%; background: #F4A12B; color: #1F2937; display: grid; place-items: center; font-family: "Archivo Black", sans-serif; font-size: 34px; flex: none; }
+.nw-btn { display: inline-block; border-radius: 999px; padding: 18px 36px; font-family: "Montserrat", sans-serif; font-weight: 800; font-size: 26px; background: #000; color: #fff; }
+.nw-panel { position: absolute; background: #fff; border-radius: 28px; border: 3px solid #E3E6EB; box-shadow: 0 40px 80px rgba(20,26,51,.18); overflow: hidden; font-family: "Montserrat", sans-serif; color: #141A33; }
+.nw-panel .bar { height: 64px; background: #F6F7F9; border-bottom: 3px solid #E3E6EB; display: flex; align-items: center; gap: 12px; padding: 0 26px; font-size: 22px; font-weight: 800; }
+.nw-panel .bar i { display: block; width: 16px; height: 16px; border-radius: 50%; background: #D6D9E0; }
+.nw-field { border: 3px solid #E3E6EB; border-radius: 16px; padding: 18px 22px; font-size: 30px; font-weight: 600; background: #fff; }
+.nw-num { position: absolute; width: 70px; height: 70px; border-radius: 50%; background: #1F5EFF; color: #fff; font-family: "Archivo Black", sans-serif; font-size: 38px; display: grid; place-items: center; box-shadow: 0 0 0 12px rgba(31,94,255,.18); }
+.nw-cursor { position: absolute; width: 56px; height: 56px; }
+.nw-notif { position: absolute; background: rgba(255,255,255,.95); border-radius: 30px; padding: 24px 28px; box-shadow: 0 20px 50px rgba(0,0,0,.28); display: flex; gap: 20px; align-items: center; font-family: "Montserrat", sans-serif; color: #141A33; }
+.nw-notif .t1 { font-size: 22px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: #5B6178; }
+.nw-notif .t2 { font-size: 30px; font-weight: 700; }
+.nw-chip { display: inline-block; border-radius: 999px; padding: 12px 26px; font-family: "Montserrat", sans-serif; font-weight: 800; font-size: 28px; }
+
+#s05, #s05 * { box-sizing: border-box; }
+#s05 { position: absolute; inset: 0; overflow: hidden; background: #FBF5EC; color: #141A33; font-family: "Montserrat", sans-serif; }
+
+#s05 .s05-tile { width: 280px; height: 280px; border-radius: 30px; display: grid; place-items: center; box-shadow: 0 20px 40px rgba(20,26,51,.12); }
+#s05-passwrap .nw-pass { position: relative; }
+#s05-lucia svg { width: 150px; height: 382px; display: block; }
+
+
+</style>
+<div id="s05" data-composition-id="s05" data-width="1920" data-height="1080" data-duration="9.35">
+
+<div class="nw-abs" id="s05-passwrap" style="left:120px;top:150px"><div class="nw-pass" id="s05-pass" style="width:600px;background:#1F2937">
+  <div class="row"><div class="nw-logo">P</div><div class="name">Restaurante Pepito</div></div>
+  <div class="lbl">Sellos</div><div class="nw-stamps"><i><b class=""></b></i><i><b class=""></b></i><i><b class=""></b></i><i><b class=""></b></i><i><b class=""></b></i></div>
+  <div class="lbl">Premio</div><div class="val" style="font-size:36px">Café gratis</div>
+</div></div>
+<p class="nw-h nw-abs nw-blue" id="s05-title" style="left:120px;top:730px;font-size:92px;white-space:nowrap">Primer sello.</p>
+<div class="nw-abs s05-tile" id="s05-t1" style="left:860px;top:130px;background:#FFE2B0">
+  <svg viewBox="0 0 200 200" width="200" height="200"><circle cx="100" cy="100" r="84" fill="#fff"/><circle cx="100" cy="100" r="56" fill="#E9852F"/><circle cx="84" cy="88" r="10" fill="#F4A12B"/><circle cx="114" cy="110" r="12" fill="#B9773E"/></svg>
+</div>
+<div class="nw-abs s05-tile" id="s05-t2" style="left:1190px;top:130px;background:#F1E3CC">
+  <svg viewBox="0 0 200 200" width="200" height="200"><g id="s05-glass-l"><rect x="40" y="60" width="50" height="110" rx="8" fill="#F4A12B"/><rect x="40" y="48" width="50" height="22" rx="10" fill="#fff"/></g><g id="s05-glass-r"><rect x="110" y="60" width="50" height="110" rx="8" fill="#F4A12B"/><rect x="110" y="48" width="50" height="22" rx="10" fill="#fff"/></g></svg>
+</div>
+<div class="nw-abs s05-tile" id="s05-t3" style="left:1520px;top:130px;background:#E7ECFF">
+  <svg viewBox="0 0 200 200" width="200" height="200"><rect x="50" y="30" width="100" height="140" rx="10" fill="#fff"/><path d="M68 64h64M68 90h64M68 116h40" stroke="#5B6178" stroke-width="9" stroke-linecap="round"/><text x="100" y="158" font-family="Archivo Black" font-size="26" text-anchor="middle" fill="#1F5EFF">PAGADO</text></svg>
+</div>
+<div class="nw-abs" id="s05-door" style="left:860px;top:450px;width:940px;height:500px;border-radius:30px;background:#F1E3CC;overflow:hidden">
+  <svg class="nw-abs" style="left:0;top:0" width="940" height="500" viewBox="0 0 940 500"><rect x="560" y="60" width="220" height="440" rx="12" fill="#B9773E"/><rect x="580" y="84" width="180" height="200" rx="8" fill="#F4A12B" opacity=".5"/><text x="300" y="120" font-family="Archivo Black" font-size="46" fill="#141A33" text-anchor="middle">¡Hasta pronto!</text></svg>
+  <div class="nw-abs" id="s05-lucia" style="left:330px;top:150px;transform-origin:50% 100%"><svg class="s05-fig" viewBox="0 0 220 560" width="220" height="560">
+  <g class="legs"><rect x="72" y="380" width="30" height="170" rx="14" fill="#141A33"/><rect x="118" y="380" width="30" height="170" rx="14" fill="#141A33"/>
+  <ellipse cx="86" cy="552" rx="26" ry="10" fill="#0E1222"/><ellipse cx="134" cy="552" rx="26" ry="10" fill="#0E1222"/></g>
+  <rect class="arm-l" x="38" y="200" width="30" height="170" rx="15" fill="#F4A12B"/>
+  <rect class="arm-r" x="152" y="200" width="30" height="170" rx="15" fill="#F4A12B"/>
+  <rect x="58" y="180" width="104" height="220" rx="46" fill="#F4A12B"/>
+  <rect x="98" y="182" width="24" height="60" rx="8" fill="#E8B48F"/>
+  <circle cx="110" cy="120" r="58" fill="#E8B48F"/>
+  <path d="M52 118 q0-72 58-72 q62 0 58 66 q-18-34-58-34 q-36 0-58 40z" fill="#2B2A3A"/>
+  <circle cx="92" cy="128" r="6" fill="#2B2A3A"/><circle cx="128" cy="128" r="6" fill="#2B2A3A"/>
+  <path d="M96 150 q14 12 28 0" stroke="#2B2A3A" stroke-width="5" fill="none" stroke-linecap="round"/>
+</svg></div>
+</div>
+
+</div>
+<script>
+(() => {
+  const D = 9.35;      // slot length (s)
+  const IN = 0.35;      // incoming transition overlap (s): content should be readable from here
+  const S = (q) => "#s05 " + q;
+  const tl = gsap.timeline({ paused: true });
+  const breath = (sel, at, cycle, props) => {
+    const len = Math.max(0, D - at);
+    tl.to(S(sel), Object.assign({ duration: cycle / 2, ease: "sine.inOut", yoyo: true,
+      repeat: Math.max(0, Math.floor(len / cycle) * 2 - 1) }, props), at);
+  };
+  const typeText = (sel, text, at, dur) => {
+    const el = document.querySelector(S(sel));
+    const st = { n: 0 };
+    tl.fromTo(st, { n: 0 }, { n: text.length, duration: dur, ease: "none",
+      onUpdate: () => { el.textContent = text.slice(0, Math.round(st.n)); } }, at);
+  };
+  const countUp = (sel, to, at, dur, fmt) => {
+    const el = document.querySelector(S(sel));
+    const st = { v: 0 };
+    tl.fromTo(st, { v: 0 }, { v: to, duration: dur, ease: "power2.out",
+      onUpdate: () => { el.textContent = (fmt || String)(Math.round(st.v)); } }, at);
+  };
+
+  tl.fromTo(S("#s05-passwrap"), { x: -60, opacity: 0 }, { x: 0, opacity: 1, duration: 0.4, ease: "power3.out" }, 0.1);
+  tl.fromTo(S("#s05-pass .nw-stamps i:first-child b"), { scale: 0, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.45, ease: "back.out(2.2)" }, 0.6);
+  tl.fromTo(S("#s05-title"), { y: 60, opacity: 0 }, { y: 0, opacity: 1, duration: 0.42, ease: "power4.out" }, 0.75);
+  ["#s05-t1", "#s05-t2", "#s05-t3"].forEach((id, i) => {
+    tl.fromTo(S(id), { scale: 0, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.35, ease: "power3.out" }, 1.55 + i * 0.42);
+  });
+  tl.fromTo(S("#s05-glass-l"), { rotation: 0, transformOrigin: "50% 100%" }, { rotation: 12, duration: 0.18, yoyo: true, repeat: 1, ease: "power2.out" }, 2.1);
+  tl.fromTo(S("#s05-glass-r"), { rotation: 0, transformOrigin: "50% 100%" }, { rotation: -12, duration: 0.18, yoyo: true, repeat: 1, ease: "power2.out" }, 2.1);
+  tl.fromTo(S("#s05-door"), { y: 80, opacity: 0 }, { y: 0, opacity: 1, duration: 0.45, ease: "expo.out" }, 2.8);
+  // Lucía waves and walks out through the door.
+  tl.fromTo(S("#s05-lucia .arm-r"), { rotation: 0, transformOrigin: "167px 210px" }, { rotation: -150, duration: 0.3, ease: "power2.out" }, 3.2);
+  tl.to(S("#s05-lucia .arm-r"), { rotation: -120, duration: 0.22, yoyo: true, repeat: 5, ease: "sine.inOut" }, 3.5);
+  tl.to(S("#s05-lucia .arm-r"), { rotation: 0, duration: 0.25, ease: "power2.in" }, 4.9);
+  tl.fromTo(S("#s05-lucia"), { x: 0 }, { x: 330, duration: 1.4, ease: "power1.in" }, 5.2);
+  tl.fromTo(S("#s05-lucia"), { opacity: 1 }, { opacity: 0, duration: 0.3 }, 6.3);
+
+  tl.fromTo(S("#s05-door svg rect:nth-of-type(1)"), { scaleX: 1 }, { scaleX: 0.15, duration: 0.4, ease: "power3.in", transformOrigin: "100% 50%" }, 6.7);
+  tl.fromTo(S("#s05-door"), { rotation: 0 }, { rotation: -1.2, duration: 0.08, yoyo: true, repeat: 3, ease: "sine.inOut" }, 7.1);
+  tl.fromTo(S("#s05-title"), { scale: 1 }, { scale: 1.06, duration: 0.25, yoyo: true, repeat: 1, ease: "power2.out", transformOrigin: "0% 50%" }, 7.6);
+
+  window.__timelines["s05"] = tl;
+})();
+</script>
+</template>
+</body>
+</html>
