@@ -8,6 +8,12 @@
 @font-face { font-family: "Archivo Black"; src: url("assets/fonts/archivo-black-400.woff2") format("woff2"); font-weight: 400; }
 @font-face { font-family: "Montserrat"; src: url("assets/fonts/montserrat-var.woff2") format("woff2"); font-weight: 100 900; }
 
+.nw-ph { position: absolute; inset: 0; overflow: hidden; }
+.nw-scrim { position: absolute; inset: 0; pointer-events: none; }
+.nw-ink.nw-ink { color: #FBF5EC; }
+.nw-ink .nw-blue, .nw-blue-l { color: #8FB0FF; }
+.nw-ph img { position: absolute; left: 0; top: 0; width: 100%; height: 100%; object-fit: cover; transform-origin: 50% 50%; }
+
 .nw-h { font-family: "Archivo Black", sans-serif; font-weight: 400; line-height: .92; letter-spacing: -.01em; margin: 0; }
 .nw-blue { color: #1F5EFF; }
 .nw-abs { position: absolute; }
@@ -42,14 +48,15 @@
 #s07, #s07 * { box-sizing: border-box; }
 #s07 { position: absolute; inset: 0; overflow: hidden; background: #FBF5EC; color: #141A33; font-family: "Montserrat", sans-serif; }
 
-#s07-paco svg { width: 430px; height: 621px; display: block; }
 #s07 .s07-bubble { position: absolute; left: 0; top: 0; white-space: nowrap; background: #fff; border: 3px solid #E3E6EB; border-radius: 999px; padding: 10px 22px; font-weight: 800; font-size: 22px; box-shadow: 0 10px 24px rgba(20,26,51,.14); }
 
 
 </style>
 <div id="s07" data-composition-id="s07" data-width="1920" data-height="1080" data-duration="13.884">
-
-<div class="nw-ghost" style="font-size:420px;left:-40px;bottom:-90px">PROMO</div>
+<div class="nw-abs" id="s07-photo" style="inset:0;overflow:hidden;border-radius:0px"><div class="nw-ph" id="s07-ph0" style="opacity:1"><img src="assets/photos/s07-paco.jpg" alt="" /></div></div>
+<div class="nw-scrim" id="s07-scrim" style="background:rgba(14,18,34,.62)"></div>
+<div class="nw-scrim" id="s07-low" style="background:linear-gradient(to top, rgba(14,18,34,.8) 0%, rgba(14,18,34,0) 40%)"></div>
+<p class="nw-h nw-abs nw-ink" id="s07-intro" style="left:120px;top:800px;font-size:110px;white-space:nowrap">Paco manda <span class="nw-blue">una promo.</span></p>
 <div class="nw-panel" id="s07-panel" style="left:110px;top:120px;width:1140px;height:760px">
   <div class="bar"><i></i><i></i><i></i><span style="margin-left:16px">NFC Wallet · Restaurante Pepito · Mensajes</span></div>
   <div style="padding:44px 48px;display:flex;flex-direction:column;gap:30px">
@@ -69,20 +76,9 @@
 <div class="nw-num" id="s07-n1" style="left:40px;top:548px">1</div>
 <div class="nw-num" id="s07-n2" style="left:40px;top:708px">2</div>
 <div class="nw-cursor" id="s07-cursor" style="left:1180px;top:860px"><svg viewBox="0 0 24 24"><path d="M4 2 L20 13 L12.5 14.2 L16.6 22 L13.4 23.4 L9.4 15.6 L4 20 Z" fill="#141A33" stroke="#fff" stroke-width="1.4" stroke-linejoin="round"/></svg></div>
-<div class="nw-abs" id="s07-paco" style="left:1370px;top:380px"><svg class="s07-fig" viewBox="0 0 360 520" width="360" height="520">
-  <rect x="70" y="250" width="220" height="270" rx="90" fill="#141A33"/>
-  <rect x="110" y="270" width="140" height="250" rx="22" fill="#1F5EFF"/>
-  <rect class="paco-arm" x="250" y="280" width="54" height="190" rx="27" fill="#141A33" style="transform-origin:277px 300px"/>
-  <rect x="50" y="280" width="54" height="190" rx="27" fill="#141A33"/>
-  <circle cx="180" cy="150" r="92" fill="#C98B62"/>
-  <path d="M100 170 q80 120 160 0 v20 q-80 100 -160 0z" fill="#3B2A20"/>
-  <circle cx="148" cy="138" r="9" fill="#2B2A3A"/><circle cx="212" cy="138" r="9" fill="#2B2A3A"/>
-  <path d="M130 108 h34 M196 108 h34" stroke="#3B2A20" stroke-width="9" stroke-linecap="round"/>
-  <path d="M158 196 q22 16 44 0" stroke="#FBF5EC" stroke-width="7" fill="none" stroke-linecap="round"/>
-</svg></div>
-<div class="nw-abs" id="s07-label" style="left:1350px;top:150px;font-weight:800;font-size:30px;color:#5B6178">Paco · dueño de Pepito</div>
+<span class="nw-chip nw-abs" id="s07-label" style="left:120px;top:690px;background:#FBF5EC;color:#141A33">Paco · dueño de Pepito</span>
 <div class="nw-abs" id="s07-fly" style="left:330px;top:745px"></div>
-<p class="nw-h nw-abs" id="s07-done" style="left:110px;top:910px;font-size:96px;white-space:nowrap">Dos clics. <span class="nw-blue">Listo.</span></p>
+<p class="nw-h nw-abs nw-ink" id="s07-done" style="left:110px;top:910px;font-size:96px;white-space:nowrap">Dos clics. <span class="nw-blue">Listo.</span></p>
 </div>
 <script>
 (() => {
@@ -107,9 +103,13 @@
     tl.fromTo(st, { v: 0 }, { v: to, duration: dur, ease: "power2.out",
       onUpdate: () => { el.textContent = (fmt || String)(Math.round(st.v)); } }, at);
   };
+  tl.fromTo(S("#s07-ph0 img"), { scale: 1.04, x: 0, y: 0 }, { scale: 1.18, x: 60, y: -20, duration: D - 0, ease: "none" }, 0);
 
-  tl.fromTo(S("#s07-panel"), { x: 140, opacity: 0, scale: 0.96 }, { x: 0, opacity: 1, scale: 1, duration: 0.5, ease: "expo.out" }, 0.45);
-  tl.fromTo(S("#s07-paco"), { y: 120, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, ease: "power3.out" }, 0.6);
+  tl.fromTo(S("#s07-scrim"), { opacity: 0 }, { opacity: 1, duration: 0.4, ease: "power2.out" }, 2.0);
+  tl.fromTo(S("#s07-intro"), { y: 60, opacity: 0 }, { y: 0, opacity: 1, duration: 0.45, ease: "power4.out" }, 0.5);
+  tl.to(S("#s07-intro, #s07-label"), { y: -30, opacity: 0, duration: 0.25, ease: "power2.in" }, 2.0);
+  tl.fromTo(S("#s07-panel"), { x: 140, opacity: 0, scale: 0.96 }, { x: 0, opacity: 1, scale: 1, duration: 0.5, ease: "expo.out" }, 2.2);
+  tl.fromTo(S("#s07-cursor"), { opacity: 0 }, { opacity: 1, duration: 0.2, ease: "power1.out" }, 2.6);
   typeText("#s07-text", "2x1 en cañas este viernes", 2.9, 1.7);
   tl.fromTo(S("#s07-caret"), { opacity: 1 }, { opacity: 0, duration: 0.25, yoyo: true, repeat: 15, ease: "steps(1)" }, 0.5);
   // Cursor: click 1 on "Todos los clientes", click 2 on "Enviar".
@@ -121,7 +121,6 @@
   tl.fromTo(S("#s07-n2"), { scale: 0, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.35, ease: "back.out(2)" }, 6.45);
   tl.fromTo(S("#s07-sent"), { x: -30, opacity: 0 }, { x: 0, opacity: 1, duration: 0.35, ease: "power3.out" }, 6.9);
   countUp("#s07-count", 318, 6.95, 1.3);
-  tl.fromTo(S("#s07-paco .paco-arm"), { rotation: 0 }, { rotation: -150, duration: 0.4, ease: "back.out(1.6)" }, 7.6);
   tl.to(S("#s07-n1, #s07-n2"), { scale: 0, opacity: 0, duration: 0.25, ease: "power2.in" }, 8.0);
   // The promo flies out to customers' phones.
   const fly = document.querySelector(S("#s07-fly"));
@@ -135,11 +134,9 @@
       { x: -260 - 120 * Math.cos(a) * 3, y: -420 * Math.sin(a) - 120, scale: 1, opacity: 1, duration: 0.9, ease: "power2.out" }, 8.3 + i * 0.12);
     tl.to(b, { x: -1100, opacity: 0, duration: 0.8, ease: "power2.in" }, 9.6 + i * 0.12);
   }
-  breath("#s07-paco", 8.2, 2.4, { y: -10 });
 
-  tl.fromTo(S("#s07-label"), { x: 60, opacity: 0 }, { x: 0, opacity: 1, duration: 0.4, ease: "power3.out" }, 1.5);
+  tl.fromTo(S("#s07-label"), { x: -40, opacity: 0 }, { x: 0, opacity: 1, duration: 0.4, ease: "power3.out" }, 0.9);
   tl.fromTo(S("#s07-done"), { y: 60, opacity: 0 }, { y: 0, opacity: 1, duration: 0.42, ease: "power4.out" }, 11.2);
-  tl.fromTo(S("#s07-paco .paco-arm"), { rotation: -150 }, { rotation: -120, duration: 0.25, yoyo: true, repeat: 5, ease: "sine.inOut", immediateRender: false }, 12.0);
 
   window.__timelines["s07"] = tl;
 })();

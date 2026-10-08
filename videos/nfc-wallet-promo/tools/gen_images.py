@@ -105,12 +105,16 @@ def main():
         for shot in spec["shots"]:
             if a.only and a.only != shot["id"]:
                 continue
-            if not a.only and (OUT / f"{shot['id']}.png").exists():
+            if not a.only and (OUT / f"{shot['id']}.jpg").exists():
                 continue  # resumable: pass --only to regenerate one shot
             refs = [chars / f"{r}.png" for r in shot["refs"] if (chars / f"{r}.png").exists()]
             who = "; ".join(spec["characters"][r] for r in shot["refs"])
             prompt = f"{shot['prompt']}. {('People: ' + who + '. Keep their faces and clothes identical to the reference images. ') if who else ''}{style}"
-            (OUT / f"{shot['id']}.png").write_bytes(generate(a.model, prompt, refs))
+            png = OUT / f"{shot['id']}.png"
+            png.write_bytes(generate(a.model, prompt, refs))
+            # Plates ship as JPEG: PNGs are over the 2 MB inline limit of the bundler.
+            subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", str(png), "-q:v", "2", str(png.with_suffix(".jpg"))], check=True)
+            png.unlink()
             print("shot", shot["id"])
 
 

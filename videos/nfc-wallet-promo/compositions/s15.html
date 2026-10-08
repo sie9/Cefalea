@@ -8,6 +8,12 @@
 @font-face { font-family: "Archivo Black"; src: url("assets/fonts/archivo-black-400.woff2") format("woff2"); font-weight: 400; }
 @font-face { font-family: "Montserrat"; src: url("assets/fonts/montserrat-var.woff2") format("woff2"); font-weight: 100 900; }
 
+.nw-ph { position: absolute; inset: 0; overflow: hidden; }
+.nw-scrim { position: absolute; inset: 0; pointer-events: none; }
+.nw-ink.nw-ink { color: #FBF5EC; }
+.nw-ink .nw-blue, .nw-blue-l { color: #8FB0FF; }
+.nw-ph img { position: absolute; left: 0; top: 0; width: 100%; height: 100%; object-fit: cover; transform-origin: 50% 50%; }
+
 .nw-h { font-family: "Archivo Black", sans-serif; font-weight: 400; line-height: .92; letter-spacing: -.01em; margin: 0; }
 .nw-blue { color: #1F5EFF; }
 .nw-abs { position: absolute; }
@@ -45,14 +51,14 @@
 
 </style>
 <div id="s15" data-composition-id="s15" data-width="1920" data-height="1080" data-duration="11.738">
-
-<div class="nw-glow" id="s15-glow" style="width:1500px;height:1500px;left:210px;top:-560px"></div>
+<div class="nw-abs" id="s15-photo" style="inset:0;overflow:hidden;border-radius:0px"><div class="nw-ph" id="s15-ph0" style="opacity:1"><img src="assets/photos/s15-local.jpg" alt="" /></div></div>
+<div class="nw-scrim" id="s15-scrim" style="background:rgba(14,18,34,.66)"></div>
 <div class="nw-abs" style="left:0;right:0;top:250px;display:flex;align-items:center;justify-content:center;gap:40px">
   <div id="s15-icon" style="width:190px;height:190px;border-radius:46px;background:#1F5EFF;display:grid;place-items:center"><svg viewBox="0 0 48 48" width="120" height="120"><g fill="none" stroke="#fff" stroke-width="6" stroke-linecap="round"><path d="M14 16 a12 12 0 0 1 0 16"/><path d="M22 10 a20 20 0 0 1 0 28"/><path d="M30 4 a28 28 0 0 1 0 40"/></g></svg></div>
-  <div class="nw-h" id="s15-word" style="font-size:180px">NFC Wallet</div>
+  <div class="nw-h nw-ink" id="s15-word" style="font-size:180px">NFC Wallet</div>
 </div>
-<p class="nw-h nw-abs" id="s15-claim" style="left:0;right:0;top:530px;text-align:center;font-size:92px">Tus clientes vuelven <span class="nw-blue">solos.</span></p>
-<p class="nw-abs" id="s15-price" style="left:0;right:0;top:680px;text-align:center;font-size:44px;font-weight:700">Desde 29 €/mes por restaurante · 14 días gratis</p>
+<p class="nw-h nw-abs nw-ink" id="s15-claim" style="left:0;right:0;top:530px;text-align:center;font-size:92px">Tus clientes vuelven <span class="nw-blue">solos.</span></p>
+<p class="nw-abs nw-ink" id="s15-price" style="left:0;right:0;top:680px;text-align:center;font-size:44px;font-weight:700">Desde 29 €/mes por restaurante · 14 días gratis</p>
 <div class="nw-abs" id="s15-url" style="left:0;right:0;top:790px;display:flex;justify-content:center"><span class="nw-btn" id="s15-btn" style="background:#1F5EFF;font-size:52px;padding:26px 70px">nfcwallet.es</span></div>
 <div class="nw-abs" id="s15-fade" style="inset:0;background:#FBF5EC;opacity:0;z-index:10"></div>
 </div>
@@ -79,6 +85,7 @@
     tl.fromTo(st, { v: 0 }, { v: to, duration: dur, ease: "power2.out",
       onUpdate: () => { el.textContent = (fmt || String)(Math.round(st.v)); } }, at);
   };
+  tl.fromTo(S("#s15-ph0 img"), { scale: 1.06, x: 0, y: 0 }, { scale: 1.16, x: 0, y: -20, duration: D - 0, ease: "none" }, 0);
 
   tl.fromTo(S("#s15-icon"), { scale: 0, rotation: -20 }, { scale: 1, rotation: 0, duration: 0.5, ease: "power3.out" }, IN);
   tl.fromTo(S("#s15-icon path"), { strokeDashoffset: 60 }, { strokeDashoffset: 0, duration: 0.5, ease: "power2.out", stagger: 0.12 }, 0.45);
@@ -87,7 +94,7 @@
   tl.fromTo(S("#s15-price"), { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, ease: "power3.out" }, 3.0);
   tl.fromTo(S("#s15-url"), { scale: 0.6, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.45, ease: "back.out(1.8)" }, 4.3);
   tl.fromTo(S("#s15-btn"), { boxShadow: "0 0 0 0px rgba(31,94,255,.35)" }, { boxShadow: "0 0 0 26px rgba(31,94,255,0)", duration: 1.1, ease: "power2.out", repeat: 4 }, 5.0);
-  breath("#s15-glow", 0, 2.6, { scale: 1.1 });
+  tl.fromTo(S("#s15-scrim"), { opacity: 0.35 }, { opacity: 1, duration: 0.6, ease: "power2.out" }, 0);
 
   tl.fromTo(S("#s15-icon path"), { opacity: 1 }, { opacity: 0.25, duration: 0.25, yoyo: true, repeat: 1, ease: "sine.inOut", stagger: 0.12 }, 6.6);
   tl.fromTo(S("#s15-icon path"), { opacity: 1 }, { opacity: 0.25, duration: 0.25, yoyo: true, repeat: 1, ease: "sine.inOut", stagger: 0.12, immediateRender: false }, 8.4);

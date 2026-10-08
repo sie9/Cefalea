@@ -8,6 +8,12 @@
 @font-face { font-family: "Archivo Black"; src: url("assets/fonts/archivo-black-400.woff2") format("woff2"); font-weight: 400; }
 @font-face { font-family: "Montserrat"; src: url("assets/fonts/montserrat-var.woff2") format("woff2"); font-weight: 100 900; }
 
+.nw-ph { position: absolute; inset: 0; overflow: hidden; }
+.nw-scrim { position: absolute; inset: 0; pointer-events: none; }
+.nw-ink.nw-ink { color: #FBF5EC; }
+.nw-ink .nw-blue, .nw-blue-l { color: #8FB0FF; }
+.nw-ph img { position: absolute; left: 0; top: 0; width: 100%; height: 100%; object-fit: cover; transform-origin: 50% 50%; }
+
 .nw-h { font-family: "Archivo Black", sans-serif; font-weight: 400; line-height: .92; letter-spacing: -.01em; margin: 0; }
 .nw-blue { color: #1F5EFF; }
 .nw-abs { position: absolute; }
